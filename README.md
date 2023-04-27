@@ -1,6 +1,24 @@
 # xalltag
 
+## Use of LFS (Large file system) to commit / push large files
+1. Clone the repository
+2. Make sure that the use of LFS in the GitLab setting is enabled
+   1. Open the **GitLap-Repo** in the Browser
+   2. Got to **Settings -> General**
+   3. Expand  **Visibility, project features, permissions**
+   4. Make sure the point **Git Large File Storage (LFS)** is enabled
+3. [Download](https://git-lfs.com) and install Git-LFS on your computer
 
+Now it should work :)
+
+
+### Some usefull commands for LFS
+
+For all of these commands you need to go to the project diretory via the cmd-line
+1. Show all files-extensions that are currently covered by .gitAttributes `git lfs track`
+2. Add a new file-extension to the LFS-system `git lfs track "*.something"`
+3. Show all files that are currently tracked by lfs (those need to be already commited) `git lfs ls-files --all`
+4. For everything else see the [documenation](https://github.com/git-lfs/git-lfs/tree/main/docs/man) or ask google e.g.
 
 ## Getting started
 

@@ -9,7 +9,7 @@ parent_dir $ git clone [ssh|https]
 parent_dir $ cd x-alltag-projekt
 ```
 
-oder
+or
 
 ```Shell
 ~$ cd existing_repo
@@ -31,12 +31,12 @@ Show all files that are currently tracked by lfs (those need to be already commi
 
 For everything else see the documenation or ask google e.g.
 
-Roadmap
+**Roadmap**
 
-License
+**License**
 
-Project status
+**Project status**
 Early development.
 
-Badges
+**Badges**
 On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.

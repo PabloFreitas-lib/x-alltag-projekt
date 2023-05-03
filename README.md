@@ -20,19 +20,22 @@ existing_dir $ git pull
 
 **Use of LFS (Large file system) to commit / push large files**
 
-Installation Guide (german):
+Install guide (german): \
 https://docs.github.com/de/repositories/working-with-files/managing-large-files/installing-git-large-file-storage
 
 Some usefull commands for LFS:
 For all of these commands you need to go to the project diretory via the cmd-line
 
 Show all files-extensions that are currently covered by .gitAttributes:
+
 `git lfs track`
 
 Add a new file-extension to the LFS-system:
+
 `git lfs track "*.something"`
 
 Show all files that are currently tracked by lfs (those need to be already commited):
+
 `git lfs ls-files --all`
 
 For everything else see the documenation or ask google e.g.

@@ -2104,6 +2104,94 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "MyActionHandgestures",
+            "id": "b79ead10-9807-4cdc-8a5f-ddbfd2adf478",
+            "actions": [
+                {
+                    "name": "pinchIndex",
+                    "type": "Button",
+                    "id": "d0301f86-aead-4fa1-a0c0-f56fa03a5979",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "pinchLittle",
+                    "type": "Button",
+                    "id": "a4118f3f-ce08-4d0e-a6ad-37e0ce38448b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "pinchMiddle",
+                    "type": "Button",
+                    "id": "7bd37efd-4612-41ca-8dd4-b192cc047a61",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "pinchRing",
+                    "type": "Button",
+                    "id": "8fbaa69b-108f-4279-92fd-d0e3e835b9fd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1158eebf-a6f4-4599-835a-c8477bbc950a",
+                    "path": "<MetaAimHand>/indexPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pinchIndex",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4f9235ce-10f3-43f5-9fa5-001a0b5071eb",
+                    "path": "<MetaAimHand>/littlePressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pinchLittle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e2e6d437-168e-43d7-a74a-0df75ab44a00",
+                    "path": "<MetaAimHand>/middlePressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pinchMiddle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2cd0770f-0219-46ac-847a-004078113975",
+                    "path": "<MetaAimHand>/ringPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pinchRing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

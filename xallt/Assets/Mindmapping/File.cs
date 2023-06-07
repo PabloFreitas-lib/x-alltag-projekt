@@ -5,6 +5,4 @@ using UnityEngine;
 public class File : MonoBehaviour
 {
     public string name;
-    // Start is called before the first frame update
-    
 }

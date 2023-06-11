@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.120763555, g: 0.18643434, b: 0.33522844, a: 1}
+  m_IndirectSpecularColor: {r: 0.12076039, g: 0.18643652, b: 0.33524966, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3165,7 +3165,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh43044
+  m_Name: pb_Mesh29990
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4390,7 +4390,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1140859251}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.021, y: 1.368, z: 1.797}
+  m_LocalPosition: {x: 0.021, y: 1.381, z: 1.833}
   m_LocalScale: {x: 0.8, y: 0.02, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5336,6 +5336,10 @@ PrefabInstance:
       propertyPath: textureSize.y
       value: 1024
       objectReference: {fileID: 0}
+    - target: {fileID: 2522349086003568402, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5645f29004409584cac0d5af6310c6b7, type: 2}
     - target: {fileID: 2522349086003568407, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
       propertyPath: m_Name
       value: Whiteboard (1)
@@ -5362,7 +5366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2522349086003568412, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2.286
+      value: -2.278
       objectReference: {fileID: 0}
     - target: {fileID: 2522349086003568412, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6521,6 +6525,10 @@ PrefabInstance:
       propertyPath: textureSize.y
       value: 3072
       objectReference: {fileID: 0}
+    - target: {fileID: 2522349086003568402, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5645f29004409584cac0d5af6310c6b7, type: 2}
     - target: {fileID: 2522349086003568407, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
       propertyPath: m_Name
       value: Whiteboard

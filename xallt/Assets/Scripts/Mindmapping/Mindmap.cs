@@ -5,7 +5,8 @@ using UnityEngine;
 public class Mindmap : MonoBehaviour
 {
     public Node root;
-    public string name;
+    public string path;
+
     // Start is called before the first frame update
     void Start()
     {

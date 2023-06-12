@@ -6,8 +6,8 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     //Metadata
-    private static uint id;
-    private static DateTime creationDate;
+    public uint id { get; private set; }
+    public DateTime creationDate;
 
     //Display information
     public string text;

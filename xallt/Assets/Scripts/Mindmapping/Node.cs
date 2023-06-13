@@ -23,11 +23,7 @@ public class Node : MonoBehaviour
         id = pId;
         creationDate = pCreationDate;
         text = pText;
-
-        userColor.r = pUserColor[0];
-        userColor.g = pUserColor[1];
-        userColor.b = pUserColor[2];
-        userColor.a = pUserColor[3];
+        userColor = new Color(pUserColor[0], pUserColor[1], pUserColor[2], pUserColor[3]);
     }
 
     // Start is called before the first frame update

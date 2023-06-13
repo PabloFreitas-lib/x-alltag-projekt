@@ -1,8 +1,20 @@
 using System;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/* TODO:
+ *  
+ *  ComplexPlayerPrefs:
+ *      -everything
+ *  Mindmap:
+ *      - move nodes into mindmap container, so it can be disabled in unity hirachy
+ *      - add remaining Attributes to Save/Load Cycle
+ *          - gameObject related (Mesh, Scale, Material, Position, Components)
+ * 
+ */
 public class SaveSystem
 {
     [System.Serializable]
@@ -92,17 +104,21 @@ public class SaveSystem
 
         String json = JsonUtility.ToJson(persistenceMapped);
 
-        //Actual saving via OS Interface
+        string fullPath = Path.Combine(Application.dataPath, "mindmaps");
+        fullPath = Path.Combine(fullPath, mindmap.name);
+        File.WriteAllText(fullPath, content);
     }
 
 
     /*
      * Called to load Mindmap when clicking button or on socket interaction.
      */
-    public static void loadMindmap()
+    public static void loadMindmap(Mindmap mindmap)
     {
-        //Actual loading via OS Interface
-        string json = "";
+        string fullPath = Path.Combine(Application.dataPath, "mindmaps");
+        fullPath = Path.Combine(fullPath, mindmap.name);
+
+        string json = File.ReadAllText(fullPath);
         NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
         Node[] nodes = new Node[persistenceMapped.Length];
 

@@ -32,19 +32,30 @@ public class SaveSystem
     [System.Serializable]
     public class NodePersistentObject
     {
-        public uint id {  get;  private set; }
-        public uint parentId {  get;  private set; }
+        public uint id {  get;  }
+        public uint parentId {  get;  }
         public DateTime creationDate;
 
-        public uint[] childrenIds {  get; private set; }
+        public string text { get; }
+        public float[] userColor { get; }
+
+        public uint[] childrenIds {  get; }
 
         public NodePersistentObject(Node node)
         {
+            //Set simple parameters
             id = node.id;
             parentId = node.parent.id;
             creationDate = node.creationDate;
+            text = node.text;
 
+            //Encode userColor
+            userColor[0] = node.userColor.r;
+            userColor[1] = node.userColor.g;
+            userColor[2] = node.userColor.b;
+            userColor[3] = node.userColor.a;
 
+            //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
             int i=0;
             foreach (Node child in node.children)
@@ -106,7 +117,7 @@ public class SaveSystem
 
         string fullPath = Path.Combine(Application.dataPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
-        File.WriteAllText(fullPath, content);
+        System.IO.File.WriteAllText(fullPath, json);
     }
 
 
@@ -118,14 +129,14 @@ public class SaveSystem
         string fullPath = Path.Combine(Application.dataPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
 
-        string json = File.ReadAllText(fullPath);
+        string json = System.IO.File.ReadAllText(fullPath);
         NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
         Node[] nodes = new Node[persistenceMapped.Length];
 
         uint i = 0;
         foreach (NodePersistentObject persistedNode in persistenceMapped)
         {
-            Node node = new Node(persistedNode.id, persistedNode.creationDate);
+            Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.creationDate, persistedNode.userColor);
             nodes[i] = node;
             i++;
         }

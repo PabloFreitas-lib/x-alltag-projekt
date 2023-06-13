@@ -22,15 +22,28 @@ public class SaveSystem
     {
         public uint id {  get;  private set; }
         public uint parentId {  get;  private set; }
+        public DateTime creationDate;
 
         public uint[] childrenIds {  get; private set; }
 
         public NodePersistentObject(Node node)
         {
+            id = node.id;
+            parentId = node.parent.id;
+            creationDate = node.creationDate;
 
+
+            childrenIds = new uint[node.children.ToArray().Length];
+            int i=0;
+            foreach (Node child in node.children)
+            {
+                childrenIds[i] = child.id;
+                i++;
+            }
         }
 
     }
+
 
     /*
     * Objects of this class have the purpose of collecting serializable data of a whiteboard to be saved from or respectively be loaded to.
@@ -96,7 +109,8 @@ public class SaveSystem
         uint i = 0;
         foreach (NodePersistentObject persistedNode in persistenceMapped)
         {
-            nodes[i] = new Node(); //calls constructor in node class
+            Node node = new Node(persistedNode.id, persistedNode.creationDate);
+            nodes[i] = node;
             i++;
         }
 
@@ -104,9 +118,9 @@ public class SaveSystem
         foreach (NodePersistentObject persistedNode in persistenceMapped)
         {
             Node node = BinarySearch(nodes, persistedNode.id);
-            node.parent = (Node)BinarySearch(nodes, persistedNode.parentId);
+            node.parent = BinarySearch(nodes, persistedNode.parentId);
             foreach (uint childId in persistedNode.childrenIds) {
-                node.children.Add((Node)BinarySearch(nodes, childId));
+                node.children.Add(BinarySearch(nodes, childId));
             }
         }
 

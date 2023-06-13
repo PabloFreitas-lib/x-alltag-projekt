@@ -15,11 +15,15 @@ public class Node : MonoBehaviour
         //Lists or variables for each type of appendable data
 
     //Model
-    public GameObject parent;                       //empty parent -> treat node as root
-    public List<GameObject> children;
+    public Node parent;                       //empty parent -> treat node as root
+    public List<Node> children = new List<Node>();
 
-
-
+    public Node(uint pId, DateTime pCreationDate)
+    {
+        id = pId;
+        creationDate = pCreationDate;
+    }
+   
     // Start is called before the first frame update
     void Start()
     {

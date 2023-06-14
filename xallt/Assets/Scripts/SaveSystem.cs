@@ -168,7 +168,7 @@ public class SaveSystem : MonoBehaviour
      */
     public static void saveWhiteboard()
     {
-        
+        //performance not optimal alawys saves all even
         //_whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
                   
 
@@ -189,11 +189,11 @@ public class SaveSystem : MonoBehaviour
         int x = 0;
         foreach (WhiteBoardPersistentObject whiteboardPersistent in persistenceMapped)
         {
-            byte[] whiteBoardtexture = persistenceMapped[i].texture.EncodeToPNG();
+            byte[] whiteBoardtexture = persistenceMapped[x].texture.EncodeToPNG();
 
 
             string fullPath = Path.Combine(Application.dataPath, "whiteboards");
-            fullPath = Path.Combine(fullPath, persistenceMapped[i].id);
+            fullPath = Path.Combine(fullPath, persistenceMapped[x].id);
 
             System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
             Debug.Log("Whiteboard saved to: " + fullPath);

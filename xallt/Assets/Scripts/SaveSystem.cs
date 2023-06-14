@@ -3,6 +3,9 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Experimental.GraphView;
+using System.Linq;
+using static SaveSystem;
 
 
 /* TODO:
@@ -15,7 +18,7 @@ using UnityEngine;
  *          - gameObject related (Mesh, Scale, Material, Position, Components)
  * 
  */
-public class SaveSystem
+public class SaveSystem : MonoBehaviour
 {
     [System.Serializable]
     public class ComplexPlayerPrefsPersistentObject
@@ -72,11 +75,18 @@ public class SaveSystem
     * Objects of this class have the purpose of collecting serializable data of a whiteboard to be saved from or respectively be loaded to.
     */
     [System.Serializable]
-    public class WhiteboardPersistentObject
+    public class WhiteBoardPersistentObject
     {
-        public WhiteboardPersistentObject()
-        {
+        //this must be a texture2D now the question ist which information of texture 2D are important in unity it says 16MB per Texture which ist quit a lot 
+        public Texture2D texture;
+        public Vector2 textureSize; 
+        public string id { get; }
 
+        public WhiteBoardPersistentObject(Whiteboard whiteboard)
+        {
+            texture = whiteboard.texture;
+            textureSize = whiteboard.textureSize;
+            id = whiteboard.id;
         }
     }
 
@@ -154,11 +164,42 @@ public class SaveSystem
     }
 
     /*
-     * Called to save Whiteboard when clicking button or on whiteboard interaction.
+     * Called to save all Whiteboards when clicking L.
      */
     public static void saveWhiteboard()
     {
+        
+        //_whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
+                  
 
+        // Find all whiteboard objects and store im them in an array called perstistenceMapped[]
+        //not sure if this as any advantage at alll because i want to store it seperatly anyways but maybe later to store all whiteboards in an json file
+        Whiteboard[] whiteboards = Resources.FindObjectsOfTypeAll<Whiteboard>();
+        WhiteBoardPersistentObject[] persistenceMapped = new WhiteBoardPersistentObject[whiteboards.Length];
+        Debug.Log(whiteboards.Length);
+        uint i = 0;
+        foreach (Whiteboard whiteboard in whiteboards)
+        {
+            persistenceMapped[i] = new WhiteBoardPersistentObject(whiteboard);
+            i++;
+        }
+
+
+       //encodes multiple whiteboards to different pngs
+        int x = 0;
+        foreach (WhiteBoardPersistentObject whiteboardPersistent in persistenceMapped)
+        {
+            byte[] whiteBoardtexture = persistenceMapped[i].texture.EncodeToPNG();
+
+
+            string fullPath = Path.Combine(Application.dataPath, "whiteboards");
+            fullPath = Path.Combine(fullPath, persistenceMapped[i].id);
+
+            System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
+            Debug.Log("Whiteboard saved to: " + fullPath);
+            x++;
+        }
+        
     }
 
     /*
@@ -166,7 +207,7 @@ public class SaveSystem
      */
     public static void loadWhitebaord()
     {
-
+       // Whiteboard.texture.Apply();
     }
 
 
@@ -242,5 +283,19 @@ public class SaveSystem
         Node temp = nodes[i];
         nodes[i] = nodes[j];
         nodes[j] = temp;
+    }
+
+    /*
+     * Save with L key (for test purposes)
+     */
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            //saveMindmap();
+            saveWhiteboard();
+            Debug.Log("Speichern...");
+        }
+        
     }
 }

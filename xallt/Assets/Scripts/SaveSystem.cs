@@ -94,9 +94,13 @@ public class SaveSystem : MonoBehaviour
     * Used to save general GameState.
     * (Player position, how many and which files cubes are there?, user(?))
     */
+    public Vector3 playerPosition;
     public void saveComplexUserPrefs()
     {
-
+        
+        PlayerPrefs.SetFloat("UserX", playerPosition.x);
+        PlayerPrefs.SetFloat("UserY", playerPosition.y);
+        PlayerPrefs.SetFloat("UserZ", playerPosition.z);
     }
 
     /*
@@ -105,7 +109,11 @@ public class SaveSystem : MonoBehaviour
      */
     public void loadComplexUserPrefs()
     {
+        float playerX = PlayerPrefs.GetFloat("UserX");
+        float playerY = PlayerPrefs.GetFloat("UserY");
+        float playerZ = PlayerPrefs.GetFloat("UserZ");
 
+        Vector3 playerPosition = new Vector3(playerX, playerY, playerZ);
     }
 
     /*

@@ -17,18 +17,4 @@ public class Node : MonoBehaviour
     //Model
     public GameObject parent;                       //empty parent -> treat node as root
     public List<GameObject> children;
-
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

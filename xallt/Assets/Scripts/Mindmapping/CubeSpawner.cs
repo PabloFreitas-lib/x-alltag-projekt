@@ -5,16 +5,17 @@ using UnityEngine.InputSystem.XR;
 
 public class CubeSpawner : MonoBehaviour
 {
-    // Reference to the Trigger input action
     public GameObject filePrefab; // Prefab of the cube to spawn
     public bool isSpawned;
-    Collider detectionCollider;
+    public Collider detectionCollider;
+    public GameObject mindmap;
+    public Transform mindMapSpawnPosition;
 
     private void Update()
     {
-        Collider[] colliders = Physics.OverlapBox(detectionCollider.bounds.center, detectionCollider.bounds.extents, detectionCollider.transform.rotation);
-
-        if (colliders.Length == 0)
+       Collider[] colliders = Physics.OverlapBox(detectionCollider.bounds.center, detectionCollider.bounds.extents, detectionCollider.transform.rotation);
+       
+        if (colliders.Length == 1)
         {
             SpawnCube();
         }
@@ -28,7 +29,9 @@ public class CubeSpawner : MonoBehaviour
     private void SpawnCube()
     {
         // Instantiate a cube prefab at the position of the hand controller
-        Instantiate(filePrefab, transform.position, Quaternion.identity);
+        GameObject cube = Instantiate(filePrefab, transform.position, Quaternion.identity);
+        Instantiate(mindmap,mindMapSpawnPosition.position, Quaternion.identity);
+        cube.GetComponent<File>().map = mindmap.GetComponent<Mindmap>();
         isSpawned = true;
     }
 }

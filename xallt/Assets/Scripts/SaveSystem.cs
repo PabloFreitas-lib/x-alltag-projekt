@@ -229,8 +229,12 @@ public class SaveSystem : MonoBehaviour
             texture = new Texture2D( (int) whiteboard.textureSize.x  , (int) whiteboard.textureSize.y);
             texture.LoadImage(fileData);
             whiteboard.texture.Apply(); //not sure if this is necessary
-            
-            
+            Debug.Log("Whiteboard loaded");
+
+        }
+        else
+        {
+            Debug.Log("There is no save to this whiteboard");
         }
     }
 

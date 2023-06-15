@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using System.Linq;
 using static SaveSystem;
+using UnityEngine.EventSystems;
 
 
 /* TODO:
@@ -176,7 +177,8 @@ public class SaveSystem : MonoBehaviour
      */
     public static void saveWhiteboard()
     {
-        //performance not optimal alawys saves all even
+        //performance not optimal alawys saves all 
+        //toDo change function to give certain whiteboard in function call argument 
         //_whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
                   
 
@@ -212,10 +214,24 @@ public class SaveSystem : MonoBehaviour
 
     /*
      * Called to load Whiteboard when clicking button or on whiteboard interaction..
+     * To Do how to call this function 
      */
-    public static void loadWhitebaord()
+    public static void loadWhitebaord(Whiteboard whiteboard)
     {
-       // Whiteboard.texture.Apply();
+       
+        Texture2D texture = null;
+        byte[] fileData;
+        string fullpath = Path.Combine(Application.dataPath, "whiteboards");
+        fullpath =Path.Combine(fullpath, whiteboard.id);
+
+        if (System.IO.File.Exists(fullpath)){
+            fileData = System.IO.File.ReadAllBytes(fullpath);
+            texture = new Texture2D( (int) whiteboard.textureSize.x  , (int) whiteboard.textureSize.y);
+            texture.LoadImage(fileData);
+            whiteboard.texture.Apply(); //not sure if this is necessary
+            
+            
+        }
     }
 
 

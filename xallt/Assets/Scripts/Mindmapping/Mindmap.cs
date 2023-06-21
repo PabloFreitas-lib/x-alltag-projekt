@@ -7,6 +7,8 @@ public class Mindmap : MonoBehaviour
     public Node root;
     public string mapName;
     public Node selected;
+    public GameObject NodePrefab;
+    public Transform Spawnposition;
 
     public void DeleteNode()
     {
@@ -19,5 +21,18 @@ public class Mindmap : MonoBehaviour
     public void SelectNode(Node node)
     {
         selected = node;
+    }
+
+    public void CreateNode()
+    {
+        if(selected != null)
+        {
+            Spawnposition = selected.gameObject.transform;
+        }
+        else
+        {
+            Spawnposition = root.gameObject.transform;
+        }
+        GameObject node = Instantiate(NodePrefab, Spawnposition.position, Quaternion.identity);
     }
 }

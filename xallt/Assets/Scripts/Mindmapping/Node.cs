@@ -8,6 +8,7 @@ public class Node : MonoBehaviour
     //Metadata
     private static uint id;
     private static DateTime creationDate;
+    public Mindmap mindmap;
 
     //Display information
     public string text;
@@ -21,6 +22,7 @@ public class Node : MonoBehaviour
     [Header("RayToParent")]
     public LineRenderer lineRenderer;
     public Material rayMaterial;
+
 
     private void Start()
     {
@@ -56,5 +58,11 @@ public class Node : MonoBehaviour
         lineRenderer.positionCount = 2;
         lineRenderer.startWidth = 0.01f;
         lineRenderer.endWidth = 0.01f;
+    }
+    public void SelectSelf()
+    {
+        if(mindmap != null)
+            mindmap.SelectNode(this);
+        
     }
 }

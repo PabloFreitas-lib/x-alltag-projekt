@@ -92,7 +92,6 @@ GameObject:
   - component: {fileID: 1562724184071086506}
   - component: {fileID: 1562724184071086509}
   - component: {fileID: 1562724184071086508}
-  - component: {fileID: 1562724184071086502}
   - component: {fileID: 1562724184071086505}
   - component: {fileID: 1562724184071086504}
   - component: {fileID: 2468638952995832475}
@@ -183,19 +182,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1562724184071086502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1562724184071086511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe9e14900a51aa849b6c468760fdea93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rayMaterial: {fileID: 2100000, guid: 396b20f5a904cc94fb0a6211604fdc6f, type: 2}
 --- !u!54 &1562724184071086505
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -249,10 +235,34 @@ MonoBehaviour:
       m_Calls: []
   m_HoverEntered:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7056331298312823638}
+        m_TargetAssemblyTypeName: ColorChanger, Assembly-CSharp
+        m_MethodName: HighlightObject
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
   m_HoverExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7056331298312823638}
+        m_TargetAssemblyTypeName: ColorChanger, Assembly-CSharp
+        m_MethodName: HighlightObject
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstSelectEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -262,17 +272,17 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1888066477941286747, guid: 7c71e9c713057ab40a8cd8f25092267e, type: 3}
-        m_TargetAssemblyTypeName: Mindmap, Assembly-CSharp
-        m_MethodName: SelectNode
-        m_Mode: 2
+      - m_Target: {fileID: 7056331298312823638}
+        m_TargetAssemblyTypeName: ColorChanger, Assembly-CSharp
+        m_MethodName: HighlightObject
+        m_Mode: 6
         m_Arguments:
-          m_ObjectArgument: {fileID: 2468638952995832475}
-          m_ObjectArgumentAssemblyTypeName: Node, Assembly-CSharp
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
@@ -371,6 +381,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5cb15ad0b3f0d4bb9cf1e3ebaea462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mindmap: {fileID: 0}
   text: 
   parent: {fileID: 0}
   children: []
@@ -388,7 +399,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5765f2e46fd04274c8dd03233139597c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeColor: {r: 0.37612695, g: 0.8207547, b: 0.11924169, a: 0}
+  objectColor: {r: 0.85924655, g: 0.8679245, b: 0.38892844, a: 0}
+  highLightColor: {r: 0.6319231, g: 0.6320754, b: 0.13416697, a: 0}
+  isHighlighted: 0
   pointLight: {fileID: 0}
 --- !u!1 &1562724185159529916
 GameObject:

@@ -256,6 +256,27 @@ public class SaveSystem : MonoBehaviour
     /*
      * Helper for finding loaded information for specific node quickly by id. Works for all arrays of objects with ids.
      */
+    // Save Drawing an der Whiteboard als Bild
+    public void SaveDrawingAsImage()
+    {
+        // Erhalten RenderTexture
+        RenderTexture renderTexture = GetComponent<Whiteboard>().TargetTexture;
+
+        // Bilden eine neu 2D Texture, und korpie RenderTexture an der Texture
+        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
+        RenderTexture.active = renderTexture;
+        texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
+        texture.Apply();
+        RenderTexture.active = null;
+        // Konvertieren Sie Texturdaten in ein Byte-Array
+        byte[] bytes = texture.EncodeToPNG();
+
+        // Spreiche als Bild-Doc
+        string filePath = Path.Combine(Application.persistentDataPath, "drawing.png");
+        File.WriteAllBytes(filePath, bytes);
+
+        Debug.Log("Success save：" + filePath);
+    }
     public static Node BinarySearch(Node[] nodes, uint targetId)
     {
         int low = 0;

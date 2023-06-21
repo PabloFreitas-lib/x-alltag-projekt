@@ -24,9 +24,9 @@ public class FileSocket : MonoBehaviour
         if (other.CompareTag("File"))
         {
             socketFile = other.GetComponent<File>();
-            fileNameText.text = socketFile.name;
+            fileNameText.text = socketFile.fileName;
             socketFile.isOpen = true;
-            Debug.Log(socketFile.name);
+            Debug.Log(socketFile.fileName);
         }
     }
     private void OnTriggerExit(Collider other)

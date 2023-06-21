@@ -42,17 +42,17 @@ public class SaveSystem : MonoBehaviour
 
         // Serialisieren Sie das LightingSettingsData-Objekt als Bytestream
         BinaryFormatter formatter = new BinaryFormatter();
-        FileStream fileStream = File.Create(savePath);
+        FileStream fileStream = System.IO.File.Create(savePath);
         formatter.Serialize(fileStream, lightingSettingsData);
         fileStream.Close();
     }
     public static void LoadLightingSettings(string savePath)
     {
-        if (File.Exists(savePath))
+        if (System.IO.File.Exists(savePath))
         {
             // Deserialisieren Sie den Bytestream in das LightingSettingsData-Objekt
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = File.Open(savePath, FileMode.Open);
+            FileStream fileStream = System.IO.File.Open(savePath, FileMode.Open);
             LightingSettingsData lightingSettingsData = (LightingSettingsData)formatter.Deserialize(fileStream);
             fileStream.Close();
 
@@ -213,46 +213,21 @@ public class SaveSystem : MonoBehaviour
     /*
      * Called to save all Whiteboards when clicking L.
      */
-    public static void saveWhiteboard()
+    public static void saveWhiteboard(Whiteboard whiteboard)
     {
-        //performance not optimal alawys saves all 
-        //toDo change function to give certain whiteboard in function call argument 
-        //_whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
+        byte[] whiteBoardtexture = new WhiteBoardPersistentObject(whiteboard).texture.EncodeToPNG();
 
 
-        // Find all whiteboard objects and store im them in an array called perstistenceMapped[]
-        //not sure if this as any advantage at alll because i want to store it seperatly anyways but maybe later to store all whiteboards in an json file
-        Whiteboard[] whiteboards = Resources.FindObjectsOfTypeAll<Whiteboard>();
-        WhiteBoardPersistentObject[] persistenceMapped = new WhiteBoardPersistentObject[whiteboards.Length];
-        Debug.Log(whiteboards.Length);
-        uint i = 0;
-        foreach (Whiteboard whiteboard in whiteboards)
-        {
-            persistenceMapped[i] = new WhiteBoardPersistentObject(whiteboard);
-            i++;
-        }
-
-
-        //encodes multiple whiteboards to different pngs
-        int x = 0;
-        foreach (WhiteBoardPersistentObject whiteboardPersistent in persistenceMapped)
-        {
-            byte[] whiteBoardtexture = persistenceMapped[x].texture.EncodeToPNG();
-
-
-            string fullPath = Path.Combine(Application.dataPath, "whiteboards");
-            fullPath = Path.Combine(fullPath, persistenceMapped[x].id);
+        string fullPath = Path.Combine(Application.dataPath, "whiteboards");
+            fullPath = Path.Combine(fullPath, whiteboard.id);
 
             System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
             Debug.Log("Whiteboard saved to: " + fullPath);
-            x++;
-        }
-
-    }
+     }
 
     /*
      * Called to load Whiteboard when clicking button or on whiteboard interaction..
-     * To Do how to call this function 
+     * Which argument use to load just ID 
      */
     public static void loadWhitebaord(Whiteboard whiteboard)
     {
@@ -352,19 +327,7 @@ public class SaveSystem : MonoBehaviour
         nodes[j] = temp;
     }
 
-    /*
-     * Save with L key (for test purposes)
-     */
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            //saveMindmap();
-            saveWhiteboard();
-            Debug.Log("Speichern...");
-        }
-
-    }
+  
 
     private string GetDebuggerDisplay()
     {

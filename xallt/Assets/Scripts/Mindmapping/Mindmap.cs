@@ -5,17 +5,17 @@ using UnityEngine;
 public class Mindmap : MonoBehaviour
 {
     public Node root;
-    public string mapName;
     public Node selected;
     public GameObject NodePrefab;
-    public Transform Spawnposition;
+    [HideInInspector]public Transform Spawnposition;
 
     public void DeleteNode()
     {
         if(selected != null)
         {
-            selected = null;
+            selected.parent.GetComponent<Node>().children.Remove(selected.gameObject);                          
             Destroy(selected.gameObject);
+            selected = null;
         }
     }
     public void SelectNode(Node node)
@@ -34,5 +34,14 @@ public class Mindmap : MonoBehaviour
             Spawnposition = root.gameObject.transform;
         }
         GameObject node = Instantiate(NodePrefab, Spawnposition.position, Quaternion.identity);
+        node.transform.SetParent(transform);
+        Node nodeScript = node.GetComponent<Node>();
+        nodeScript.mindmap = this;
+        
+        if (selected != null)
+        {
+            nodeScript.parent = selected.gameObject;
+            selected.children.Add(nodeScript.gameObject);
+        }
     }
 }

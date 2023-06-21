@@ -96,6 +96,9 @@ GameObject:
   - component: {fileID: 1562724184071086504}
   - component: {fileID: 2468638952995832475}
   - component: {fileID: 7056331298312823638}
+  - component: {fileID: -5972294099088666596}
+  - component: {fileID: -936026745922366678}
+  - component: {fileID: 3442681793999656953}
   m_Layer: 0
   m_Name: node
   m_TagString: Untagged
@@ -218,7 +221,7 @@ MonoBehaviour:
   m_InteractionLayers:
     m_Bits: 1
   m_DistanceCalculationMode: 1
-  m_SelectMode: 0
+  m_SelectMode: 1
   m_CustomReticle: {fileID: 0}
   m_AllowGazeInteraction: 0
   m_AllowGazeSelect: 0
@@ -272,10 +275,10 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7056331298312823638}
-        m_TargetAssemblyTypeName: ColorChanger, Assembly-CSharp
-        m_MethodName: HighlightObject
-        m_Mode: 6
+      - m_Target: {fileID: 2468638952995832475}
+        m_TargetAssemblyTypeName: Node, Assembly-CSharp
+        m_MethodName: SelectSelf
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -325,7 +328,7 @@ MonoBehaviour:
       m_Calls: []
   m_AttachTransform: {fileID: 0}
   m_SecondaryAttachTransform: {fileID: 0}
-  m_UseDynamicAttach: 0
+  m_UseDynamicAttach: 1
   m_MatchAttachPosition: 1
   m_MatchAttachRotation: 1
   m_SnapToColliderVolume: 1
@@ -344,7 +347,7 @@ MonoBehaviour:
   m_SmoothRotation: 0
   m_SmoothRotationAmount: 5
   m_TightenRotation: 0.5
-  m_ThrowOnDetach: 1
+  m_ThrowOnDetach: 0
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -386,7 +389,7 @@ MonoBehaviour:
   parent: {fileID: 0}
   children: []
   lineRenderer: {fileID: 0}
-  rayMaterial: {fileID: 0}
+  rayMaterial: {fileID: 2100000, guid: 396b20f5a904cc94fb0a6211604fdc6f, type: 2}
 --- !u!114 &7056331298312823638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,9 +403,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectColor: {r: 0.85924655, g: 0.8679245, b: 0.38892844, a: 0}
-  highLightColor: {r: 0.6319231, g: 0.6320754, b: 0.13416697, a: 0}
+  highLightColor: {r: 0.7383046, g: 0.753293, b: 0.15126534, a: 0}
   isHighlighted: 0
   pointLight: {fileID: 0}
+--- !u!114 &-5972294099088666596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562724184071086511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 162b4e5a3d1fcd043afbc6bf71ab2e51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MultiSelectPosition: 0
+  m_MultiSelectRotation: 2
+--- !u!114 &-936026745922366678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562724184071086511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0494216f146186f43ae10873cfa088ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3442681793999656953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562724184071086511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a1302d0d134fa8a2a5b3bf4aec3c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PermittedDisplacementAxes: 7
+  m_ConstrainedAxisDisplacementMode: 1
+  m_TwoHandedRotationMode: 2
+  m_AllowTwoHandedScaling: 1
+  m_ThresholdMoveRatioForScale: 0.1
+  m_ClampScaling: 0
+  m_MinimumScaleRatio: 0.25
+  m_MaximumScaleRatio: 2
+  m_ScaleMultiplier: 0.25
 --- !u!1 &1562724185159529916
 GameObject:
   m_ObjectHideFlags: 0

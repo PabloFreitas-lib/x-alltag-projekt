@@ -9,6 +9,9 @@ using static SaveSystem;
 using UnityEngine.EventSystems;
 
 
+
+
+
 /* TODO:
  *  
  *  ComplexPlayerPrefs:
@@ -19,6 +22,7 @@ using UnityEngine.EventSystems;
  *          - gameObject related (Mesh, Scale, Material, Position, Components)
  * 
  */
+[System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 public class SaveSystem : MonoBehaviour
 {
     [System.Serializable]
@@ -29,6 +33,39 @@ public class SaveSystem : MonoBehaviour
 
         }
     }
+    public static void SaveLightingSettings(string savePath)
+    {
+        // Erstellen Sie ein LightingSettingsData-Objekt zum Speichern von Beleuchtungseinstellungsdaten
+        LightingSettingsData lightingSettingsData = new LightingSettingsData();
+        lightingSettingsData.lightmaps = LightmapSettings.lightmaps;
+        lightingSettingsData.lightProbes = LightmapSettings.lightProbes;
+
+        // Serialisieren Sie das LightingSettingsData-Objekt als Bytestream
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = File.Create(savePath);
+        formatter.Serialize(fileStream, lightingSettingsData);
+        fileStream.Close();
+    }
+    public static void LoadLightingSettings(string savePath)
+    {
+        if (File.Exists(savePath))
+        {
+            // Deserialisieren Sie den Bytestream in das LightingSettingsData-Objekt
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = File.Open(savePath, FileMode.Open);
+            LightingSettingsData lightingSettingsData = (LightingSettingsData)formatter.Deserialize(fileStream);
+            fileStream.Close();
+
+            // Wenden Sie die Beleuchtungseinstellungsdaten in LightingSettingsData an
+            LightmapSettings.lightmaps = lightingSettingsData.lightmaps;
+            LightmapSettings.lightProbes = lightingSettingsData.lightProbes;
+        }
+        else
+        {
+            Debug.Log("Save file not found: " + savePath);
+        }
+    }
+  
 
     /*
     * Objects of this class have the purpose of collecting serializable data of a mindmap to be saved from or respectively be loaded to.
@@ -36,14 +73,14 @@ public class SaveSystem : MonoBehaviour
     [System.Serializable]
     public class NodePersistentObject
     {
-        public uint id {  get;  }
-        public uint parentId {  get;  }
+        public uint id { get; }
+        public uint parentId { get; }
         public DateTime creationDate;
 
         public string text { get; }
         public float[] userColor { get; }
 
-        public uint[] childrenIds {  get; }
+        public uint[] childrenIds { get; }
 
         public NodePersistentObject(Node node)
         {
@@ -61,7 +98,7 @@ public class SaveSystem : MonoBehaviour
 
             //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
-            int i=0;
+            int i = 0;
             foreach (Node child in node.children)
             {
                 childrenIds[i] = child.id;
@@ -80,7 +117,7 @@ public class SaveSystem : MonoBehaviour
     {
         //this must be a texture2D now the question ist which information of texture 2D are important in unity it says 16MB per Texture which ist quit a lot 
         public Texture2D texture;
-        public Vector2 textureSize; 
+        public Vector2 textureSize;
         public string id { get; }
 
         public WhiteBoardPersistentObject(Whiteboard whiteboard)
@@ -96,9 +133,9 @@ public class SaveSystem : MonoBehaviour
     * (Player position, how many and which files cubes are there?, user(?))
     */
     public Vector3 playerPosition;
-    public void saveComplexUserPrefs()
+    public void SaveComplexUserPrefs()
     {
-        
+
         PlayerPrefs.SetFloat("UserX", playerPosition.x);
         PlayerPrefs.SetFloat("UserY", playerPosition.y);
         PlayerPrefs.SetFloat("UserZ", playerPosition.z);
@@ -165,7 +202,8 @@ public class SaveSystem : MonoBehaviour
         {
             Node node = BinarySearch(nodes, persistedNode.id);
             node.parent = BinarySearch(nodes, persistedNode.parentId);
-            foreach (uint childId in persistedNode.childrenIds) {
+            foreach (uint childId in persistedNode.childrenIds)
+            {
                 node.children.Add(BinarySearch(nodes, childId));
             }
         }
@@ -180,7 +218,7 @@ public class SaveSystem : MonoBehaviour
         //performance not optimal alawys saves all 
         //toDo change function to give certain whiteboard in function call argument 
         //_whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
-                  
+
 
         // Find all whiteboard objects and store im them in an array called perstistenceMapped[]
         //not sure if this as any advantage at alll because i want to store it seperatly anyways but maybe later to store all whiteboards in an json file
@@ -195,7 +233,7 @@ public class SaveSystem : MonoBehaviour
         }
 
 
-       //encodes multiple whiteboards to different pngs
+        //encodes multiple whiteboards to different pngs
         int x = 0;
         foreach (WhiteBoardPersistentObject whiteboardPersistent in persistenceMapped)
         {
@@ -209,7 +247,7 @@ public class SaveSystem : MonoBehaviour
             Debug.Log("Whiteboard saved to: " + fullPath);
             x++;
         }
-        
+
     }
 
     /*
@@ -218,15 +256,16 @@ public class SaveSystem : MonoBehaviour
      */
     public static void loadWhitebaord(Whiteboard whiteboard)
     {
-       
+
         Texture2D texture = null;
         byte[] fileData;
         string fullpath = Path.Combine(Application.dataPath, "whiteboards");
-        fullpath =Path.Combine(fullpath, whiteboard.id);
+        fullpath = Path.Combine(fullpath, whiteboard.id);
 
-        if (System.IO.File.Exists(fullpath)){
+        if (System.IO.File.Exists(fullpath))
+        {
             fileData = System.IO.File.ReadAllBytes(fullpath);
-            texture = new Texture2D( (int) whiteboard.textureSize.x  , (int) whiteboard.textureSize.y);
+            texture = new Texture2D((int)whiteboard.textureSize.x, (int)whiteboard.textureSize.y);
             texture.LoadImage(fileData);
             whiteboard.texture.Apply(); //not sure if this is necessary
             Debug.Log("Whiteboard loaded");
@@ -271,7 +310,7 @@ public class SaveSystem : MonoBehaviour
 
     /**
      * Helper to QuickSort Elements of type NodePersistentObject by id.
-     */ 
+     */
     public static void QuickSort(Node[] nodes, int low, int high)
     {
         if (low < high)
@@ -324,6 +363,30 @@ public class SaveSystem : MonoBehaviour
             saveWhiteboard();
             Debug.Log("Speichern...");
         }
-        
+
     }
+
+    private string GetDebuggerDisplay()
+    {
+        return ToString();
+    }
+}
+
+internal class BinaryFormatter
+{
+    internal LightingSettingsData Deserialize(FileStream fileStream)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal void Serialize(FileStream fileStream, LightingSettingsData lightingSettingsData)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+internal class LightingSettingsData
+{
+    internal LightmapData[] lightmaps;
+    internal LightProbes lightProbes;
 }

@@ -33,7 +33,9 @@ public class Mindmap : MonoBehaviour
         {
             Spawnposition = root.gameObject.transform;
         }
-        GameObject node = Instantiate(NodePrefab, Spawnposition.position, Quaternion.identity);
+        Vector3 currentPosition = Spawnposition.position;
+        Vector3 newPosition = new Vector3(currentPosition.x + 0.5f, currentPosition.y, currentPosition.z);
+        GameObject node = Instantiate(NodePrefab, newPosition, Quaternion.identity);
         node.transform.SetParent(transform);
         Node nodeScript = node.GetComponent<Node>();
         nodeScript.mindmap = this;
@@ -42,6 +44,7 @@ public class Mindmap : MonoBehaviour
         {
             nodeScript.parent = selected.gameObject;
             selected.children.Add(nodeScript.gameObject);
+            nodeScript.transform.parent = nodeScript.parent.transform;
         }
     }
 }

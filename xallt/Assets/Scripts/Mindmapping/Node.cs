@@ -23,6 +23,9 @@ public class Node : MonoBehaviour
     public LineRenderer lineRenderer;
     public Material rayMaterial;
 
+    //Boolean
+    public bool isRoot;
+
 
     private void Start()
     {

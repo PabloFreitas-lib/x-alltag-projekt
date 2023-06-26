@@ -27,7 +27,7 @@ public class CreateCubes : MonoBehaviour
                     buttonPressed = false;
                 }
     }
-    private void TriggerButtonPress()s
+    private void TriggerButtonPress()
         {
             buttonPressed = true;
         }

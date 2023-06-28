@@ -52,4 +52,17 @@ public class Connection : MonoBehaviour
         this.from = from;
         this.to = to;
     }
+
+    public void DestroyConnection()
+    {
+        if(from.mindmap.mode == Mindmap.Mode.DeleteMode)
+        {
+            if (from.parent.GetComponent<Node>() != null)
+            {
+                to.parent = null;
+                from.parent.GetComponent<Node>().children.Remove(to.gameObject);
+            }
+        }
+        
+    }
 }

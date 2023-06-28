@@ -6,9 +6,21 @@ public class Mindmap : MonoBehaviour
 {
     public Node root;
     public Node selected;
+    public Node prevSelected;
+    [Header("Prefabs")]
     public GameObject NodePrefab;
+    public GameObject connectionPrefab;
     [HideInInspector]public Transform Spawnposition;
     public List<Node> nodes;
+    public Mode mode;
+
+    public enum Mode
+    {
+        defaultMode = 0,
+        ConnectMode = 1,
+        EditMode = 2,
+        DeleteMode = 3
+    }
 
     public void DeleteNode()
     {
@@ -16,7 +28,10 @@ public class Mindmap : MonoBehaviour
         {
             if (!selected.isRoot)
             {
-                selected.parent.GetComponent<Node>().children.Remove(selected.gameObject);
+                if(selected.parent != null)
+                {
+                    selected.parent.GetComponent<Node>().children.Remove(selected.gameObject);
+                }
                 nodes.Remove(selected);
                 Destroy(selected.gameObject);
                 selected = null;
@@ -25,6 +40,7 @@ public class Mindmap : MonoBehaviour
     }
     public void SelectNode(Node node)
     {
+        prevSelected = selected;
         selected = node;
     }
 
@@ -52,5 +68,18 @@ public class Mindmap : MonoBehaviour
             selected.children.Add(nodeScript.gameObject);
             nodeScript.transform.parent = nodeScript.parent.transform;
         }
+    }
+
+    public void changeMode(int index)
+    {
+            switch (index){
+                case 0: mode = Mode.defaultMode;
+                    break;
+                case 1: mode = Mode.ConnectMode;
+                selected = null;
+                        break;
+                case 2: mode = Mode.EditMode;
+                    break;
+            }
     }
 }

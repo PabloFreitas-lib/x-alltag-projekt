@@ -68,4 +68,14 @@ public class Node : MonoBehaviour
             mindmap.SelectNode(this);
         
     }
+
+    public void ConnectNodes()
+    {
+        if(mindmap.mode == Mindmap.Mode.ConnectMode && mindmap.prevSelected != null && mindmap.selected != null)
+        {
+            GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
+            connection.GetComponent<Connection>().SetFromTo(mindmap.prevSelected, mindmap.selected);
+            mindmap.mode = Mindmap.Mode.defaultMode;
+        }
+    }
 }

@@ -8,14 +8,19 @@ public class Mindmap : MonoBehaviour
     public Node selected;
     public GameObject NodePrefab;
     [HideInInspector]public Transform Spawnposition;
+    public List<Node> nodes;
 
     public void DeleteNode()
     {
         if(selected != null)
         {
-            selected.parent.GetComponent<Node>().children.Remove(selected.gameObject);                          
-            Destroy(selected.gameObject);
-            selected = null;
+            if (!selected.isRoot)
+            {
+                selected.parent.GetComponent<Node>().children.Remove(selected.gameObject);
+                nodes.Remove(selected);
+                Destroy(selected.gameObject);
+                selected = null;
+            }
         }
     }
     public void SelectNode(Node node)
@@ -39,6 +44,7 @@ public class Mindmap : MonoBehaviour
         node.transform.SetParent(transform);
         Node nodeScript = node.GetComponent<Node>();
         nodeScript.mindmap = this;
+        nodes.Add(nodeScript);
         
         if (selected != null)
         {

@@ -117,7 +117,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1888066477941286744
 Transform:
   m_ObjectHideFlags: 0
@@ -150,6 +150,8 @@ MonoBehaviour:
   selected: {fileID: 0}
   NodePrefab: {fileID: 1562724184071086511, guid: c3b81b4fff7484442833a06e75e7f0e7, type: 3}
   Spawnposition: {fileID: 0}
+  nodes:
+  - {fileID: 1888066478565158693}
 --- !u!1 &1888066478505316412
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,10 +508,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5cb15ad0b3f0d4bb9cf1e3ebaea462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   mindmap: {fileID: 0}
   text: 
   parent: {fileID: 0}
   children: []
   lineRenderer: {fileID: 0}
   rayMaterial: {fileID: 0}
-  isRoot: 0
+  isRoot: 1

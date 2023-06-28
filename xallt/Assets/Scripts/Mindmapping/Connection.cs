@@ -1,32 +1,17 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour
+public class Connection : MonoBehaviour
 {
-    //Metadata
-    public int id;
-    public DateTime creationDate;
-    public Mindmap mindmap;
-
-    //Display information
-    public string text;
-    //Lists or variables for each type of appendable data
-
-    //Model
-    public GameObject parent;                       //empty parent -> treat node as root
-    public List<GameObject> children;
+    public Node from;
+    public Node to;
 
     //LineRenderer - Ray to Parent
-    [Header("RayToParent")]
+    [Header("Ray")]
     public LineRenderer lineRenderer;
     public Material rayMaterial;
-
-    //Boolean
-    public bool isRoot;
-
-
+    // Start is called before the first frame update
     private void Start()
     {
         CreateLineRenderer();
@@ -34,16 +19,15 @@ public class Node : MonoBehaviour
     private void Update()
     {
         UpdateLineRenderer();
-
     }
 
     private void UpdateLineRenderer()
     {
-        if (parent != null)
+        if (from != null && to != null)
         {
             lineRenderer.enabled = true;
-            lineRenderer.SetPosition(0, gameObject.transform.position);
-            lineRenderer.SetPosition(1, parent.transform.position);
+            lineRenderer.SetPosition(0, from.transform.position);
+            lineRenderer.SetPosition(1, to.transform.position);
 
         }
         else
@@ -62,10 +46,10 @@ public class Node : MonoBehaviour
         lineRenderer.startWidth = 0.01f;
         lineRenderer.endWidth = 0.01f;
     }
-    public void SelectSelf()
+
+    public void SetFromTo(Node from, Node to)
     {
-        if(mindmap != null)
-            mindmap.SelectNode(this);
-        
+        this.from = from;
+        this.to = to;
     }
 }

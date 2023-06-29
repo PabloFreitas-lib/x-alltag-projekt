@@ -30,8 +30,8 @@ public class CubeSpawner : MonoBehaviour
     {
         // Instantiate a cube prefab at the position of the hand controller
         GameObject cube = Instantiate(filePrefab, transform.position, Quaternion.identity);
-        Instantiate(mindmap,mindMapSpawnPosition.position, Quaternion.identity);
-        cube.GetComponent<File>().map = mindmap.GetComponent<Mindmap>();
+        GameObject map = Instantiate(mindmap,mindMapSpawnPosition.position, Quaternion.identity);
+        cube.GetComponent<File>().map = map.GetComponent<Mindmap>();
         isSpawned = true;
     }
 }

@@ -75,6 +75,7 @@ public class Node : MonoBehaviour
         {
             GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
             connection.GetComponent<Connection>().SetFromTo(mindmap.prevSelected, mindmap.selected);
+            connection.transform.parent = mindmap.transform;
             mindmap.mode = Mindmap.Mode.defaultMode;
         }
     }

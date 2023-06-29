@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Management;
+using UnityEngine.XR.Interaction.Toolkit;
+
+[RequireComponent(typeof(XRGrabInteractable))]
 
 public class cutting : MonoBehaviour
 {
@@ -15,7 +18,9 @@ public class cutting : MonoBehaviour
     private Pose currentDistalMiddleJointPose;
     private bool dataLoaded = false;
     private float lastAngle;
-    
+    [SerializeField]
+    private XRGrabInteractable Interactable;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +29,7 @@ public class cutting : MonoBehaviour
  **/
         XRHandSubsystem m_Subsystem = XRGeneralSettings.Instance?.Manager?.activeLoader?.GetLoadedSubsystem<XRHandSubsystem>();
 
-        //check if loaded system excists 
+        //check if loaded system exists 
         if (m_Subsystem != null)
             m_Subsystem.updatedHands += OnHandUpdate;
     }
@@ -66,26 +71,29 @@ public class cutting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(dataLoaded)
+        if (Interactable.isSelected)
         {
-            float distance = Vector3.Distance(currentDistalIndexJointPose.position, currentDistalMiddleJointPose.position);
-            distance = Mathf.Clamp(distance, 0, maxAngle);
-            //remapping values https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
-            float angle = (distance - minDistance) / (0f - minDistance) * (maxAngle - maxDistance) + maxDistance;
-            if (ninja)
-            { 
-                untereKlinge.transform.RotateAround(pivot.transform.position, Vector3.up, -angle / 2);
-                obereKlinge.transform.RotateAround(pivot.transform.position, Vector3.up, angle / 2);
-                return;
+            if (dataLoaded)
+            {
+                float distance = Vector3.Distance(currentDistalIndexJointPose.position, currentDistalMiddleJointPose.position);
+                distance = Mathf.Clamp(distance, 0, maxAngle);
+                //remapping values https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
+                float angle = (distance - minDistance) / (0f - minDistance) * (maxAngle - maxDistance) + maxDistance;
+                if (ninja)
+                {
+                    untereKlinge.transform.RotateAround(pivot.transform.position, Vector3.up, -angle / 2);
+                    obereKlinge.transform.RotateAround(pivot.transform.position, Vector3.up, angle / 2);
+                    return;
+                }
+
+                float delta = angle - lastAngle;
+
+                if (lastAngle - delta < 0 && lastAngle + delta > maxAngle)
+                { return; }
+                untereKlinge.transform.RotateAround(pivot.transform.position, pivot.transform.forward, -delta / 2);
+                obereKlinge.transform.RotateAround(pivot.transform.position, pivot.transform.forward, delta / 2);
+                lastAngle = angle;
             }
-
-            float delta = angle - lastAngle;
-
-            if (lastAngle - delta < 0 && lastAngle + delta > maxAngle)
-            { return; }
-            untereKlinge.transform.RotateAround(pivot.transform.position, pivot.transform.forward, -delta / 2);
-            obereKlinge.transform.RotateAround(pivot.transform.position, pivot.transform.forward, delta / 2);
-            lastAngle = angle;
         }
     }
 }

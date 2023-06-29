@@ -30,41 +30,10 @@ public class SaveSystem : MonoBehaviour
     {
         public ComplexPlayerPrefsPersistentObject()
         {
-
+            Light
         }
     }
-    public static void SaveLightingSettings(string savePath)
-    {
-        // Erstellen Sie ein LightingSettingsData-Objekt zum Speichern von Beleuchtungseinstellungsdaten
-        LightingSettingsData lightingSettingsData = new LightingSettingsData();
-        lightingSettingsData.lightmaps = LightmapSettings.lightmaps;
-        lightingSettingsData.lightProbes = LightmapSettings.lightProbes;
-
-        // Serialisieren Sie das LightingSettingsData-Objekt als Bytestream
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream fileStream = System.IO.File.Create(savePath);
-        formatter.Serialize(fileStream, lightingSettingsData);
-        fileStream.Close();
-    }
-    public static void LoadLightingSettings(string savePath)
-    {
-        if (System.IO.File.Exists(savePath))
-        {
-            // Deserialisieren Sie den Bytestream in das LightingSettingsData-Objekt
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = System.IO.File.Open(savePath, FileMode.Open);
-            LightingSettingsData lightingSettingsData = (LightingSettingsData)formatter.Deserialize(fileStream);
-            fileStream.Close();
-
-            // Wenden Sie die Beleuchtungseinstellungsdaten in LightingSettingsData an
-            LightmapSettings.lightmaps = lightingSettingsData.lightmaps;
-            LightmapSettings.lightProbes = lightingSettingsData.lightProbes;
-        }
-        else
-        {
-            Debug.Log("Save file not found: " + savePath);
-        }
-    }
+ 
   
 
     /*
@@ -135,10 +104,27 @@ public class SaveSystem : MonoBehaviour
     public Vector3 playerPosition;
     public void SaveComplexUserPrefs()
     {
-
         PlayerPrefs.SetFloat("UserX", playerPosition.x);
         PlayerPrefs.SetFloat("UserY", playerPosition.y);
         PlayerPrefs.SetFloat("UserZ", playerPosition.z);
+
+        string fullPath = Path.Combine(Application.dataPath, "complexUserPrefs");
+        string json = null;
+
+        // Erstellen Sie ein LightingSettingsData-Objekt zum Speichern von Beleuchtungseinstellungsdaten
+        LightingSettingsData lightingSettingsData = new LightingSettingsData();
+        lightingSettingsData.lightmaps = LightmapSettings.lightmaps;
+        lightingSettingsData.lightProbes = LightmapSettings.lightProbes;
+
+        // Serialisieren Sie das LightingSettingsData-Objekt als Bytestream
+        BinaryFormatter formatter = new BinaryFormatter();
+
+
+        FileStream fileStream = System.IO.File.Create(fullPath);
+        formatter.Serialize(fileStream, lightingSettingsData);
+        fileStream.Close();
+
+        System.IO.File.WriteAllText(fullPath, json);
     }
 
     /*
@@ -152,6 +138,25 @@ public class SaveSystem : MonoBehaviour
         float playerZ = PlayerPrefs.GetFloat("UserZ");
 
         Vector3 playerPosition = new Vector3(playerX, playerY, playerZ);
+
+        string fullPath = Path.Combine(Application.dataPath, "cup");
+
+        if (System.IO.File.Exists(fullPath))
+        {
+            // Deserialisieren Sie den Bytestream in das LightingSettingsData-Objekt
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = System.IO.File.Open(fullPath, FileMode.Open);
+            LightingSettingsData lightingSettingsData = (LightingSettingsData)formatter.Deserialize(fileStream);
+            fileStream.Close();
+
+            // Wenden Sie die Beleuchtungseinstellungsdaten in LightingSettingsData an
+            LightmapSettings.lightmaps = lightingSettingsData.lightmaps;
+            LightmapSettings.lightProbes = lightingSettingsData.lightProbes;
+        }
+        else
+        {
+            Debug.Log("Save file not found: " + fullPath);
+        }
     }
 
     /*
@@ -207,9 +212,8 @@ public class SaveSystem : MonoBehaviour
                 node.children.Add(BinarySearch(nodes, childId));
             }
         }
-
     }
-
+    
     /*
      * Called to save all Whiteboards when clicking L.
      */
@@ -256,27 +260,6 @@ public class SaveSystem : MonoBehaviour
     /*
      * Helper for finding loaded information for specific node quickly by id. Works for all arrays of objects with ids.
      */
-    // Save Drawing an der Whiteboard als Bild
-    public void SaveDrawingAsImage()
-    {
-        // Erhalten RenderTexture
-        RenderTexture renderTexture = GetComponent<Whiteboard>().TargetTexture;
-
-        // Bilden eine neu 2D Texture, und korpie RenderTexture an der Texture
-        Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
-        RenderTexture.active = renderTexture;
-        texture.ReadPixels(new Rect(0, 0, renderTexture.width, renderTexture.height), 0, 0);
-        texture.Apply();
-        RenderTexture.active = null;
-        // Konvertieren Sie Texturdaten in ein Byte-Array
-        byte[] bytes = texture.EncodeToPNG();
-
-        // Spreiche als Bild-Doc
-        string filePath = Path.Combine(Application.persistentDataPath, "drawing.png");
-        File.WriteAllBytes(filePath, bytes);
-
-        Debug.Log("Success save：" + filePath);
-    }
     public static Node BinarySearch(Node[] nodes, uint targetId)
     {
         int low = 0;

@@ -16,6 +16,16 @@ public class Scissor_interaction : Scripted_Interactable_Object
     [SerializeField]
     private float maxAngle = 40;
 
+    [SerializeField]
+    [Range(0,2)]
+    private float m_zOffset;
+    [SerializeField]
+    [Range(0, 2)]
+    private float m_xOffset;
+    [SerializeField]
+    [Range(0, 2)]
+    private float m_yOffset;
+
     /// <summary>
     /// Lower part of scissor
     /// </summary>
@@ -56,10 +66,20 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private float lastAngle;
 
     /// <summary>
+    /// Reference to xr setup to calculate the object position
+    /// </summary>
+    private GameObject m_XROrigin;
+
+    [SerializeField]
+    [Tooltip("The name of xr-origin game-object")]
+    private string m_XRSetupName;
+
+    /// <summary>
     /// Joints needed for this interaction
     /// </summary>
     private static XRHandJointID m_index_distal = XRHandJointID.IndexDistal;
     private static XRHandJointID m_middle_distal = XRHandJointID.MiddleDistal;
+    private static XRHandJointID m_palm = XRHandJointID.Palm;
 
     public Scissor_interaction() : base(GetJointList())
     {
@@ -70,16 +90,27 @@ public class Scissor_interaction : Scripted_Interactable_Object
         List<XRHandJointID> joints = new List<XRHandJointID>();
         joints.Add(m_index_distal);
         joints.Add(m_middle_distal);
+        joints.Add(m_palm);
         return joints;
     }
 
     public override void updateInteraction()
     {
-        necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index);
-        necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle);
-        index.TryGetPose(out Pose indexPose);
-        middle.TryGetPose(out Pose middlePose);
+        //getting pose data
+        if(!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index) 
+            && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle)
+            && necessaryJointData.TryGetValue(m_palm, out XRHandJoint palm)))
+        {
+            return;
+        }
 
+        if(!(index.TryGetPose(out Pose indexPose) 
+            && middle.TryGetPose(out Pose middlePose)
+            && palm.TryGetPose(out Pose palmPose)))
+        {
+            return;
+        }
+        
         float distance = Vector3.Distance(indexPose.position, middlePose.position);
         distance = Mathf.Clamp(distance, 0, maxAngle);
         //remapping values https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
@@ -98,12 +129,29 @@ public class Scissor_interaction : Scripted_Interactable_Object
         untereKlinge.transform.RotateAround(pivot.transform.position, pivot.transform.forward, -delta / 2);
         obereKlinge.transform.RotateAround(pivot.transform.position, pivot.transform.forward, delta / 2);
         lastAngle = angle;
+
+        //apply new pos
+        Vector3 origin = m_XROrigin.transform.position;
+        Vector3 originToPivot = origin - palmPose.position;
+        Vector3 offset = new Vector3(m_xOffset, m_yOffset, m_zOffset);
+        //pivot.transform.position = origin + palmPose.position;
+
+        //apply new rotation
+        pivot.transform.position = origin + palmPose.position;
+        //pivot.transform.SetPositionAndRotation(origin + palmPose.position + offset, palmPose.rotation);
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //getting reference to XR origin
+        m_XROrigin = GameObject.Find(m_XRSetupName);
+        if(m_XROrigin == null)
+        {
+            throw new NullReferenceException("Could not found the xr setup with given name.");
+        }
+
     }
 
     // Update is called once per frame

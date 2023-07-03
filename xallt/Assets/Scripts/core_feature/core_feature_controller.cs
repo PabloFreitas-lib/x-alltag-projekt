@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
+using UnityEngine.XR.Hands.Samples.VisualizerSample;
 using UnityEngine.XR.Management;
 
 /// <summary>
@@ -33,6 +34,12 @@ public class core_feature_controller : MonoBehaviour
     /// </summary>
     private XRHand m_rightHandRef;
 
+    [SerializeField]
+    [Tooltip("Name of XR main object")]
+    private string m_XRObjectName;
+
+    private SeperateHandVisualizer m_handVisualizerScipt;
+
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +49,23 @@ public class core_feature_controller : MonoBehaviour
         //check if loaded system exists 
         if (m_Subsystem != null)
             m_Subsystem.updatedHands += OnHandUpdate;
-    }
+
+        // get reference to HandVisualizer Script
+        if(m_XRObjectName != null)
+        {
+            GameObject xr = GameObject.Find(m_XRObjectName);
+            if(xr != null)
+            {
+                m_handVisualizerScipt = xr.GetComponent<SeperateHandVisualizer>();
+                if(m_handVisualizerScipt == null)
+                {
+                    throw new MissingComponentException("XR-object does not contain SeperateHandvisualizer script.");
+                }
+            }
+            throw new MissingComponentException("XR Object of given name not found.");
+            
+        }
+        }
 
     /// <summary>
     /// Method that performs actions every time an hand-update occurred
@@ -192,7 +215,14 @@ public class core_feature_controller : MonoBehaviour
     /// <exception cref="NotImplementedException"></exception>
     private void makeHandVisible(Handedness hand)
     {
-        throw new NotImplementedException();
+        if(hand == Handedness.Left)
+        {
+            m_handVisualizerScipt.drawLeftMeshes = true;
+        }
+        if(hand == Handedness.Right)
+        {
+            m_handVisualizerScipt.drawLeftMeshes = true;
+        }
     }
 
     /// <summary>
@@ -202,7 +232,14 @@ public class core_feature_controller : MonoBehaviour
     /// <exception cref="NotImplementedException"></exception>
     private void makeHandInvisible(Handedness hand)
     {
-        throw new NotImplementedException();
+        if(hand == Handedness.Left) 
+        {
+            m_handVisualizerScipt.drawLeftMeshes = false;
+        }
+        if(hand == Handedness.Right)
+        {
+            m_handVisualizerScipt.drawRightMeshes = false;
+        }
     }
 
     /// <summary>

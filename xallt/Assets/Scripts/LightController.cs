@@ -9,10 +9,10 @@ public class LightController : MonoBehaviour
 
     public bool useTemperatureControl = true; // Toggle between temperature and RGB control
     public float brightness = 1f;
-    public Color color = new Color(1f, 1f, 1f);
+    public Color color = new Color(255f/255f, 180f/255f, 107f/255f);
 
     // Slider for light temperature / color change
-    [Range(0f, 1f)]
+    [Range(0f, 130f)]
     public float tempSlider;
 
     public bool activateAllLights = true; // Toggle to activate or disable all lights
@@ -63,7 +63,7 @@ public class LightController : MonoBehaviour
         Color currentColor;
         if (useTemperatureControl)
         {
-            currentColor = new Color(1f, 1f, tempSlider);
+            currentColor = new Color(1f, ((169f + (tempSlider/2))/255), ((87 + tempSlider)/255));
         }
         else
         {

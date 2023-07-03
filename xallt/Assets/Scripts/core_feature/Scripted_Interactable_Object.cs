@@ -66,12 +66,13 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     {
         if(handedness != Handedness.Invalid)
         {
+        
             //check if length of given dictionary matches the length of pre-defined joint id list
             if (joints.Count == handJointIDs.Count)
             {
                 lastTransformBeforeActivation = transform;
                 controllingHand = handedness;
-                necessaryJointData = joints;              
+                necessaryJointData = joints;
             } 
             else
             {
@@ -81,6 +82,14 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         else
         {
             throw new ArgumentException("Handedness can't be Invalid.");
+        }
+    }
+
+    public void updateData(Dictionary<XRHandJointID, XRHandJoint> joints)
+    {
+        if(joints.Count == handJointIDs.Count)
+        {
+            necessaryJointData = joints;
         }
     }
 

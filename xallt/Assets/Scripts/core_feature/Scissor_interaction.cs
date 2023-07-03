@@ -60,10 +60,6 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// </summary>
     private static XRHandJointID m_index_distal = XRHandJointID.IndexDistal;
     private static XRHandJointID m_middle_distal = XRHandJointID.MiddleDistal;
-    private XRHandJoint indexDistalJoint;
-    private XRHandJoint middleIndexJoint;
-    private Pose currentDistalIndexJointPose;
-    private Pose currentDistalMiddleJointPose;
 
     public Scissor_interaction() : base(GetJointList())
     {
@@ -79,13 +75,12 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
     public override void updateInteraction()
     {
-        
-        necessaryJointData.TryGetValue(m_index_distal, out indexDistalJoint);
-        necessaryJointData.TryGetValue(m_middle_distal, out middleIndexJoint);
-        indexDistalJoint.TryGetPose(out currentDistalIndexJointPose);
-        middleIndexJoint.TryGetPose(out currentDistalMiddleJointPose);
+        necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index);
+        necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle);
+        index.TryGetPose(out Pose indexPose);
+        middle.TryGetPose(out Pose middlePose);
 
-        float distance = Vector3.Distance(currentDistalIndexJointPose.position, currentDistalMiddleJointPose.position);
+        float distance = Vector3.Distance(indexPose.position, middlePose.position);
         distance = Mathf.Clamp(distance, 0, maxAngle);
         //remapping values https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
         float angle = (distance - minDistance) / (0f - minDistance) * (maxAngle - maxDistance) + maxDistance;

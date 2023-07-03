@@ -23,10 +23,16 @@ public class Selection_checker : MonoBehaviour
 
     private bool m_lastSelected = false;
 
+    private core_feature_controller controller;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        controller = _coreController.GetComponent<core_feature_controller>();
+        if(controller == null)
+        {
+            throw new MissingComponentException("core feature controller not found in controller holder object.");
+        }
     }
 
     // Update is called once per frame
@@ -35,19 +41,22 @@ public class Selection_checker : MonoBehaviour
         
         if(m_Interactable.isSelected && !m_lastSelected)
         {
-            core_feature_controller core_Feature_Controller = GetComponent<core_feature_controller>();
-            if(core_Feature_Controller != null)
+            if(controller != null)
             {
-                if (leftSelected.action.IsPressed())
+                Debug.Log("object selection detected");
+                if (leftSelected.action.WasPerformedThisFrame())
                 {
-                    core_Feature_Controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left);
+                    Debug.Log("left selection detected");
+                    controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left);
+                    m_lastSelected = true;
                 }
-                else if (rightSelected.action.IsPressed())
+                else if (rightSelected.action.WasPerformedThisFrame())
                 {
-                    core_Feature_Controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right);
+                    Debug.Log("right selection detected");
+                    controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right);
+                    m_lastSelected = true;
                 }
             }
-            m_lastSelected = true;
         }
         if(!m_Interactable.isSelected && m_lastSelected)
         {

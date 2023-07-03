@@ -17,12 +17,12 @@ public class core_feature_controller : MonoBehaviour
     /// <summary>
     /// The current object that is being hold by the player in left hand
     /// </summary>
-    private GameObject m_leftHandObj;
+    private GameObject m_leftHandObj = null;
 
     /// <summary>
     /// The current object that is being hold by the player in right hand
     /// </summary>
-    private GameObject m_rightHandObj;
+    private GameObject m_rightHandObj = null;
 
     /// <summary>
     /// Reference to left hand data
@@ -56,14 +56,16 @@ public class core_feature_controller : MonoBehaviour
             GameObject xr = GameObject.Find(m_XRObjectName);
             if(xr != null)
             {
-                m_handVisualizerScipt = xr.GetComponent<SeperateHandVisualizer>();
+                m_handVisualizerScipt = xr.GetComponentInChildren<SeperateHandVisualizer>();
                 if(m_handVisualizerScipt == null)
                 {
                     throw new MissingComponentException("XR-object does not contain SeperateHandvisualizer script.");
                 }
             }
-            throw new MissingComponentException("XR Object of given name not found.");
-            
+            else
+            {
+                throw new MissingComponentException("XR Object of given name not found.");
+            }           
         }
         }
 
@@ -76,7 +78,6 @@ public class core_feature_controller : MonoBehaviour
     {
         switch (updateType)
         {
-            //check if relocate action has already started
             case XRHandSubsystem.UpdateType.Dynamic:
                 //update right hand reference if it#s correctly updated
                 if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints || updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
@@ -97,8 +98,10 @@ public class core_feature_controller : MonoBehaviour
                 {
                     if (m_leftHandObj != null)
                     {
+                        Scripted_Interactable_Object leftobj = m_leftHandObj.GetComponent<Scripted_Interactable_Object>();
                         //no need for checking if != null because this object has already been proofed
-                        m_leftHandObj.GetComponent<Scripted_Interactable_Object>().updateInteraction();
+                        leftobj.updateData(getHandDataDictionary(Handedness.Left, leftobj.handJointIDs));
+                        leftobj.updateInteraction();
                     }
                 }
                 if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.RightHandJoints || updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
@@ -106,6 +109,8 @@ public class core_feature_controller : MonoBehaviour
                     if (m_rightHandObj != null)
                     {
                         //no need for checking if != null because this object has already been proofed
+                        Scripted_Interactable_Object rightObj = m_rightHandObj.GetComponent<Scripted_Interactable_Object>();
+                        rightObj.updateData(getHandDataDictionary(Handedness.Right, rightObj.handJointIDs));
                         m_rightHandObj.GetComponent<Scripted_Interactable_Object>().updateInteraction();
                     }
                 }
@@ -125,21 +130,23 @@ public class core_feature_controller : MonoBehaviour
     {
         if (obj == null)
         {
-            return false;
+            throw new NullReferenceException("Given selected object is null.");
         }
 
         //object needs to have a configured interaction scripted extending Scripted_Interactable_Object
         Scripted_Interactable_Object scripted_Interactable_Object = obj.GetComponent<Scripted_Interactable_Object>();
         if (obj.GetComponent<Scripted_Interactable_Object>() == null)
         {
-            return false;
+            throw new MissingComponentException("selected object does not contain scripted interactable object");
         }
 
         //can't snap an object to an invalid hand
-        if (selectingHand != Handedness.Invalid)
+        if (selectingHand == Handedness.Invalid)
         {
+            Debug.Log("invalid hand");
             return false;
         }
+
         //left hand has selected and is free of any objects
         if (selectingHand == Handedness.Left && m_leftHandObj == null)
         {
@@ -147,6 +154,7 @@ public class core_feature_controller : MonoBehaviour
             {
                 scripted_Interactable_Object.Activate(getHandDataDictionary(Handedness.Left, scripted_Interactable_Object.handJointIDs), selectingHand);
                 makeHandInvisible(Handedness.Left);
+                m_leftHandObj = obj;
                 return true;
             }
             catch (ArgumentException exception) 
@@ -162,6 +170,7 @@ public class core_feature_controller : MonoBehaviour
             {
                 scripted_Interactable_Object.Activate(getHandDataDictionary(Handedness.Right, scripted_Interactable_Object.handJointIDs), selectingHand);
                 makeHandInvisible(Handedness.Right);
+                m_rightHandObj = obj;
                 return true;
             }
             catch (ArgumentException exception)

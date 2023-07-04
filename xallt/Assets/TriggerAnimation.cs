@@ -9,7 +9,7 @@ public class TriggerAnimation : MonoBehaviour
     void OnEnable()
     {
         // debug log to see if is working
-        Debug.Log("TriggerAnimation script is enabled");
+        // Debug.Log("TriggerAnimation script is enabled");
         interactable.onSelectEntered.AddListener(StartTurn);
         interactable.onSelectExited.AddListener(StopTurn);
     }
@@ -17,7 +17,7 @@ public class TriggerAnimation : MonoBehaviour
     void OnDisable()
     {
         // debug log to see if is working
-        Debug.Log("TriggerAnimation script is disabled");
+        // Debug.Log("TriggerAnimation script is disabled");
         interactable.onSelectEntered.RemoveListener(StartTurn);
         interactable.onSelectExited.RemoveListener(StopTurn);
     }

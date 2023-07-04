@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Hands.Samples.VisualizerSample;
 using UnityEngine.XR.Management;
@@ -38,6 +39,14 @@ public class core_feature_controller : MonoBehaviour
     [Tooltip("Name of XR main object")]
     private string m_XRObjectName;
 
+    [SerializeField]
+    [Tooltip("Pinch gesture to detach the left object")]
+    private InputActionReference m_detachPinchLeft;
+
+    [SerializeField]
+    [Tooltip("Pinch gesture to detach the right object")]
+    private InputActionReference m_detachPinchRight;
+
     private SeperateHandVisualizer m_handVisualizerScipt;
 
 
@@ -49,6 +58,7 @@ public class core_feature_controller : MonoBehaviour
         //check if loaded system exists 
         if (m_Subsystem != null)
             m_Subsystem.updatedHands += OnHandUpdate;
+        
 
         // get reference to HandVisualizer Script
         if(m_XRObjectName != null)
@@ -80,13 +90,18 @@ public class core_feature_controller : MonoBehaviour
         {
             case XRHandSubsystem.UpdateType.Dynamic:
                 //update right hand reference if it#s correctly updated
-                if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints || updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
+                if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.All))
+                {
+                    m_leftHandRef = subsystem.leftHand;
+                    m_rightHandRef = subsystem.rightHand;
+                }
+                else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.LeftHandRootPose | XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints))
                 {
                     m_leftHandRef = subsystem.leftHand;
                 }
 
                 //update right hand reference if it#s correctly updated
-                if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.RightHandJoints || updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
+                else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.RightHandJoints | XRHandSubsystem.UpdateSuccessFlags.RightHandRootPose))
                 {
                     m_rightHandRef = subsystem.rightHand;
                 }
@@ -94,7 +109,25 @@ public class core_feature_controller : MonoBehaviour
 
             case XRHandSubsystem.UpdateType.BeforeRender:
                 // Update visual objects that use hand data
-                if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints || updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
+                if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
+                {
+                    //I know pretty duplicated code, but I couldn't get it to work in a different way
+                    if (m_leftHandObj != null)
+                    {
+                        Scripted_Interactable_Object leftobj = m_leftHandObj.GetComponent<Scripted_Interactable_Object>();
+                        //no need for checking if != null because this object has already been proofed
+                        leftobj.updateData(getHandDataDictionary(Handedness.Left, leftobj.handJointIDs));
+                        leftobj.updateInteraction();
+                    }
+                    if (m_rightHandObj != null)
+                    {
+                        //no need for checking if != null because this object has already been proofed
+                        Scripted_Interactable_Object rightObj = m_rightHandObj.GetComponent<Scripted_Interactable_Object>();
+                        rightObj.updateData(getHandDataDictionary(Handedness.Right, rightObj.handJointIDs));
+                        m_rightHandObj.GetComponent<Scripted_Interactable_Object>().updateInteraction();
+                    }
+                }
+                else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.LeftHandRootPose | XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints))
                 {
                     if (m_leftHandObj != null)
                     {
@@ -104,7 +137,7 @@ public class core_feature_controller : MonoBehaviour
                         leftobj.updateInteraction();
                     }
                 }
-                if (updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.RightHandJoints || updateSuccessFlags == XRHandSubsystem.UpdateSuccessFlags.All)
+                else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.RightHandJoints | XRHandSubsystem.UpdateSuccessFlags.RightHandRootPose))
                 {
                     if (m_rightHandObj != null)
                     {
@@ -148,11 +181,11 @@ public class core_feature_controller : MonoBehaviour
         }
 
         //left hand has selected and is free of any objects
-        if (selectingHand == Handedness.Left && m_leftHandObj == null)
+        if (selectingHand == Handedness.Left && m_leftHandObj == null && obj != m_rightHandObj)
         {
             try
             {
-                scripted_Interactable_Object.Activate(getHandDataDictionary(Handedness.Left, scripted_Interactable_Object.handJointIDs), selectingHand);
+                scripted_Interactable_Object.Activate(getHandDataDictionary(Handedness.Left, scripted_Interactable_Object.handJointIDs), Handedness.Left);
                 makeHandInvisible(Handedness.Left);
                 m_leftHandObj = obj;
                 return true;
@@ -164,11 +197,11 @@ public class core_feature_controller : MonoBehaviour
             }            
         }
         //right hand has selected and is free of any objects
-        if (selectingHand == Handedness.Right && m_rightHandObj == null)
+        if (selectingHand == Handedness.Right && m_rightHandObj == null && obj != m_leftHandObj)
         {
             try
             {
-                scripted_Interactable_Object.Activate(getHandDataDictionary(Handedness.Right, scripted_Interactable_Object.handJointIDs), selectingHand);
+                scripted_Interactable_Object.Activate(getHandDataDictionary(Handedness.Right, scripted_Interactable_Object.handJointIDs), Handedness.Right);
                 makeHandInvisible(Handedness.Right);
                 m_rightHandObj = obj;
                 return true;
@@ -190,7 +223,7 @@ public class core_feature_controller : MonoBehaviour
     /// <returns>If disabling interaction was successful</returns>
     public bool disableGameObject(Handedness hand)
     {
-        // can't deactivate a invalid hand lol
+        // can't deactivate an invalid hand lol
         if (hand == Handedness.Invalid)
         {
             return false;
@@ -199,7 +232,7 @@ public class core_feature_controller : MonoBehaviour
         // object in left hand should be deactivated and is existing
         if (hand == Handedness.Left && m_leftHandObj != null)
         {
-            m_leftHandObj.GetComponent<Scripted_Interactable_Object>().deactivate();
+            m_leftHandObj.GetComponentInChildren<Scripted_Interactable_Object>().deactivate();
             m_leftHandObj = null;
             makeHandVisible(Handedness.Left);
             return true;
@@ -208,7 +241,7 @@ public class core_feature_controller : MonoBehaviour
         //// object in right hand should be deactivated and is existing
         if (hand == Handedness.Right && m_rightHandObj != null)
         {
-            m_leftHandObj.GetComponent<Scripted_Interactable_Object>().deactivate();
+            m_rightHandObj.GetComponentInChildren<Scripted_Interactable_Object>().deactivate();
             m_rightHandObj = null;  
             makeHandVisible(Handedness.Right);
             return true;
@@ -230,7 +263,7 @@ public class core_feature_controller : MonoBehaviour
         }
         if(hand == Handedness.Right)
         {
-            m_handVisualizerScipt.drawLeftMeshes = true;
+            m_handVisualizerScipt.drawRightMeshes = true;
         }
     }
 
@@ -286,6 +319,14 @@ public class core_feature_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //check for detach gesture
+        if(m_detachPinchLeft.action.inProgress)
+        {
+            disableGameObject(Handedness.Left);
+        }
+        if(m_detachPinchRight.action.inProgress)
+        {
+            disableGameObject(Handedness.Right);
+        }
     }
 }

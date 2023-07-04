@@ -38,27 +38,23 @@ public class Selection_checker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         if(m_Interactable.isSelected && !m_lastSelected)
         {
             if(controller != null)
             {
-                Debug.Log("object selection detected");
                 if (leftSelected.action.WasPerformedThisFrame())
                 {
-                    Debug.Log("left selection detected");
                     controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left);
                     m_lastSelected = true;
                 }
                 else if (rightSelected.action.WasPerformedThisFrame())
                 {
-                    Debug.Log("right selection detected");
                     controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right);
                     m_lastSelected = true;
                 }
             }
         }
-        if(!m_Interactable.isSelected && m_lastSelected)
+        else if(!m_Interactable.isSelected && m_lastSelected)
         {
             m_lastSelected = false;
         }

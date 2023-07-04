@@ -7,6 +7,7 @@ using UnityEngine.XR.Hands;
 /// Parent class of all objects performing an scripted interaction based of hand-tracking data based in plugin XRHand
 /// Author: Fabian Schmurr
 /// </summary>
+[RequireComponent(typeof(Rigidbody))]
 public abstract class Scripted_Interactable_Object : MonoBehaviour
 {
 
@@ -29,6 +30,9 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// Joint indices that are necessary for interaction
     /// </summary>
     public readonly List<XRHandJointID> handJointIDs;
+
+    [SerializeField]
+    private Rigidbody rigidbody;
 
     /// <summary>
     /// 
@@ -73,6 +77,9 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
                 lastTransformBeforeActivation = transform;
                 controllingHand = handedness;
                 necessaryJointData = joints;
+
+                rigidbody.useGravity = false;
+                rigidbody.isKinematic = true;
             } 
             else
             {
@@ -100,11 +107,16 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     public void deactivate(bool moveBack = false)
     {
         controllingHand = Handedness.Invalid;
-        necessaryJointData.Clear();
-        if(moveBack)
+        if (moveBack)
         {
-            //call animation
+            moveBackToOrigin();
         }
+        necessaryJointData.Clear();
+        rigidbody.position = transform.position;
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.useGravity = true;
+        rigidbody.isKinematic = false;
+        
     }
 
     /// <summary>

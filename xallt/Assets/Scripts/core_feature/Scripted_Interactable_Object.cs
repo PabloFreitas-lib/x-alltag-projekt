@@ -35,8 +35,9 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     private Rigidbody rigidbody;
 
     /// <summary>
-    /// 
+    /// Constructor that only checks if given list isn't empty
     /// </summary>
+    /// <param name="necessaryJoints">List if needed joint indices to get the joint pose information</param>
     /// <exception cref="ArgumentException">If necessary hand-joint ID's are not set in Editor</exception>
     public Scripted_Interactable_Object(List<XRHandJointID> necessaryJoints)
     {
@@ -92,6 +93,10 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the data used for interaction
+    /// </summary>
+    /// <param name="joints">Dictionary of all joint data. Must be matching the joint indices</param>
     public void updateData(Dictionary<XRHandJointID, XRHandJoint> joints)
     {
         if(joints.Count == handJointIDs.Count)

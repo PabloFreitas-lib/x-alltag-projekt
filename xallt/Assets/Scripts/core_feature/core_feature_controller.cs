@@ -9,7 +9,8 @@ using UnityEngine.XR.Management;
 /// <summary>
 /// Script that works as a controller between objects controlled directly by
 /// hand-tracking and their selection
-/// Author: Fabian Schmurr
+/// Main Author: Fabian Schmurr
+/// Additional authors: Jaap
 /// </summary>
 public class core_feature_controller : MonoBehaviour
 {
@@ -47,6 +48,9 @@ public class core_feature_controller : MonoBehaviour
     [Tooltip("Pinch gesture to detach the right object")]
     private InputActionReference m_detachPinchRight;
 
+    /// <summary>
+    /// Script to control which hands should currently be displayed or not
+    /// </summary>
     private SeperateHandVisualizer m_handVisualizerScipt;
 
 

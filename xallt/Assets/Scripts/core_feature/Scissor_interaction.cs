@@ -28,6 +28,9 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
     private float cutThreshold = 5;
 
+    /// <summary>
+    /// Anchor to rotate the whole object around
+    /// </summary>
     [SerializeField]
     private GameObject anchor;
 
@@ -90,12 +93,16 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private static XRHandJointID m_procimalMiddle = XRHandJointID.MiddleProximal;
     private static XRHandJointID m_wrist = XRHandJointID.Wrist;
 
+    /// <summary>
+    /// Only passing the indices list to base constructor
+    /// </summary>
     public Scissor_interaction() : base(GetJointList())
     {
     }
 
     private static List<XRHandJointID> GetJointList()
     {
+        ///creating list of static defined hand joint indices
         List<XRHandJointID> joints = new List<XRHandJointID>();
         joints.Add(m_index_distal);
         joints.Add(m_middle_distal);
@@ -105,9 +112,12 @@ public class Scissor_interaction : Scripted_Interactable_Object
         return joints;
     }
 
+    /// <summary>
+    /// Method that updates the scripted interaction by using the current hand joint data
+    /// </summary>
     public override void updateInteraction()
     {
-        //getting pose data
+        //getting joint references
         if(!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index) 
             && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle)
             && necessaryJointData.TryGetValue(m_palm, out XRHandJoint palm)
@@ -116,7 +126,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
         {
             return;
         }
-
+        //getting poses of joints
         if(!(index.TryGetPose(out Pose indexPose) 
             && middle.TryGetPose(out Pose middlePose)
             && palm.TryGetPose(out Pose palmPose)
@@ -126,6 +136,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
             return;
         }
 
+        //distance between distal index and middle finger
         float distance = Vector3.Distance(indexPose.position, middlePose.position);
         distance = Mathf.Clamp(distance, 0, maxAngle);
         moveBlades(distance);
@@ -142,10 +153,15 @@ public class Scissor_interaction : Scripted_Interactable_Object
         Quaternion scissorsForward = Quaternion.LookRotation(pointingDirection, palmPose.rotation * Vector3.up);
         Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset, m_rotationZOffset);
 
+        //applying rotation and position
         pivot.transform.rotation = rotationOffset * scissorsForward;
         pivot.transform.position = palmPose.GetTransformedBy(new Pose(origin, m_XROrigin.transform.rotation)).position + offsetFromHand;
     }
 
+    /// <summary>
+    /// Rotates the blades of scissors correctly, this method is also invoking the OnCut Action
+    /// </summary>
+    /// <param name="distance">Distance between distal joints</param>
     private void moveBlades(float distance)
     {
         //remapping values https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
@@ -166,7 +182,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
         obereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, delta / 2);
         lastAngle = angle;
 
-        // Check for cut
+        // Check for cut and ignoring negative angle
         if (Math.Abs(angle) < cutThreshold)
         {
             OnScissorsCut.Invoke();

@@ -26,6 +26,9 @@ public class VRDrawingManager : MonoBehaviour
     private bool _isDrawing = false;
     private Vector3 _previousPosition;
 
+    [SerializeField]
+    private XRGrabInteractable _interactable;
+
     private void Start()
     {
         _currentColorIndex = 0;
@@ -34,9 +37,14 @@ public class VRDrawingManager : MonoBehaviour
 
     private void Update()
     {
-        StartDrawing();
-
-
+        if (_interactable.isSelected)
+        {
+            StartDrawing();
+        }
+        else
+        {
+            StopDrawing();
+        }
         // if (3 finger pinch?)
         // { 
         // Draw();
@@ -84,13 +92,14 @@ public class VRDrawingManager : MonoBehaviour
         }
     }
     
-    private void StartDrawing()
+    public void StartDrawing()
     {
+        Debug.Log("VRDrawingManager Start");
         _isDrawing = true;
         Draw();
     }
     
-    private void StopDrawing()
+    public void StopDrawing()
     {
         _isDrawing = false;
     }

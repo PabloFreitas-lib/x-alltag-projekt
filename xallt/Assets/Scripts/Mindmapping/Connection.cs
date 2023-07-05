@@ -45,6 +45,7 @@ public class Connection : MonoBehaviour
         lineRenderer.positionCount = 2;
         lineRenderer.startWidth = 0.01f;
         lineRenderer.endWidth = 0.01f;
+
     }
 
     public void SetFromTo(Node from, Node to)
@@ -61,8 +62,18 @@ public class Connection : MonoBehaviour
             {
                 to.parent = null;
                 from.parent.GetComponent<Node>().children.Remove(to.gameObject);
+                from.mindmap.mode = Mindmap.Mode.defaultMode;
+                Destroy(this);
             }
         }
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Scissors"))
+        {
+            DestroyConnection();
+        }
     }
 }

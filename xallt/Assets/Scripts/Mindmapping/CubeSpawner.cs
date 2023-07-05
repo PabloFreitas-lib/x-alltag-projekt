@@ -17,19 +17,19 @@ public class CubeSpawner : MonoBehaviour
        
         if (colliders.Length == 1)
         {
-            SpawnCube();
+            SpawnCube(transform);
         }
     }
 
     private void Start()
     {
-        SpawnCube();
+        SpawnCube(transform);
     }
 
-    private void SpawnCube()
+    public void SpawnCube(Transform spawnPosition)
     {
         // Instantiate a cube prefab at the position of the hand controller
-        GameObject cube = Instantiate(filePrefab, transform.position, Quaternion.identity);
+        GameObject cube = Instantiate(filePrefab, spawnPosition.position, Quaternion.identity);
         GameObject map = Instantiate(mindmap,mindMapSpawnPosition.position, Quaternion.identity);
         cube.GetComponent<File>().map = map.GetComponent<Mindmap>();
         isSpawned = true;

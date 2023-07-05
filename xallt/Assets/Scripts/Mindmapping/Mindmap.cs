@@ -24,7 +24,7 @@ public class Mindmap : MonoBehaviour
 
     public void DeleteNode()
     {
-        if(selected != null)
+        if(selected != null && mode == Mode.DeleteMode)
         {
             if (!selected.isRoot)
             {
@@ -35,6 +35,7 @@ public class Mindmap : MonoBehaviour
                 nodes.Remove(selected);
                 Destroy(selected.gameObject);
                 selected = null;
+                mode = Mode.defaultMode;
             }
         }
     }
@@ -80,6 +81,8 @@ public class Mindmap : MonoBehaviour
                         break;
                 case 2: mode = Mode.EditMode;
                     break;
-            }
+                case 3: mode = Mode.DeleteMode;
+                break;
+        }
     }
 }

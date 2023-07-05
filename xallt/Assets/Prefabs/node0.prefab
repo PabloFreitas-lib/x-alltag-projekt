@@ -340,7 +340,7 @@ MonoBehaviour:
   m_SmoothRotation: 0
   m_SmoothRotationAmount: 5
   m_TightenRotation: 0.5
-  m_ThrowOnDetach: 1
+  m_ThrowOnDetach: 0
   m_ThrowSmoothingDuration: 0.25
   m_ThrowSmoothingCurve:
     serializedVersion: 2
@@ -377,12 +377,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b5cb15ad0b3f0d4bb9cf1e3ebaea462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   mindmap: {fileID: 0}
   text: 
   parent: {fileID: 0}
   children: []
-  lineRenderer: {fileID: 0}
-  rayMaterial: {fileID: 0}
   isRoot: 0
 --- !u!1 &4551093130459514148
 GameObject:

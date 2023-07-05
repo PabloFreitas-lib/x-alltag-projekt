@@ -17,7 +17,7 @@ public class WhiteboardMarker : MonoBehaviour
     private Vector2 _touchPos, _lastTouchPos;
     private bool _touchedLastFrame;
     private Quaternion _lastTouchRot;
-
+    private int _drawingId = 0;
 
     void Start()
     {
@@ -33,6 +33,8 @@ public class WhiteboardMarker : MonoBehaviour
 
     private void Draw()
     {
+        // Generate a new unique drawing ID
+        _drawingId = GenerateUniqueId();
         if (Physics.Raycast(_tip.position, transform.up, out _touch, _tipHeight))
         {
             if (_touch.transform.CompareTag("Whiteboard"))
@@ -51,18 +53,18 @@ public class WhiteboardMarker : MonoBehaviour
 
                 if (_touchedLastFrame)
                 {
-                    _whiteboard.texture.SetPixels(x, y, _penSize, _penSize, _colors);
+                    _whiteboard.drawingTexture.SetPixels(x, y, _penSize, _penSize, _colors);
 
                     for (float f = 0.01f; f < 1.00f; f += 0.01f)
                     {
                         var lerpX = (int)Mathf.Lerp(_lastTouchPos.x, x, f);
                         var lerpY = (int)Mathf.Lerp(_lastTouchPos.y, y, f);
-                        _whiteboard.texture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
+                        _whiteboard.drawingTexture.SetPixels(lerpX, lerpY, _penSize, _penSize, _colors);
                     }
 
                     transform.rotation = _lastTouchRot;
 
-                    _whiteboard.texture.Apply();
+                    _whiteboard.drawingTexture.Apply();
                 }
 
                 _lastTouchPos = new Vector2(x, y);
@@ -71,8 +73,48 @@ public class WhiteboardMarker : MonoBehaviour
                 return;
             }
         }
-
-        _whiteboard = null;
+        
         _touchedLastFrame = false;
     }
+    
+    public void SaveDrawing()
+    {
+        Debug.Log("Drawing saved");
+        // Speichern der Zeichnung, z. B. mit der SaveTexture-Methode
+        SaveTexture(_whiteboard.drawingTexture);
+    }
+    
+    private void SaveTexture(Texture2D texture)
+    {
+        string fileName = "Drawing_"+ _drawingId +".png";
+        string filePath = Application.persistentDataPath + "/" + fileName;
+
+        //byte[] pngData = _whiteboard.drawingTexture.EncodeToPNG();
+        byte[] textureBytes = texture.EncodeToPNG();
+        System.IO.File.WriteAllBytes(filePath, textureBytes);
+
+        Debug.Log("Drawing saved to: " + filePath);
+    }
+    
+    private int GenerateUniqueId()
+    {
+        // Generate a unique ID here (e.g., using a timestamp, random number, etc.)
+        return System.DateTime.Now.GetHashCode();
+    }
+
+    public void ClearDrawing()
+    {
+        //_whiteboard = null;
+        Color[] emptyColors = new Color[_whiteboard.drawingTexture.width * _whiteboard.drawingTexture.height];
+        for (int i = 0; i < emptyColors.Length; i++)
+        {
+            emptyColors[i] = Color.white; // Setze die Farbe auf Weiß (transparent)
+        }
+
+        // Überschreibe die gesamte Zeichnung auf dem Whiteboard mit der leeren Farbe
+        _whiteboard.drawingTexture.SetPixels(emptyColors);
+        _whiteboard.drawingTexture.Apply();
+    }
+    
+    
 }

@@ -37,9 +37,9 @@ public class VRDrawingManager : MonoBehaviour
 
     private void Update()
     {
-        if (_interactable.isSelected)
+        if (_interactable.isSelected && _isDrawing)
         {
-            StartDrawing();
+            Draw();
         }
         else
         {
@@ -94,9 +94,19 @@ public class VRDrawingManager : MonoBehaviour
     
     public void StartDrawing()
     {
-        Debug.Log("VRDrawingManager Start");
-        _isDrawing = true;
-        Draw();
+        if (_interactable.isSelected)
+        {
+            Debug.Log("VRDrawingManager Start");
+            _isDrawing = true;
+            Draw();
+        }
+        else
+        {
+            StopDrawing();
+        }
+        // Debug.Log("VRDrawingManager Start");
+        // _isDrawing = true;
+        // Draw();
     }
     
     public void StopDrawing()

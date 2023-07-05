@@ -16,6 +16,15 @@ public class Whiteboard : MonoBehaviour
         var r = GetComponent<Renderer>();
         drawingTexture = new Texture2D((int)textureSize.x, (int)textureSize.y);
         r.material.mainTexture = drawingTexture;
+        Color[] emptyColors = new Color[drawingTexture.width * drawingTexture.height];
+        for (int i = 0; i < emptyColors.Length; i++)
+        {
+            emptyColors[i] = Color.white; // Setze die Farbe auf Weiß (transparent)
+        }
+
+        // Überschreibe die gesamte Zeichnung auf dem Whiteboard mit der leeren Farbe
+        drawingTexture.SetPixels(emptyColors);
+        drawingTexture.Apply();
     }
     
     public void LoadDrawing(string whichFilePath)

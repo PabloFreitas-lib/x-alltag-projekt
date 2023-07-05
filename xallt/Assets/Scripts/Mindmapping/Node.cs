@@ -7,7 +7,6 @@ public class Node : MonoBehaviour
 {
     //Metadata
     public uint id { get; private set; }
-    public DateTime creationDate { get; private set; }
 
     //Display information
     public string text { get; private set; }
@@ -18,12 +17,11 @@ public class Node : MonoBehaviour
     public Node parent;                       //empty parent -> treat node as root
     public List<Node> children = new List<Node>();
 
-    public Node(uint pId, string pText, DateTime pCreationDate, float[] pUserColor)
+    public Node(uint pId, string pText, Color pUserColor)
     {
         id = pId;
-        creationDate = pCreationDate;
         text = pText;
-        userColor = new Color(pUserColor[0], pUserColor[1], pUserColor[2], pUserColor[3]);
+        userColor = pUserColor;
     }
 
     // Start is called before the first frame update

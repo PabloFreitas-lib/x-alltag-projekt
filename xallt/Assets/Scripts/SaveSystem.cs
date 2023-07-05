@@ -9,9 +9,6 @@ using static SaveSystem;
 using UnityEngine.EventSystems;
 
 
-
-
-
 /* TODO:
  *  
  *  ComplexPlayerPrefs:
@@ -26,15 +23,62 @@ using UnityEngine.EventSystems;
 public class SaveSystem : MonoBehaviour
 {
     [System.Serializable]
-    public class ComplexPlayerPrefsPersistentObject
+    public class ComplexUserPrefsPersistentObject
     {
-        public ComplexPlayerPrefsPersistentObject()
+        public Vector3 playerPosition;
+
+        public LightPersistentObject[] lights;
+        public FilePersistentObject[] files;
+
+        public ComplexUserPrefsPersistentObject()
         {
-            Light
+            playerPosition = GameObject.Find("XR Origin").transform.position; //overwriten by HMD Position Tracking
+
+            //Add Tags to acutal Files
+            int f = 0;
+            File[] filesToEncode = Resources.FindObjectsOfTypeAll<File>();
+            files = new FilePersistentObject[filesToEncode.Length];
+            foreach (File file in filesToEncode) 
+            {
+                files[f] = new FilePersistentObject(file);
+                f++;
+            }
+
+            /* Lookup actual implementation of Lights and and Tags
+            static List<Light> lightsToEncode = GameObject.FindGameObjectsWithTag("Light");
+            foreach (GameObject light in GameObject.FindGameObjectsWithTag("Light"))
+            {
+                lights.Add(new FilePersistentObject(light));
+            }
+            */
+
         }
     }
- 
-  
+
+    [System.Serializable]
+    public class FilePersistentObject
+    {
+        string name;
+        Color color;
+        Vector3 position;
+
+        public FilePersistentObject(File file) 
+        {
+            name = file.name;
+            color = file.userColor;
+            position = file.gameObject.transform.position;
+        }
+    }
+
+    [System.Serializable]
+    public class LightPersistentObject
+    {
+            uint modelID; //Modelidentifier
+            Color color;
+            Vector3 positon; 
+    }
+
+
 
     /*
     * Objects of this class have the purpose of collecting serializable data of a mindmap to be saved from or respectively be loaded to.
@@ -44,10 +88,9 @@ public class SaveSystem : MonoBehaviour
     {
         public uint id { get; }
         public uint parentId { get; }
-        public DateTime creationDate;
 
         public string text { get; }
-        public float[] userColor { get; }
+        public Color userColor { get; }
 
         public uint[] childrenIds { get; }
 
@@ -56,14 +99,10 @@ public class SaveSystem : MonoBehaviour
             //Set simple parameters
             id = node.id;
             parentId = node.parent.id;
-            creationDate = node.creationDate;
             text = node.text;
 
             //Encode userColor
-            userColor[0] = node.userColor.r;
-            userColor[1] = node.userColor.g;
-            userColor[2] = node.userColor.b;
-            userColor[3] = node.userColor.a;
+            userColor = node.userColor;
 
             //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
@@ -79,52 +118,18 @@ public class SaveSystem : MonoBehaviour
 
 
     /*
-    * Objects of this class have the purpose of collecting serializable data of a whiteboard to be saved from or respectively be loaded to.
-    */
-    [System.Serializable]
-    public class WhiteBoardPersistentObject
-    {
-        //this must be a texture2D now the question ist which information of texture 2D are important in unity it says 16MB per Texture which ist quit a lot 
-        public Texture2D texture;
-        public Vector2 textureSize;
-        public string id { get; }
-
-        public WhiteBoardPersistentObject(Whiteboard whiteboard)
-        {
-            texture = whiteboard.texture;
-            textureSize = whiteboard.textureSize;
-            id = whiteboard.id;
-        }
-    }
-
-    /*
     * Used to save general GameState.
     * (Player position, how many and which files cubes are there?, user(?))
     */
-    public Vector3 playerPosition;
-    public void SaveComplexUserPrefs()
+    public void saveComplexUserPrefs()
     {
-        PlayerPrefs.SetFloat("UserX", playerPosition.x);
-        PlayerPrefs.SetFloat("UserY", playerPosition.y);
-        PlayerPrefs.SetFloat("UserZ", playerPosition.z);
-
-        string fullPath = Path.Combine(Application.dataPath, "complexUserPrefs");
-        string json = null;
-
-        // Erstellen Sie ein LightingSettingsData-Objekt zum Speichern von Beleuchtungseinstellungsdaten
-        LightingSettingsData lightingSettingsData = new LightingSettingsData();
-        lightingSettingsData.lightmaps = LightmapSettings.lightmaps;
-        lightingSettingsData.lightProbes = LightmapSettings.lightProbes;
-
-        // Serialisieren Sie das LightingSettingsData-Objekt als Bytestream
-        BinaryFormatter formatter = new BinaryFormatter();
-
-
-        FileStream fileStream = System.IO.File.Create(fullPath);
-        formatter.Serialize(fileStream, lightingSettingsData);
-        fileStream.Close();
+        string fullPath = Path.Combine(Application.dataPath, "cup");
+        string json = JsonUtility.ToJson(new ComplexUserPrefsPersistentObject()); 
 
         System.IO.File.WriteAllText(fullPath, json);
+
+
+        Debug.Log("User prefs saved" + json);
     }
 
     /*
@@ -133,29 +138,24 @@ public class SaveSystem : MonoBehaviour
      */
     public void loadComplexUserPrefs()
     {
-        float playerX = PlayerPrefs.GetFloat("UserX");
-        float playerY = PlayerPrefs.GetFloat("UserY");
-        float playerZ = PlayerPrefs.GetFloat("UserZ");
-
-        Vector3 playerPosition = new Vector3(playerX, playerY, playerZ);
-
         string fullPath = Path.Combine(Application.dataPath, "cup");
 
         if (System.IO.File.Exists(fullPath))
         {
-            // Deserialisieren Sie den Bytestream in das LightingSettingsData-Objekt
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = System.IO.File.Open(fullPath, FileMode.Open);
-            LightingSettingsData lightingSettingsData = (LightingSettingsData)formatter.Deserialize(fileStream);
-            fileStream.Close();
+            string json = System.IO.File.ReadAllText(fullPath);
+            ComplexUserPrefsPersistentObject cup = JsonUtility.FromJson<ComplexUserPrefsPersistentObject>(json);
 
-            // Wenden Sie die Beleuchtungseinstellungsdaten in LightingSettingsData an
-            LightmapSettings.lightmaps = lightingSettingsData.lightmaps;
-            LightmapSettings.lightProbes = lightingSettingsData.lightProbes;
+            GameObject.Find("XR Origin").transform.position = cup.playerPosition;
+
+            //File Objekte erstellen
+            //Lichtobjekte erstellen
+
+
+            Debug.Log("User prefs loaded" + cup.playerPosition.ToString());
         }
         else
         {
-            Debug.Log("Save file not found: " + fullPath);
+            Debug.Log("User Preferences not found.");
         }
     }
 
@@ -185,7 +185,7 @@ public class SaveSystem : MonoBehaviour
     /*
      * Called to load Mindmap when clicking button or on socket interaction.
      */
-    public static void loadMindmap(Mindmap mindmap)
+    public static List<Node> loadMindmap(Mindmap mindmap)
     {
         string fullPath = Path.Combine(Application.dataPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
@@ -197,7 +197,7 @@ public class SaveSystem : MonoBehaviour
         uint i = 0;
         foreach (NodePersistentObject persistedNode in persistenceMapped)
         {
-            Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.creationDate, persistedNode.userColor);
+            Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor);
             nodes[i] = node;
             i++;
         }
@@ -212,6 +212,8 @@ public class SaveSystem : MonoBehaviour
                 node.children.Add(BinarySearch(nodes, childId));
             }
         }
+
+        return nodes.ToList();
     }
     
     /*
@@ -219,11 +221,12 @@ public class SaveSystem : MonoBehaviour
      */
     public static void saveWhiteboard(Whiteboard whiteboard)
     {
-        byte[] whiteBoardtexture = new WhiteBoardPersistentObject(whiteboard).texture.EncodeToPNG();
+        byte[] whiteBoardtexture = whiteboard.texture.EncodeToPNG();
 
 
         string fullPath = Path.Combine(Application.dataPath, "whiteboards");
             fullPath = Path.Combine(fullPath, whiteboard.id);
+            fullPath = Path.Combine(fullPath, ".png");
 
             System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
             Debug.Log("Whiteboard saved to: " + fullPath);
@@ -236,19 +239,19 @@ public class SaveSystem : MonoBehaviour
     public static void loadWhitebaord(Whiteboard whiteboard)
     {
 
-        Texture2D texture = null;
+        Texture2D texture;
         byte[] fileData;
-        string fullpath = Path.Combine(Application.dataPath, "whiteboards");
-        fullpath = Path.Combine(fullpath, whiteboard.id);
+        string fullPath = Path.Combine(Application.dataPath, "whiteboards");
+        fullPath = Path.Combine(fullPath, whiteboard.id);
+        fullPath = Path.Combine(fullPath, ".png");
 
-        if (System.IO.File.Exists(fullpath))
+        if (System.IO.File.Exists(fullPath))
         {
-            fileData = System.IO.File.ReadAllBytes(fullpath);
-            texture = new Texture2D((int)whiteboard.textureSize.x, (int)whiteboard.textureSize.y);
+            fileData = System.IO.File.ReadAllBytes(fullPath);
+            texture = new Texture2D((int)whiteboard.textureSize.x, (int)whiteboard.textureSize.y); 
             texture.LoadImage(fileData);
-            whiteboard.texture.Apply(); //not sure if this is necessary
+            whiteboard.texture = texture; 
             Debug.Log("Whiteboard loaded");
-
         }
         else
         {
@@ -337,23 +340,15 @@ public class SaveSystem : MonoBehaviour
     {
         return ToString();
     }
-}
 
-internal class BinaryFormatter
-{
-    internal LightingSettingsData Deserialize(FileStream fileStream)
+    public void Update()
     {
-        throw new NotImplementedException();
-    }
-
-    internal void Serialize(FileStream fileStream, LightingSettingsData lightingSettingsData)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-internal class LightingSettingsData
-{
-    internal LightmapData[] lightmaps;
-    internal LightProbes lightProbes;
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            saveComplexUserPrefs();
+        }else if (Input.GetKeyDown(KeyCode.L)) 
+        {
+            loadComplexUserPrefs();
+        }
+    }  
 }

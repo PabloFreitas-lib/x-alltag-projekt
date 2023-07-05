@@ -34,7 +34,7 @@ public class SaveSystem : MonoBehaviour
             int f = 0;
             File[] filesToEncode = Resources.FindObjectsOfTypeAll<File>();
             files = new FilePersistentObject[filesToEncode.Length];
-            foreach (File file in filesToEncode) 
+            foreach (File file in filesToEncode)
             {
                 files[f] = new FilePersistentObject(file);
                 f++;
@@ -58,7 +58,7 @@ public class SaveSystem : MonoBehaviour
         Color color;
         Vector3 position;
 
-        public FilePersistentObject(File file) 
+        public FilePersistentObject(File file)
         {
             name = file.name;
             // color = file.userColor; Access ColorChanger Script of file
@@ -69,12 +69,12 @@ public class SaveSystem : MonoBehaviour
     [System.Serializable]
     public class LightPersistentObject
     {
-            uint modelID; //Modelidentifier
-            Color color;
-            float intesity; //float?
-            Vector3 positon; 
+        uint modelID; //Modelidentifier
+        Color color;
+        float intesity; //float?
+        Vector3 positon;
 
-            //Constructor
+        //Constructor
     }
 
     /*
@@ -118,11 +118,11 @@ public class SaveSystem : MonoBehaviour
     * Used to save general GameState.
     * (Player position, how many and which files cubes are there?, user(?))
     */
-    public void saveComplexUserPrefs()
+    public void SaveComplexUserPrefs()
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "cup");
-        string json = JsonUtility.ToJson(new ComplexUserPrefsPersistentObject()); 
+        string json = JsonUtility.ToJson(new ComplexUserPrefsPersistentObject());
 
         System.IO.File.WriteAllText(fullPath, json);
     }
@@ -131,7 +131,7 @@ public class SaveSystem : MonoBehaviour
      * Used to load general GameState.
      * (Player position, how many and which files cubes are there?, user(?))
      */
-    public void loadComplexUserPrefs()
+    public void LoadComplexUserPrefs()
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "cup");
@@ -151,7 +151,7 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    public static void SaveFreeDraw(VRDrawingManager drawing) 
+    public static void SaveFreeDraw(VRDrawingManager drawing)
     {
         Vector3[] positions = new Vector3[drawing._currentDrawing.positionCount];              //still private in CORE Version of VRDrawingManager, change to param maybe?
         drawing._currentDrawing.GetPositions(positions);
@@ -165,7 +165,7 @@ public class SaveSystem : MonoBehaviour
         System.IO.File.WriteAllText(fullPath, json);
     }
 
-    public static Vector3[] LoadFreeDraw(uint drawingID) 
+    public static Vector3[] LoadFreeDraw(uint drawingID)
     {
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");
@@ -177,7 +177,9 @@ public class SaveSystem : MonoBehaviour
 
             Vector3[] positions = JsonUtility.FromJson<Vector3[]>(json);
             return positions;
-        }else{
+        }
+        else
+        {
             Debug.Log("No such free draw file.");
             throw new Exception("No such free draw file.");
         }
@@ -186,7 +188,7 @@ public class SaveSystem : MonoBehaviour
     /*
      * Called to save Mindmap when clicking button or on socket interaction.
      */
-    public static void saveMindmap(Mindmap mindmap)
+    public static void SaveMindmap(Mindmap mindmap)
     {
         Node[] nodes = mindmap.nodes.ToArray();
         NodePersistentObject[] persistenceMapped = new NodePersistentObject[nodes.Length];
@@ -210,7 +212,7 @@ public class SaveSystem : MonoBehaviour
     /*
      * Called to load Mindmap when clicking button or on socket interaction.
      */
-    public static List<Node> loadMindmap(Mindmap mindmap)
+    public static List<Node> LoadMindmap(Mindmap mindmap)
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "mindmaps");
@@ -250,12 +252,12 @@ public class SaveSystem : MonoBehaviour
             throw new Exception("No such mindmap file.");
         }
     }
-       
-    
+
+
     /*
      * Called to save all Whiteboards when clicking L.
      */
-    public static void saveWhiteboard(Whiteboard whiteboard)
+    public static void SaveWhiteboard(Whiteboard whiteboard)
     {
         byte[] whiteBoardtexture = whiteboard.texture.EncodeToPNG();
 
@@ -266,13 +268,13 @@ public class SaveSystem : MonoBehaviour
 
         System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
         Debug.Log("Whiteboard saved to: " + fullPath);
-     }
+    }
 
     /*
      * Called to load Whiteboard when clicking button or on whiteboard interaction..
      * Which argument use to load just ID 
      */
-    public static void loadWhitebaord(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
+    public static void LoadWhitebaord(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
     {
 
         Texture2D texture;
@@ -285,9 +287,9 @@ public class SaveSystem : MonoBehaviour
         if (System.IO.File.Exists(fullPath))
         {
             fileData = System.IO.File.ReadAllBytes(fullPath);
-            texture = new Texture2D((int)whiteboard.textureSize.x, (int)whiteboard.textureSize.y); 
+            texture = new Texture2D((int)whiteboard.textureSize.x, (int)whiteboard.textureSize.y);
             texture.LoadImage(fileData);
-            whiteboard.texture = texture; 
+            whiteboard.texture = texture;
             Debug.Log("Whiteboard loaded");
         }
         else
@@ -371,7 +373,7 @@ public class SaveSystem : MonoBehaviour
         nodes[j] = temp;
     }
 
-  
+
 
     private string GetDebuggerDisplay()
     {
@@ -382,10 +384,11 @@ public class SaveSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            saveComplexUserPrefs();
-        }else if (Input.GetKeyDown(KeyCode.L)) 
-        {
-            loadComplexUserPrefs();
+            SaveComplexUserPrefs();
         }
-    }  
+        else if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadComplexUserPrefs();
+        }
+    }
 }

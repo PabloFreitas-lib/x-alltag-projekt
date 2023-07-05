@@ -25,15 +25,11 @@ public class SaveSystem : MonoBehaviour
     [System.Serializable]
     public class ComplexUserPrefsPersistentObject
     {
-        public Vector3 playerPosition;
-
         public LightPersistentObject[] lights;
         public FilePersistentObject[] files;
 
         public ComplexUserPrefsPersistentObject()
         {
-            playerPosition = GameObject.Find("XR Origin").transform.position; //overwriten by HMD Position Tracking
-
             //Add Tags to acutal Files
             int f = 0;
             File[] filesToEncode = Resources.FindObjectsOfTypeAll<File>();
@@ -65,7 +61,7 @@ public class SaveSystem : MonoBehaviour
         public FilePersistentObject(File file) 
         {
             name = file.name;
-            color = file.userColor;
+            // color = file.userColor; Access ColorChanger Script of file
             position = file.gameObject.transform.position;
         }
     }
@@ -75,10 +71,11 @@ public class SaveSystem : MonoBehaviour
     {
             uint modelID; //Modelidentifier
             Color color;
+            float intesity; //float?
             Vector3 positon; 
+
+            //Constructor
     }
-
-
 
     /*
     * Objects of this class have the purpose of collecting serializable data of a mindmap to be saved from or respectively be loaded to.
@@ -102,7 +99,7 @@ public class SaveSystem : MonoBehaviour
             text = node.text;
 
             //Encode userColor
-            userColor = node.userColor;
+            //userColor = node.userColor;
 
             //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
@@ -123,13 +120,11 @@ public class SaveSystem : MonoBehaviour
     */
     public void saveComplexUserPrefs()
     {
-        string fullPath = Path.Combine(Application.dataPath, "cup");
+        string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
+        fullPath = Path.Combine(fullPath, "cup");
         string json = JsonUtility.ToJson(new ComplexUserPrefsPersistentObject()); 
 
         System.IO.File.WriteAllText(fullPath, json);
-
-
-        Debug.Log("User prefs saved" + json);
     }
 
     /*
@@ -138,24 +133,53 @@ public class SaveSystem : MonoBehaviour
      */
     public void loadComplexUserPrefs()
     {
-        string fullPath = Path.Combine(Application.dataPath, "cup");
+        string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
+        fullPath = Path.Combine(fullPath, "cup");
 
         if (System.IO.File.Exists(fullPath))
         {
             string json = System.IO.File.ReadAllText(fullPath);
             ComplexUserPrefsPersistentObject cup = JsonUtility.FromJson<ComplexUserPrefsPersistentObject>(json);
 
-            GameObject.Find("XR Origin").transform.position = cup.playerPosition;
-
             //File Objekte erstellen
             //Lichtobjekte erstellen
-
-
-            Debug.Log("User prefs loaded" + cup.playerPosition.ToString());
         }
         else
         {
             Debug.Log("User Preferences not found.");
+            throw new Exception("User Preferences not found");
+        }
+    }
+
+    public static void SaveFreeDraw(VRDrawingManager drawing) 
+    {
+        Vector3[] positions = new Vector3[drawing._currentDrawing.positionCount];              //still private in CORE Version of VRDrawingManager, change to param maybe?
+        drawing._currentDrawing.GetPositions(positions);
+
+        string json = JsonUtility.ToJson(positions);
+
+        string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
+        fullPath = Path.Combine(fullPath, "freeDraw");
+        fullPath = Path.Combine(fullPath, drawing.id.ToString());
+
+        System.IO.File.WriteAllText(fullPath, json);
+    }
+
+    public static Vector3[] LoadFreeDraw(uint drawingID) 
+    {
+        string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
+        fullPath = Path.Combine(fullPath, "freeDraw");
+        fullPath = Path.Combine(fullPath, drawingID.ToString());
+
+        if (System.IO.File.Exists(fullPath))
+        {
+            string json = System.IO.File.ReadAllText(fullPath);
+
+            Vector3[] positions = JsonUtility.FromJson<Vector3[]>(json);
+            return positions;
+        }else{
+            Debug.Log("No such free draw file.");
+            throw new Exception("No such free draw file.");
         }
     }
 
@@ -164,7 +188,7 @@ public class SaveSystem : MonoBehaviour
      */
     public static void saveMindmap(Mindmap mindmap)
     {
-        Node[] nodes = Resources.FindObjectsOfTypeAll<Node>();
+        Node[] nodes = mindmap.nodes.ToArray();
         NodePersistentObject[] persistenceMapped = new NodePersistentObject[nodes.Length];
 
         uint i = 0;
@@ -176,7 +200,8 @@ public class SaveSystem : MonoBehaviour
 
         String json = JsonUtility.ToJson(persistenceMapped);
 
-        string fullPath = Path.Combine(Application.dataPath, "mindmaps");
+        string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
+        fullPath = Path.Combine(fullPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
         System.IO.File.WriteAllText(fullPath, json);
     }
@@ -187,34 +212,45 @@ public class SaveSystem : MonoBehaviour
      */
     public static List<Node> loadMindmap(Mindmap mindmap)
     {
-        string fullPath = Path.Combine(Application.dataPath, "mindmaps");
+        string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
+        fullPath = Path.Combine(fullPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
 
-        string json = System.IO.File.ReadAllText(fullPath);
-        NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
-        Node[] nodes = new Node[persistenceMapped.Length];
-
-        uint i = 0;
-        foreach (NodePersistentObject persistedNode in persistenceMapped)
+        if (System.IO.File.Exists(fullPath))
         {
-            Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor);
-            nodes[i] = node;
-            i++;
-        }
+            string json = System.IO.File.ReadAllText(fullPath);
 
-        //Convert id references to gameobject references (cannot be done in loop before because Nodes are persisted unsorted and therefore a parent or child might not yet be instantiated)
-        foreach (NodePersistentObject persistedNode in persistenceMapped)
-        {
-            Node node = BinarySearch(nodes, persistedNode.id);
-            node.parent = BinarySearch(nodes, persistedNode.parentId);
-            foreach (uint childId in persistedNode.childrenIds)
+            NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
+            Node[] nodes = new Node[persistenceMapped.Length];
+
+            uint i = 0;
+            foreach (NodePersistentObject persistedNode in persistenceMapped)
             {
-                node.children.Add(BinarySearch(nodes, childId));
+                Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor);
+                nodes[i] = node;
+                i++;
             }
-        }
 
-        return nodes.ToList();
+            //Convert id references to gameobject references (cannot be done in loop before because Nodes are persisted unsorted and therefore a parent or child might not yet be instantiated)
+            foreach (NodePersistentObject persistedNode in persistenceMapped)
+            {
+                Node node = BinarySearch(nodes, persistedNode.id);
+                node.parent = BinarySearch(nodes, persistedNode.parentId);
+                foreach (uint childId in persistedNode.childrenIds)
+                {
+                    node.children.Add(BinarySearch(nodes, childId));
+                }
+            }
+
+            return nodes.ToList();
+        }
+        else
+        {
+            Debug.Log("No such mindmap file.");
+            throw new Exception("No such mindmap file.");
+        }
     }
+       
     
     /*
      * Called to save all Whiteboards when clicking L.
@@ -223,25 +259,26 @@ public class SaveSystem : MonoBehaviour
     {
         byte[] whiteBoardtexture = whiteboard.texture.EncodeToPNG();
 
+        string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
+        fullPath = Path.Combine(fullPath, "whiteboards");
+        fullPath = Path.Combine(fullPath, whiteboard.id);
+        fullPath = Path.Combine(fullPath, ".png");
 
-        string fullPath = Path.Combine(Application.dataPath, "whiteboards");
-            fullPath = Path.Combine(fullPath, whiteboard.id);
-            fullPath = Path.Combine(fullPath, ".png");
-
-            System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
-            Debug.Log("Whiteboard saved to: " + fullPath);
+        System.IO.File.WriteAllBytes(fullPath, whiteBoardtexture);
+        Debug.Log("Whiteboard saved to: " + fullPath);
      }
 
     /*
      * Called to load Whiteboard when clicking button or on whiteboard interaction..
      * Which argument use to load just ID 
      */
-    public static void loadWhitebaord(Whiteboard whiteboard)
+    public static void loadWhitebaord(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
     {
 
         Texture2D texture;
         byte[] fileData;
-        string fullPath = Path.Combine(Application.dataPath, "whiteboards");
+        string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
+        fullPath = Path.Combine(fullPath, "whiteboards");
         fullPath = Path.Combine(fullPath, whiteboard.id);
         fullPath = Path.Combine(fullPath, ".png");
 

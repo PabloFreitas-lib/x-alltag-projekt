@@ -6,33 +6,84 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     //Metadata
-    public uint id { get; private set; }
+    public uint id;
+    public DateTime creationDate;
+    public Mindmap mindmap;
 
     //Display information
-    public string text { get; private set; }
-    public Color userColor { get; private set; }
+    public string text;
     //Lists or variables for each type of appendable data
 
     //Model
     public Node parent;                       //empty parent -> treat node as root
-    public List<Node> children = new List<Node>();
+    public List<Node> children;
+
+    //LineRenderer - Ray to Parent
+    [Header("RayToParent")]
+    public LineRenderer lineRenderer;
+    public Material rayMaterial;
+
+    //Boolean
+    public bool isRoot;
 
     public Node(uint pId, string pText, Color pUserColor)
     {
         id = pId;
         text = pText;
-        userColor = pUserColor;
+        //userColor = pUserColor;
     }
 
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
+        CreateLineRenderer();
+    }
+    private void Update()
+    {
+        UpdateLineRenderer();
+
+    }
+
+    private void UpdateLineRenderer()
+    {
+        if (parent != null)
+        {
+            lineRenderer.enabled = true;
+            lineRenderer.SetPosition(0, gameObject.transform.position);
+            lineRenderer.SetPosition(1, parent.transform.position);
+
+        }
+        else
+        {
+            lineRenderer.enabled = false;
+        }
+    }
+
+    private void CreateLineRenderer()
+    {
+        lineRenderer = gameObject.AddComponent<LineRenderer>();
+        lineRenderer.useWorldSpace = true;
+        lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+        lineRenderer.material = rayMaterial;
+        lineRenderer.positionCount = 2;
+        lineRenderer.startWidth = 0.01f;
+        lineRenderer.endWidth = 0.01f;
+    }
+    public void SelectSelf()
+    {
+        if(mindmap != null)
+            mindmap.SelectNode(this);
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ConnectNodes()
     {
-        
+        if(mindmap.mode == Mindmap.Mode.ConnectMode && mindmap.prevSelected != null && mindmap.selected != null)
+        {
+            GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
+            connection.GetComponent<Connection>().SetFromTo(mindmap.prevSelected, mindmap.selected);
+            connection.transform.parent = mindmap.transform;
+            mindmap.mode = Mindmap.Mode.defaultMode;
+        }
     }
 }

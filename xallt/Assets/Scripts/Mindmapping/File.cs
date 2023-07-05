@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class File : MonoBehaviour
 {
-    public string name;
+    public string fileName;
     public Mindmap map;
-    public Color userColor;
     public bool isOpen;
 
     private void Start()

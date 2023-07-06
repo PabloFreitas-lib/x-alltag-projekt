@@ -28,20 +28,12 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Time after the animation ends
     /// </summary>
-    [Range(0, 5)]
-    public float maxAnimationTime = 4f;
+    public float maxAnimationTime = 2f;
 
     /// <summary>
     /// Width of drawn line of line-renderer
     /// </summary>
-    [Range(0, 1)]
-    public float animationWidth = 0.7f;
-
-    /// <summary>
-    /// Actually not the endTransform for animation. Maybe it indicates the current transform. Tbh I forgot what this is xD
-    /// But you know never change a running system
-    /// </summary>
-    private Transform m_endTransform;
+    public float animationWidth = 0.07f;
 
     /// <summary>
     /// End rotation for animation
@@ -81,7 +73,7 @@ public class MoveAnimation : MonoBehaviour
     private Quaternion m_startRotation;
     private Scripted_Interactable_Object objectToMove;
 
-    private LineRenderer renderer = null;
+    private LineRenderer renderer;
 
     private AnimationAction animationAction;
 
@@ -120,10 +112,10 @@ public class MoveAnimation : MonoBehaviour
             m_isRunning = true;
             this.objectToMove = objectToMove;
             objectToMove.getFinalTransform(action, out m_endPosition, out m_endRotation);
-            m_endTransform.position = m_endPosition;
-            m_endTransform.rotation = m_endRotation;
-            startDistance = Vector3.Distance(gameObject.transform.position, m_endTransform.position);
+            m_startRotation = objectToMove.transform.rotation;
+            startDistance = Vector3.Distance(objectToMove.transform.position, m_endPosition);
             animationAction = action;
+            setupRenderer();
         }
     }
 
@@ -134,7 +126,6 @@ public class MoveAnimation : MonoBehaviour
     {
         renderer = new GameObject().AddComponent<LineRenderer>();
         renderer.material = drawingMaterial;
-        m_startRotation = transform.rotation;
         renderer.startColor = renderer.endColor = pathColor;
         renderer.startWidth = renderer.endWidth = animationWidth;
     }
@@ -159,8 +150,6 @@ public class MoveAnimation : MonoBehaviour
                 else
                 {
                     objectToMove.getFinalTransform(animationAction, out m_endPosition, out m_endRotation);
-                    m_endTransform.position = m_endPosition;
-                    m_endTransform.rotation = m_endRotation;
                     animate();
                 }
             }
@@ -194,8 +183,8 @@ public class MoveAnimation : MonoBehaviour
         }
         timeAnimating += Time.deltaTime;
         //calculate forward vector
-        Vector3 forward = m_endTransform.position - transform.position;
-        Quaternion rotationTowardsEnd = Quaternion.Inverse(transform.rotation) * m_endTransform.rotation;
+        Vector3 forward = m_endPosition - objectToMove.transform.position;
+        Quaternion rotationTowardsEnd = Quaternion.Inverse(objectToMove.transform.rotation) * m_endRotation;
         remainingDistance = Vector3.Magnitude(forward);
 
         Vector3 forwardNorm = Vector3.Normalize(forward);
@@ -203,8 +192,8 @@ public class MoveAnimation : MonoBehaviour
         double progress = getTimeProgress();
 
         float animationPosDif = (float)progress - (1 - remainingDistance / startDistance);
-        gameObject.transform.rotation = Quaternion.Slerp(m_startRotation, m_endTransform.rotation, (float)progress);
-        gameObject.transform.position += forwardNorm * animationPosDif;
+        objectToMove.transform.rotation = Quaternion.Slerp(m_startRotation, m_endRotation, (float)progress);
+        objectToMove.transform.position += forwardNorm * animationPosDif;
         drawNextPoint();
     }
 
@@ -238,7 +227,7 @@ public class MoveAnimation : MonoBehaviour
     private void drawNextPoint()
     {
         renderer.positionCount = lineIndex + 1;
-        renderer.SetPosition(lineIndex, gameObject.transform.position);
+        renderer.SetPosition(lineIndex, objectToMove.transform.position);
         lineIndex++;
     }
 }

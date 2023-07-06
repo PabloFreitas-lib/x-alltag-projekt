@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 0}
+  animationMaterial: {fileID: 0}
   m_XRSetupName: Complete XR Origin Set Up
 --- !u!114 &796599520
 MonoBehaviour:
@@ -1353,6 +1354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1927259204}
+  animationMaterial: {fileID: 0}
   maxAngle: 40
   anchor: {fileID: 1927259197}
   untereKlinge: {fileID: 1933502051}
@@ -1526,6 +1528,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: scissors_interactable
       objectReference: {fileID: 0}
+    - target: {fileID: 8947122078444114280, guid: bd98b478864b49a4a844189ade01889c, type: 3}
+      propertyPath: rigidbody
+      value: 
+      objectReference: {fileID: 5238910593280684926}
+    - target: {fileID: 8947122078444114280, guid: bd98b478864b49a4a844189ade01889c, type: 3}
+      propertyPath: animationMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
     - target: {fileID: 8947122078444114281, guid: bd98b478864b49a4a844189ade01889c, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1646,6 +1656,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 5238910593280684926}
+  animationMaterial: {fileID: 0}
   maxAngle: 37
   anchor: {fileID: 3791689269466227224}
   untereKlinge: {fileID: 3791689269466227223}

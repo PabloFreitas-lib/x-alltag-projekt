@@ -165,7 +165,10 @@ public class Scissor_interaction : Scripted_Interactable_Object
         // Check for cut and ignoring negative angle
         if (Math.Abs(angle) < cutThreshold)
         {
-            OnScissorsCut.Invoke();
+            if (OnScissorsCut != null)
+            {
+                OnScissorsCut.Invoke();
+            }
         }
     }
 
@@ -188,12 +191,6 @@ public class Scissor_interaction : Scripted_Interactable_Object
     {
         
     }
-
-    protected override void updateHandPosTransform()
-    {
-        throw new NotImplementedException();
-    }
-
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
     {
 

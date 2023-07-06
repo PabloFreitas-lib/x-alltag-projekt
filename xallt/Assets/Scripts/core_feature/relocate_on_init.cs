@@ -53,7 +53,7 @@ public class relocate_on_init : MonoBehaviour
             m_Subsystem.updatedHands += OnHandUpdate;
 
         //initialized LineRenderer (thx to group mindmap)
-
+        /*
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.useWorldSpace = true;
         lineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
@@ -61,7 +61,7 @@ public class relocate_on_init : MonoBehaviour
         lineRenderer.positionCount = 2;
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
-
+        */
     }
 
 

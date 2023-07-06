@@ -105,7 +105,7 @@ public class MoveAnimation : MonoBehaviour
     /// </summary>
     /// <param name="objectToMove">The object that should be moved to a new position</param>
     /// <param name="action">Whether the animation is due to detach or select action</param>
-    public void startAnimation(Scripted_Interactable_Object objectToMove, AnimationAction action = AnimationAction.SELECT)
+    public void startAnimation(Scripted_Interactable_Object objectToMove, AnimationAction action)
     {
         if (!m_isRunning)
         {

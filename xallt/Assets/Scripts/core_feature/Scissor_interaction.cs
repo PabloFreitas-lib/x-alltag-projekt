@@ -96,9 +96,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Only passing the indices list to base constructor
     /// </summary>
-    public Scissor_interaction() : base(GetJointList())
-    {
-    }
+    public Scissor_interaction() : base(GetJointList()){}
 
     private static List<XRHandJointID> GetJointList()
     {
@@ -238,5 +236,13 @@ public class Scissor_interaction : Scripted_Interactable_Object
         finalRotation = rotationOffset * scissorsForward;
         return true;
     }
-    
+
+    protected override void objectSpecificDeactivation()
+    {
+    }
+
+    protected override void objectSpecificActivation()
+    {
+        
+    }
 }

@@ -15,7 +15,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Indicates the current hand controlling the interactable object
     /// </summary>
-    private Handedness controllingHand = Handedness.Invalid;
+    protected Handedness controllingHand = Handedness.Invalid;
     
     /// <summary>
     /// Last transform information of activated object
@@ -53,6 +53,11 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// Material that is used by the line renderer to display the animation
     /// </summary>
     public Material animationMaterial;
+
+    /// <summary>
+    /// Indicates if an object should be moved back to it's last origin
+    /// </summary>
+    public bool moveBack = false;
 
 
     /// <summary>
@@ -148,7 +153,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// Method to deactivate the interaction of an object
     /// </summary>
     /// <param name="moveBack">If true the deactivated object will be set back to it's origin before interaction</param>
-    public void deactivate(bool moveBack = false)
+    public void deactivate()
     {
         controllingHand = Handedness.Invalid;
         //start animation and update the physic constraints after the end of the animation
@@ -161,8 +166,10 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
             UpdatePhysics();
             Destroy(moveAnimation);
         }
+        objectSpecificDeactivation();
         necessaryJointData.Clear();        
     }
+
 
     /// <summary>
     /// Moves the game-object back to the position stored in lastTransformBeforeActivation
@@ -188,7 +195,16 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         rigidbody.isKinematic = false;
     }
 
+    /// <summary>
+    /// This method  performs individual stuff if deactivating an object
+    /// </summary>
+    protected abstract void objectSpecificDeactivation();
 
+
+    /// <summary>
+    /// This method  performs individual stuff if activating an object
+    /// </summary>
+    protected abstract void objectSpecificActivation();
 
     /// <summary>
     /// Updates the displayed animation in relation to the current hand joint data 

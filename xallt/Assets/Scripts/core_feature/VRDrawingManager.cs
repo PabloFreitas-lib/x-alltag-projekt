@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using UnityEngine.XR.Hands;
 using UnityEngine.XR.Interaction.Toolkit;
 using CommonUsages = UnityEngine.XR.CommonUsages;
 
@@ -29,6 +30,14 @@ public class VRDrawingManager : MonoBehaviour
     [SerializeField]
     private XRGrabInteractable _interactable;
 
+    [SerializeField]
+    private InputActionReference leftSelect;
+    [SerializeField]
+    private InputActionReference rightSelect;
+
+
+    private Handedness drawingHand = Handedness.Invalid;
+
     private void Start()
     {
         _currentColorIndex = 0;
@@ -37,14 +46,39 @@ public class VRDrawingManager : MonoBehaviour
 
     private void Update()
     {
-        if (_interactable.isSelected)
+            if (drawingHand == Handedness.Left)
+            {
+                if(leftSelect.action.inProgress)
+                {
+                    StartDrawing();
+                }
+                else
+                {
+                    StopDrawing();
+                }
+                
+            }
+            else if (drawingHand == Handedness.Right)
+            {
+                if(rightSelect.action.inProgress)
+                {
+                    StartDrawing();
+                }
+                else
+                {
+                    StopDrawing();
+                }
+            }
+        
+
+        /*if (_interactable.isSelected)
         {
             StartDrawing();
         }
         else
         {
             StopDrawing();
-        }
+        }*/
         // if (3 finger pinch?)
         // { 
         // Draw();
@@ -67,7 +101,13 @@ public class VRDrawingManager : MonoBehaviour
         // }
     }
 
-
+    public void  setDrawingHand(Handedness hand)
+    {
+        if(hand != Handedness.Invalid)
+        {
+            drawingHand = hand;
+        }       
+    }
     private void Draw()
     {
         if (_currentDrawing == null)
@@ -94,7 +134,6 @@ public class VRDrawingManager : MonoBehaviour
     
     public void StartDrawing()
     {
-        Debug.Log("VRDrawingManager Start");
         _isDrawing = true;
         Draw();
     }

@@ -2144,6 +2144,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LeftLittlePinch",
+                    "type": "Button",
+                    "id": "699b12a6-4481-4f7c-971f-94d0b16dc35b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "RightLittlePinch",
+                    "type": "Button",
+                    "id": "863d133c-0de4-4418-8807-42817943a7b2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -2188,6 +2206,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "pinchRing",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4a01d624-1648-4cd0-bf01-171093c8ce7a",
+                    "path": "<MetaAimHand>{LeftHand}/middlePressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "LeftLittlePinch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "289c9bbc-1288-4833-84be-e643b0f1eb8d",
+                    "path": "<MetaAimHand>{RightHand}/middlePressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Generic XR Controller",
+                    "action": "RightLittlePinch",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

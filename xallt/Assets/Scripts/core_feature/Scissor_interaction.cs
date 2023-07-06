@@ -103,12 +103,14 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private static List<XRHandJointID> GetJointList()
     {
         ///creating list of static defined hand joint indices
-        List<XRHandJointID> joints = new List<XRHandJointID>();
-        joints.Add(m_index_distal);
-        joints.Add(m_middle_distal);
-        joints.Add(m_palm);
-        joints.Add(m_procimalMiddle);
-        joints.Add(m_wrist);
+        List<XRHandJointID> joints = new List<XRHandJointID>
+        {
+            m_index_distal,
+            m_middle_distal,
+            m_palm,
+            m_procimalMiddle,
+            m_wrist
+        };
         return joints;
     }
 
@@ -117,45 +119,23 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// </summary>
     public override void updateInteraction()
     {
-        //getting joint references
-        if(!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index) 
-            && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle)
-            && necessaryJointData.TryGetValue(m_palm, out XRHandJoint palm)
-            && necessaryJointData.TryGetValue(m_procimalMiddle, out XRHandJoint procimalMiddle)
-            &&  necessaryJointData.TryGetValue(m_wrist, out XRHandJoint wrist)))
-        {
-            return;
-        }
-        //getting poses of joints
-        if(!(index.TryGetPose(out Pose indexPose) 
-            && middle.TryGetPose(out Pose middlePose)
-            && palm.TryGetPose(out Pose palmPose)
-            && procimalMiddle.TryGetPose(out Pose proximalMiddlePose)
-            && wrist.TryGetPose(out Pose wristPose)))
-        {
-            return;
-        }
+        getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
+        //applying rotation and position
+        pivot.transform.rotation = finalRot;
+        pivot.transform.position = finalPos;
+
+        if (!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index)
+    && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle)))
+        { return; }
+
+        if (!(index.TryGetPose(out Pose indexPose)
+    && middle.TryGetPose(out Pose middlePose)))
+        { return; }
 
         //distance between distal index and middle finger
         float distance = Vector3.Distance(indexPose.position, middlePose.position);
         distance = Mathf.Clamp(distance, 0, maxAngle);
         moveBlades(distance);
-
-        //apply new pos
-        Vector3 origin = m_XROrigin.transform.position;
-        //transforming the offset from local in world space
-        Vector3 offset = new Vector3(m_xOffset, m_yOffset, m_zOffset);
-        Quaternion palmRotationInHeadsetSpace = palmPose.rotation;
-        Vector3 offsetFromHand = palmRotationInHeadsetSpace * offset;
-        Vector3 pointingDirection = palmPose.position - wristPose.position;
-
-        //Forward vector for scissors
-        Quaternion scissorsForward = Quaternion.LookRotation(pointingDirection, palmPose.rotation * Vector3.up);
-        Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset, m_rotationZOffset);
-
-        //applying rotation and position
-        pivot.transform.rotation = rotationOffset * scissorsForward;
-        pivot.transform.position = palmPose.GetTransformedBy(new Pose(origin, m_XROrigin.transform.rotation)).position + offsetFromHand;
     }
 
     /// <summary>
@@ -208,4 +188,58 @@ public class Scissor_interaction : Scripted_Interactable_Object
     {
         
     }
+
+    protected override void updateHandPosTransform()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
+    {
+
+        if (animationAction == MoveAnimation.AnimationAction.DETACH)
+        {
+            finalPosition = lastTransformBeforeActivation.position;
+            finalRotation = lastTransformBeforeActivation.rotation;
+            return true;
+        }
+
+        finalPosition = Vector3.zero;
+        finalRotation = Quaternion.identity;
+
+        //getting joint references
+        if (!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index)
+            && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle)
+            && necessaryJointData.TryGetValue(m_palm, out XRHandJoint palm)
+            && necessaryJointData.TryGetValue(m_procimalMiddle, out XRHandJoint procimalMiddle)
+            && necessaryJointData.TryGetValue(m_wrist, out XRHandJoint wrist)))
+        {
+            return false;
+        }
+        //getting poses of joints
+        if (!(index.TryGetPose(out Pose indexPose)
+            && middle.TryGetPose(out Pose middlePose)
+            && palm.TryGetPose(out Pose palmPose)
+            && procimalMiddle.TryGetPose(out Pose proximalMiddlePose)
+            && wrist.TryGetPose(out Pose wristPose)))
+        {
+            return false;
+        }
+
+        //apply new pos
+        Vector3 origin = m_XROrigin.transform.position;
+        //transforming the offset from local in world space
+        Vector3 offset = new Vector3(m_xOffset, m_yOffset, m_zOffset);
+        Quaternion palmRotationInHeadsetSpace = palmPose.rotation;
+        Vector3 offsetFromHand = palmRotationInHeadsetSpace * offset;
+        Vector3 pointingDirection = palmPose.position - wristPose.position;
+        finalPosition = palmPose.GetTransformedBy(new Pose(origin, m_XROrigin.transform.rotation)).position + offsetFromHand;
+
+        //Forward vector for scissors
+        Quaternion scissorsForward = Quaternion.LookRotation(pointingDirection, palmPose.rotation * Vector3.up);
+        Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset, m_rotationZOffset);
+        finalRotation = rotationOffset * scissorsForward;
+        return true;
+    }
+    
 }

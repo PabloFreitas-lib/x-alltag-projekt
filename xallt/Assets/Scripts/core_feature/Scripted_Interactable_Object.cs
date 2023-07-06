@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
+using Vector3 = UnityEngine.Vector3;
 
 /// <summary>
 /// Parent class of all objects performing an scripted interaction based of hand-tracking data based in plugin XRHand
@@ -19,7 +20,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Last transform information of activated object
     /// </summary>
-    private Transform lastTransformBeforeActivation;
+    protected Transform lastTransformBeforeActivation;
 
     /// <summary>
     /// Joint data needed for interaction
@@ -31,8 +32,23 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// </summary>
     public readonly List<XRHandJointID> handJointIDs;
 
+    /// <summary>
+    /// Used  to update the physic constraints for this object
+    /// </summary>
     [SerializeField]
+    [Tooltip("The rigidbody of game-object.")]
     private Rigidbody rigidbody;
+
+    /// <summary>
+    /// Object that animates the select and detach behavior of the object 
+    /// </summary>
+    private MoveAnimation moveAnimation;
+
+    /// <summary>
+    /// Event that is triggered when the object reached its designated position
+    /// </summary>
+    public Action OnObjectPositioned;
+
 
     /// <summary>
     /// Constructor that only checks if given list isn't empty
@@ -78,9 +94,13 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
                 lastTransformBeforeActivation = transform;
                 controllingHand = handedness;
                 necessaryJointData = joints;
-
+                //update rigidbody so the object is solely controlled by hand data
                 rigidbody.useGravity = false;
                 rigidbody.isKinematic = true;
+                moveAnimation = new MoveAnimation();
+                moveAnimation.startAnimation(gameObject.transform, this);
+                moveAnimation.OnAnimationEnd += OnAnimationEnd;
+
             } 
             else
             {
@@ -93,6 +113,19 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         }
     }
 
+    private void OnAnimationEnd()
+    {
+        if(moveAnimation != null)
+        {
+            moveAnimation.OnAnimationEnd -= OnAnimationEnd;
+            moveAnimation = null;
+        }
+        if(OnObjectPositioned != null)
+        {
+            OnObjectPositioned.Invoke();
+        }
+    }
+
     /// <summary>
     /// Updates the data used for interaction
     /// </summary>
@@ -102,8 +135,11 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         if(joints.Count == handJointIDs.Count)
         {
             necessaryJointData = joints;
+            updateHandPosTransform();
         }
     }
+
+    protected abstract void updateHandPosTransform();
 
     /// <summary>
     /// Method to deactivate the interaction of an object
@@ -112,16 +148,17 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     public void deactivate(bool moveBack = false)
     {
         controllingHand = Handedness.Invalid;
+        //start animation and update the physic constraints after the end of the animation
         if (moveBack)
         {
             moveBackToOrigin();
         }
-        necessaryJointData.Clear();
-        rigidbody.position = transform.position;
-        rigidbody.velocity = Vector3.zero;
-        rigidbody.useGravity = true;
-        rigidbody.isKinematic = false;
-        
+        else
+        {
+            UpdatePhysics();
+            Destroy(moveAnimation);
+        }
+        necessaryJointData.Clear();        
     }
 
     /// <summary>
@@ -130,8 +167,38 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <exception cref="NotImplementedException">Not implemented yet</exception>
     void moveBackToOrigin()
     {
-        throw new NotImplementedException();
+        moveAnimation = new MoveAnimation();
+        moveAnimation.startAnimation(transform, this);
+        //update the physics and then destroy the MoveAnimation object after the object reached its position
+        moveAnimation.OnAnimationEnd+= UpdatePhysics;
+        moveAnimation.OnAnimationEnd += () => Destroy(moveAnimation);
     }
+
+    /// <summary>
+    /// Updates the physic constraints of rigidbody component
+    /// </summary>
+    private void UpdatePhysics()
+    {
+        rigidbody.position = transform.position;
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.useGravity = true;
+        rigidbody.isKinematic = false;
+    }
+
+
+
+    /// <summary>
+    /// Updates the displayed animation in relation to the current hand joint data 
+    /// </summary>
     public abstract void updateInteraction();
 
+    /// <summary>
+    /// Returns the final position and rotation the object should currently be displayed at. If the object is currently in hand these values represents
+    /// the current holding transform for th object in hand.
+    /// </summary>
+    /// <param name="animationAction">Defines whether the final transform should be the hand or at the last known transform before selection</param>
+    /// <param name="finalPosition">Designated position of object</param>
+    /// <param name="finalRotation">Designated rotation of object</param>
+    /// <returns></returns>
+    public abstract bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out UnityEngine.Quaternion finalRotation);
 }

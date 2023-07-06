@@ -165,10 +165,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
         // Check for cut and ignoring negative angle
         if (Math.Abs(angle) < cutThreshold)
         {
-            if (OnScissorsCut != null)
-            {
-                OnScissorsCut.Invoke();
-            }
+            OnScissorsCut.Invoke();
         }
     }
 
@@ -179,7 +176,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     {
         //getting reference to XR origin
         m_XROrigin = GameObject.Find(m_XRSetupName);
-        if (m_XROrigin == null)
+        if(m_XROrigin == null)
         {
             throw new NullReferenceException("Could not found the xr setup with given name.");
         }
@@ -189,7 +186,12 @@ public class Scissor_interaction : Scripted_Interactable_Object
     // Update is called once per frame
     void Update()
     {
+        
+    }
 
+    protected override void updateHandPosTransform()
+    {
+        throw new NotImplementedException();
     }
 
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
@@ -239,5 +241,5 @@ public class Scissor_interaction : Scripted_Interactable_Object
         finalRotation = rotationOffset * scissorsForward;
         return true;
     }
-
+    
 }

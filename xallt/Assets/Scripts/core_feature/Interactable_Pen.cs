@@ -26,11 +26,6 @@ public class Interactable_Pen : Scripted_Interactable_Object
         return joints;
     }
 
-    public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
-    {
-        throw new NotImplementedException();
-    }
-
     public override void updateInteraction()
     {
         //getting pose data

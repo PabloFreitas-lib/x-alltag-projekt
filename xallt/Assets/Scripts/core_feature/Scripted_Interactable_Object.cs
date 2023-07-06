@@ -33,11 +33,6 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     public readonly List<XRHandJointID> handJointIDs;
 
     /// <summary>
-    /// The material use to display by line renderer
-    /// </summary>
-    public Material animationMaterial;
-
-    /// <summary>
     /// Used  to update the physic constraints for this object
     /// </summary>
     [SerializeField]
@@ -102,9 +97,8 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
                 //update rigidbody so the object is solely controlled by hand data
                 rigidbody.useGravity = false;
                 rigidbody.isKinematic = true;
-                moveAnimation = new GameObject().AddComponent<MoveAnimation>();
-                moveAnimation.drawingMaterial = animationMaterial;
-                moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.SELECT);
+                moveAnimation = new MoveAnimation();
+                moveAnimation.startAnimation(gameObject.transform, this);
                 moveAnimation.OnAnimationEnd += OnAnimationEnd;
 
             } 
@@ -141,8 +135,11 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         if(joints.Count == handJointIDs.Count)
         {
             necessaryJointData = joints;
+            updateHandPosTransform();
         }
     }
+
+    protected abstract void updateHandPosTransform();
 
     /// <summary>
     /// Method to deactivate the interaction of an object
@@ -171,7 +168,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     void moveBackToOrigin()
     {
         moveAnimation = new MoveAnimation();
-        moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.DETACH);
+        moveAnimation.startAnimation(transform, this);
         //update the physics and then destroy the MoveAnimation object after the object reached its position
         moveAnimation.OnAnimationEnd+= UpdatePhysics;
         moveAnimation.OnAnimationEnd += () => Destroy(moveAnimation);

@@ -603,6 +603,8 @@ GameObject:
   - component: {fileID: 8947122078444114281}
   - component: {fileID: 8947122078444114286}
   - component: {fileID: 8947122078444114285}
+  - component: {fileID: 8947122078444114287}
+  - component: {fileID: 8947122078444114280}
   m_Layer: 0
   m_Name: scissors_interactable
   m_TagString: Untagged
@@ -778,3 +780,38 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &8947122078444114287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602227736599530451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a686b0897239d40b3c418654468c1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Interactable: {fileID: 8947122078444114286}
+  _coreController: {fileID: 0}
+  leftSelected: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  rightSelected: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+--- !u!114 &8947122078444114280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8602227736599530451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f8c34a5a6c28a2429f54bfa1e237a2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxAngle: 40
+  anchor: {fileID: 3791689269757541589}
+  untereKlinge: {fileID: 6656437571415095037}
+  obereKlinge: {fileID: 3214776440109916850}
+  pivot: {fileID: 8602227736599530451}
+  ninja: 0
+  m_XRSetupName: Complete XR Origin Set Up

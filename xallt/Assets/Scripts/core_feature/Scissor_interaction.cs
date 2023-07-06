@@ -194,8 +194,8 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
         if (animationAction == MoveAnimation.AnimationAction.DETACH)
         {
-            finalPosition = lastTransformBeforeActivation.position;
-            finalRotation = lastTransformBeforeActivation.rotation;
+            finalPosition = lastPositionBeforeActivation;
+            finalRotation = lastRotationBeforeActivation;
             return true;
         }
 

@@ -18,8 +18,6 @@ public class VRDrawingManager : MonoBehaviour
     public float penWidth = 0.01f;
     public Color[] penColors;
 
-    [FormerlySerializedAs("RightHandController")] [Header("Hands & Grabbable")]
-    public Transform rightHandController;
 
     private LineRenderer _currentDrawing;
     private int _index;
@@ -46,30 +44,25 @@ public class VRDrawingManager : MonoBehaviour
 
     private void Update()
     {
-            if (drawingHand == Handedness.Left)
-            {
-                if(leftSelect.action.inProgress)
-                {
-                    StartDrawing();
-                }
-                else
-                {
-                    StopDrawing();
-                }
-                
-            }
-            else if (drawingHand == Handedness.Right)
-            {
-                if(rightSelect.action.inProgress)
-                {
-                    StartDrawing();
-                }
-                else
-                {
-                    StopDrawing();
-                }
-            }
-        
+        if (drawingHand == Handedness.Left)
+        {
+            _isDrawing = leftSelect.action.inProgress;
+
+        }
+        else if (drawingHand == Handedness.Right)
+        {
+            _isDrawing = rightSelect.action.inProgress;
+        }
+        else if (drawingHand == Handedness.Invalid)
+        {
+            _isDrawing = false;
+        }
+
+        if(_isDrawing)
+        {
+            Draw();
+        }
+
 
         /*if (_interactable.isSelected)
         {
@@ -101,19 +94,19 @@ public class VRDrawingManager : MonoBehaviour
         // }
     }
 
-    public void  setDrawingHand(Handedness hand)
+    public void setDrawingHand(Handedness hand)
     {
-        if(hand != Handedness.Invalid)
+        if (hand != Handedness.Invalid)
         {
             drawingHand = hand;
-        }       
+        }
     }
     private void Draw()
     {
         if (_currentDrawing == null)
         {
             _index = 0;
-            _currentDrawing = new GameObject().AddComponent<LineRenderer>();
+            _currentDrawing = gameObject.AddComponent<LineRenderer>();
             _currentDrawing.material = drawingMaterial;
             _currentDrawing.startColor = _currentDrawing.endColor = penColors[_currentColorIndex];
             _currentDrawing.startWidth = _currentDrawing.endWidth = penWidth;
@@ -131,18 +124,18 @@ public class VRDrawingManager : MonoBehaviour
             }
         }
     }
-    
+
     public void StartDrawing()
     {
         _isDrawing = true;
         Draw();
     }
-    
+
     public void StopDrawing()
     {
         _isDrawing = false;
     }
-    
+
     private void DrawLine()
     {
         _index = 0;
@@ -166,10 +159,11 @@ public class VRDrawingManager : MonoBehaviour
         }
         tipMaterial.color = penColors[_currentColorIndex];
     }
-    
+
     public void ClearDrawing()
     {
         _currentDrawing.positionCount = 0;
+        _index = 0;
     }
-    
+
 }

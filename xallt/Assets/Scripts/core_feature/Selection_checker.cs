@@ -29,7 +29,7 @@ public class Selection_checker : MonoBehaviour
     void Start()
     {
         controller = _coreController.GetComponent<core_feature_controller>();
-        if(controller == null)
+        if (controller == null)
         {
             throw new MissingComponentException("core feature controller not found in controller holder object.");
         }
@@ -38,23 +38,28 @@ public class Selection_checker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(m_Interactable.isSelected && !m_lastSelected)
+        if (m_Interactable.isSelected && !m_lastSelected)
         {
-            if(controller != null)
+            if (controller != null)
             {
-                if (leftSelected.action.WasPerformedThisFrame())
+                if (leftSelected.action.WasPressedThisFrame())
                 {
-                    controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left);
-                    m_lastSelected = true;
+                    if (controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left))
+                    {
+                        m_lastSelected = true;
+                    }
                 }
-                else if (rightSelected.action.WasPerformedThisFrame())
+                else if (rightSelected.action.WasPressedThisFrame())
                 {
-                    controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right);
-                    m_lastSelected = true;
+                    if (controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right))
+                    {
+                        m_lastSelected = true;
+                    }
+
                 }
             }
         }
-        else if(!m_Interactable.isSelected && m_lastSelected)
+        else if (!m_Interactable.isSelected && m_lastSelected)
         {
             m_lastSelected = false;
         }

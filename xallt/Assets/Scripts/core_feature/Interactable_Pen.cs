@@ -45,44 +45,56 @@ public class Interactable_Pen : Scripted_Interactable_Object
     [Range(-30, 30)]
     private float m_rotationZOffset = 0.0f;
 
+    private VRDrawingManager drawingManager;
+
 
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
     {
         finalPosition = Vector3.zero;
         finalRotation = Quaternion.identity;
-        //getting pose data
-        if (!(necessaryJointData.TryGetValue(m_indexDistalJointID, out XRHandJoint indexDistal)
-            && necessaryJointData.TryGetValue(m_indexProximalJointId, out XRHandJoint middleProcimal)))
+        if (animationAction == MoveAnimation.AnimationAction.SELECT)
         {
-            return false;
-        }
+            //getting pose data
+            if (!(necessaryJointData.TryGetValue(m_indexDistalJointID, out XRHandJoint indexDistal)
+                && necessaryJointData.TryGetValue(m_indexProximalJointId, out XRHandJoint middleProcimal)))
+            {
+                return false;
+            }
 
-        if (!(indexDistal.TryGetPose(out Pose indexProximalPose)
-            && middleProcimal.TryGetPose(out Pose indexDistalPose)))
+            if (!(indexDistal.TryGetPose(out Pose indexProximalPose)
+                && middleProcimal.TryGetPose(out Pose indexDistalPose)))
+            {
+                return false;
+            }
+
+
+            //apply new pos
+            Vector3 origin = m_XROrigin.transform.position;
+            //transforming the offset from local in world space
+            Vector3 offset = new Vector3(m_xOffset, m_yOffset, m_zOffset);
+            Quaternion palmRotationInHeadsetSpace = indexProximalPose.rotation;
+            Vector3 offsetFromHand = palmRotationInHeadsetSpace * offset;
+            Vector3 pointingDirection = indexProximalPose.position - indexDistalPose.position;
+            //apply new pos
+            //transforming the offset from local in world space
+            finalPosition = indexProximalPose.GetTransformedBy(new Pose(origin, m_XROrigin.transform.rotation)).position + offsetFromHand;
+
+            //Forward vector for scissors
+            Quaternion scissorsForward = Quaternion.LookRotation(pointingDirection, indexDistalPose.rotation * Vector3.up);
+            Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset + 90, m_rotationZOffset);
+            //Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset, m_rotationZOffset);
+
+            finalRotation = rotationOffset * scissorsForward;
+
+            return true;
+        }
+        if(animationAction == MoveAnimation.AnimationAction.DETACH)
         {
-            return false;
+            finalPosition = lastPositionBeforeActivation;
+            finalRotation = lastRotationBeforeActivation;
+            return true;
         }
-
-
-        //apply new pos
-        Vector3 origin = m_XROrigin.transform.position;
-        //transforming the offset from local in world space
-        Vector3 offset = new Vector3(m_xOffset, m_yOffset, m_zOffset);
-        Quaternion palmRotationInHeadsetSpace = indexProximalPose.rotation;
-        Vector3 offsetFromHand = palmRotationInHeadsetSpace * offset;
-        Vector3 pointingDirection = indexProximalPose.position - indexDistalPose.position;
-        //apply new pos
-        //transforming the offset from local in world space
-        finalPosition = indexProximalPose.GetTransformedBy(new Pose(origin, m_XROrigin.transform.rotation)).position + offsetFromHand;
-
-        //Forward vector for scissors
-        Quaternion scissorsForward = Quaternion.LookRotation(pointingDirection, indexDistalPose.rotation * Vector3.up);
-        Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset + 90, m_rotationZOffset);
-        //Quaternion rotationOffset = Quaternion.Euler(m_rotationXOffset, m_rotationYOffset, m_rotationZOffset);
-
-        finalRotation = rotationOffset * scissorsForward;
-
-        return true;
+        return false;
     }
 
     public override void updateInteraction()
@@ -111,12 +123,17 @@ public class Interactable_Pen : Scripted_Interactable_Object
     }
 
     protected override void objectSpecificDeactivation()
-    {
-       // GetComponent<VRDrawingManager>().ClearDrawing();
+    {      
+        if (drawingManager != null)
+        {
+            drawingManager.setDrawingHand(Handedness.Invalid);
+            drawingManager.ClearDrawing();
+        }
     }
 
     protected override void objectSpecificActivation()
     {
-        GetComponent<VRDrawingManager>().setDrawingHand(controllingHand);
+        drawingManager = GetComponent<VRDrawingManager>();
+        drawingManager.setDrawingHand(controllingHand);
     }
 }

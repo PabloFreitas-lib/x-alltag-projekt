@@ -8,7 +8,7 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Describes the animation type
     /// </summary>
-    public AnimationType easing = AnimationType.EASEINOUT;
+    public AnimationType easing = AnimationType.EASEIN;
 
     /// <summary>
     /// Event that is called if the maximal animation was reached
@@ -28,12 +28,12 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Time after the animation ends
     /// </summary>
-    public float maxAnimationTime = 2f;
+    public float maxAnimationTime = 1.5f;
 
     /// <summary>
     /// Width of drawn line of line-renderer
     /// </summary>
-    public float animationWidth = 0.07f;
+    public float animationWidth = 0.02f;
 
     /// <summary>
     /// End rotation for animation
@@ -149,8 +149,9 @@ public class MoveAnimation : MonoBehaviour
                 }
                 else
                 {
-                    objectToMove.getFinalTransform(animationAction, out m_endPosition, out m_endRotation);
-                    animate();
+                    if(objectToMove.getFinalTransform(animationAction, out m_endPosition, out m_endRotation))
+                    { animate(); }
+                    
                 }
             }
         }

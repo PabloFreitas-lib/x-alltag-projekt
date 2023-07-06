@@ -20,7 +20,8 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Last transform information of activated object
     /// </summary>
-    protected Transform lastTransformBeforeActivation;
+    protected Quaternion lastRotationBeforeActivation;
+    protected Vector3 lastPositionBeforeActivation;
 
     /// <summary>
     /// Joint data needed for interaction
@@ -101,15 +102,17 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
             //check if length of given dictionary matches the length of pre-defined joint id list
             if (joints.Count == handJointIDs.Count)
             {
-                lastTransformBeforeActivation = transform;
+                lastPositionBeforeActivation = transform.position;
+                lastRotationBeforeActivation = transform.rotation;
                 controllingHand = handedness;
                 necessaryJointData = joints;
                 //update rigidbody so the object is solely controlled by hand data
                 rigidbody.useGravity = false;
                 rigidbody.isKinematic = true;
-                moveAnimation = new GameObject().AddComponent<MoveAnimation>();
+                moveAnimation = gameObject.AddComponent<MoveAnimation>();
                 moveAnimation.drawingMaterial = animationMaterial;
                 moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.SELECT);
+                moveAnimation.OnAnimationEnd += () => objectSpecificActivation();
                 moveAnimation.OnAnimationEnd += OnAnimationEnd;
 
             } 
@@ -156,6 +159,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     public void deactivate()
     {
         controllingHand = Handedness.Invalid;
+        objectSpecificDeactivation();
         //start animation and update the physic constraints after the end of the animation
         if (moveBack)
         {
@@ -163,10 +167,10 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         }
         else
         {
+            objectSpecificDeactivation();
             UpdatePhysics();
             Destroy(moveAnimation);
         }
-        objectSpecificDeactivation();
         necessaryJointData.Clear();        
     }
 
@@ -177,7 +181,12 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <exception cref="NotImplementedException">Not implemented yet</exception>
     void moveBackToOrigin()
     {
-        moveAnimation = new MoveAnimation();
+        Collider collider = gameObject.GetComponent<Collider>();
+        if(collider != null)
+        {
+            collider.enabled = false;
+        }
+        moveAnimation =  gameObject.AddComponent<MoveAnimation>();
         moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.DETACH);
         //update the physics and then destroy the MoveAnimation object after the object reached its position
         moveAnimation.OnAnimationEnd+= UpdatePhysics;
@@ -189,6 +198,11 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// </summary>
     private void UpdatePhysics()
     {
+        Collider collider = gameObject.GetComponent<Collider>();
+        if(collider != null)
+        {
+            collider.enabled = true;
+        }
         rigidbody.position = transform.position;
         rigidbody.velocity = Vector3.zero;
         rigidbody.useGravity = true;

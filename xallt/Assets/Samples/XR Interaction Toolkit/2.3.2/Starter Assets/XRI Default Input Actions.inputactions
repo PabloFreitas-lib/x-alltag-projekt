@@ -2110,9 +2110,18 @@
             "id": "b79ead10-9807-4cdc-8a5f-ddbfd2adf478",
             "actions": [
                 {
-                    "name": "pinchIndex",
+                    "name": "pinchIndexLeft",
                     "type": "Button",
                     "id": "d0301f86-aead-4fa1-a0c0-f56fa03a5979",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "pinchIndexRight",
+                    "type": "Button",
+                    "id": "924c165f-0dd7-4ec3-8840-89a14cac6c7d",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -2168,11 +2177,11 @@
                 {
                     "name": "",
                     "id": "1158eebf-a6f4-4599-835a-c8477bbc950a",
-                    "path": "<MetaAimHand>/indexPressed",
+                    "path": "<MetaAimHand>{LeftHand}/indexPressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "pinchIndex",
+                    "action": "pinchIndexLeft",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -2212,7 +2221,7 @@
                 {
                     "name": "",
                     "id": "4a01d624-1648-4cd0-bf01-171093c8ce7a",
-                    "path": "<MetaAimHand>{LeftHand}/middlePressed",
+                    "path": "<MetaAimHand>{LeftHand}/littlePressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "Generic XR Controller",
@@ -2223,11 +2232,22 @@
                 {
                     "name": "",
                     "id": "289c9bbc-1288-4833-84be-e643b0f1eb8d",
-                    "path": "<MetaAimHand>{RightHand}/middlePressed",
+                    "path": "<MetaAimHand>{RightHand}/littlePressed",
                     "interactions": "",
                     "processors": "",
                     "groups": "Generic XR Controller",
                     "action": "RightLittlePinch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4df21af6-0635-435e-b411-ecd3b375bf43",
+                    "path": "<MetaAimHand>{RightHand}/indexPressed",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pinchIndexRight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

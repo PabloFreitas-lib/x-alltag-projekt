@@ -2052,6 +2052,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4371777293683817490}
     m_Modifications:
+    - target: {fileID: 429297447930701460, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.9300003
+      objectReference: {fileID: 0}
     - target: {fileID: 3051311836793844223, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2136,8 +2140,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3083783763523011857, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_Color.b
+      value: 0.85882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 3083783763523011857, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_Color.g
+      value: 0.63529414
+      objectReference: {fileID: 0}
+    - target: {fileID: 3083783763523011857, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3309382496205236204, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3440069286876176714, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_Color.b
+      value: 0.85882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 3440069286876176714, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_Color.g
+      value: 0.63529414
+      objectReference: {fileID: 0}
+    - target: {fileID: 3440069286876176714, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: m_Color.r
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4706744238943718367, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
@@ -2192,6 +2220,18 @@ PrefabInstance:
       propertyPath: colorChart
       value: 
       objectReference: {fileID: 2800000, guid: 9b65ce21f7fe16444ae574dd2567a84d, type: 3}
+    - target: {fileID: 6774485064841402394, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: newcolor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6774485064841402394, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: newcolor.b
+      value: 0.85882354
+      objectReference: {fileID: 0}
+    - target: {fileID: 6774485064841402394, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: newcolor.g
+      value: 0.63529414
+      objectReference: {fileID: 0}
     - target: {fileID: 6774485064841402394, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
       propertyPath: colorChartRect
       value: 

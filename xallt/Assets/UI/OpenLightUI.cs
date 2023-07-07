@@ -7,13 +7,17 @@ public class OpenLightUI : MonoBehaviour
 
     private void Start()
     {
-        isCanvasEnabled = false;
-        canvas.enabled = isCanvasEnabled;
+        canvas.gameObject.SetActive(false);
+        //canvas.enabled = isCanvasEnabled;
     }
 
     private void OnMouseDown()
     {
-        isCanvasEnabled = !isCanvasEnabled;
-        canvas.enabled = isCanvasEnabled;
+        //isCanvasEnabled = !isCanvasEnabled;
+        //canvas.enabled = isCanvasEnabled;
+    }
+    public void UIsetActive()
+    {
+        gameObject.SetActive(!gameObject.active);
     }
 }

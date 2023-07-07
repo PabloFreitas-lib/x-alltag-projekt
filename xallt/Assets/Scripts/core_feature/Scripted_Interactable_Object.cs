@@ -85,7 +85,6 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
 /// <summary>
@@ -128,6 +127,13 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns the controlling hand of object.
+    /// </summary>
+    /// <returns>Either left or right, if object is in  control or Invalid if it's not selected.</returns>
+    public Handedness getControllingHand()
+    { return controllingHand; }
+
     private void OnAnimationEnd()
     {
         if(moveAnimation != null)
@@ -169,10 +175,8 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         else
         {
             objectSpecificDeactivation();
-            UpdatePhysics();
-            Destroy(moveAnimation);
-        }
-        necessaryJointData.Clear();        
+            UpdateToObjectStatic();
+        }               
     }
 
 
@@ -190,17 +194,20 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
                 col.enabled = false;
             }
         }
+        rigidbody.useGravity = false;
+        rigidbody.isKinematic = true;
         moveAnimation =  gameObject.AddComponent<MoveAnimation>();
+        moveAnimation.drawingMaterial = animationMaterial;
         moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.DETACH);
         //update the physics and then destroy the MoveAnimation object after the object reached its position
-        moveAnimation.OnAnimationEnd+= UpdatePhysics;
-        moveAnimation.OnAnimationEnd += () => Destroy(moveAnimation);
+
+        moveAnimation.OnAnimationEnd += UpdateToObjectStatic;
     }
 
     /// <summary>
     /// Updates the physic constraints of rigidbody component
     /// </summary>
-    private void UpdatePhysics()
+    private void UpdateToObjectStatic()
     {
         Collider[] colList = transform.GetComponentsInChildren<Collider>();
         if (colList != null && colList.Count() > 0)
@@ -214,6 +221,8 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         rigidbody.velocity = Vector3.zero;
         rigidbody.useGravity = true;
         rigidbody.isKinematic = false;
+        Destroy(moveAnimation);
+        necessaryJointData.Clear();
     }
 
     /// <summary>

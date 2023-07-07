@@ -146,11 +146,11 @@ public class Scissor_interaction : Scripted_Interactable_Object
         //distance between distal index and middle finger
         float distance = Vector3.Distance(indexDistalPose.position, middleDistalPose.position);
         distance = Mathf.Clamp(distance, 0, maxBladeAngle);
-        //  moveBlades(distance);
+          moveBlades(distance);
 
         Vector3 middleForward = middleDistalPose.position - middleProcimalPose.position;
         Vector3 indexForward = indexDistalPose.position - indexProcimalPose.position;
-        moveBladesByAngle(middleForward, indexForward);
+        //moveBladesByAngle(middleForward, indexForward);
     }
 
     /// <summary>
@@ -242,7 +242,6 @@ public class Scissor_interaction : Scripted_Interactable_Object
     // Update is called once per frame
     void Update()
     {
-        
     }
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
     {

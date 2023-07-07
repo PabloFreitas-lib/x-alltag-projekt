@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Scripted_Interactable_Object))]
 public class MoveAnimation : MonoBehaviour
 {
     /// <summary>
@@ -165,6 +166,7 @@ public class MoveAnimation : MonoBehaviour
         m_isRunning = false;
         timeAnimating = float.NegativeInfinity;
         remainingDistance = float.MaxValue;
+        startDistance = float.NaN;
         m_startRotation = Quaternion.identity;
         if (renderer.gameObject != null)
         {

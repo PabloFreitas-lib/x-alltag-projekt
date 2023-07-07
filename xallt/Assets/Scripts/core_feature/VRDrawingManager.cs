@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Interaction.Toolkit;
-using CommonUsages = UnityEngine.XR.CommonUsages;
 
 public class VRDrawingManager : MonoBehaviour
 {
@@ -18,23 +13,22 @@ public class VRDrawingManager : MonoBehaviour
     public float penWidth = 0.01f;
     public Color[] penColors;
 
-
+    [Header("Drawing Properties")]
     private LineRenderer _currentDrawing;
     private int _index;
     private int _currentColorIndex;
-    private bool _isDrawing = false;
+    private bool _isDrawing;
     private Vector3 _previousPosition;
 
+    [Header("Hands & Interactable")]
     [SerializeField]
-    private XRGrabInteractable _interactable;
-
+    private XRGrabInteractable interactable;
     [SerializeField]
     private InputActionReference leftSelect;
     [SerializeField]
     private InputActionReference rightSelect;
 
-
-    private Handedness drawingHand = Handedness.Invalid;
+    private Handedness _drawingHand = Handedness.Invalid;
 
     private void Start()
     {
@@ -44,26 +38,23 @@ public class VRDrawingManager : MonoBehaviour
 
     private void Update()
     {
-        if (drawingHand == Handedness.Left)
+        if (_drawingHand == Handedness.Left)
         {
-            _isDrawing = leftSelect.action.inProgress;
-
+            _isDrawing = leftSelect.action.inProgress; 
         }
-        else if (drawingHand == Handedness.Right)
+        else if (_drawingHand == Handedness.Right)
         {
             _isDrawing = rightSelect.action.inProgress;
         }
-        else if (drawingHand == Handedness.Invalid)
+        else if (_drawingHand == Handedness.Invalid)
         {
             _isDrawing = false;
         }
-
         if(_isDrawing)
         {
             Draw();
         }
-
-
+        
         /*if (_interactable.isSelected)
         {
             StartDrawing();
@@ -72,35 +63,19 @@ public class VRDrawingManager : MonoBehaviour
         {
             StopDrawing();
         }*/
-        // if (3 finger pinch?)
-        // { 
-        // Draw();
-        // }
-        // else if (!3 finger pinch && _isDrawing)
-        // {
-        //     StopDrawing();
-        // }
-        //
-        // if (_isDrawing)
-        // {
-        //     Vector3 currentPosition = rightHandController.transform.position;
-        //
-        //     if (Vector3.Distance(currentPosition, _previousPosition) > penWidth)
-        //     {
-        //         DrawLine();
-        //     }
-        //
-        //     _previousPosition = currentPosition;
-        // }
     }
 
-    public void setDrawingHand(Handedness hand)
+    public void SetDrawingHand(Handedness hand)
     {
         if (hand != Handedness.Invalid)
         {
-            drawingHand = hand;
+            _drawingHand = hand;
         }
     }
+    
+    /**
+     * Die Draw()-Methode wird genutzt, um eine 3D-Linie im Raum zu zeichnen.
+     */
     private void Draw()
     {
         if (_currentDrawing == null)
@@ -125,28 +100,29 @@ public class VRDrawingManager : MonoBehaviour
         }
     }
 
+    /*
+     * StartDrawing() startet die Zeichnung. Wurde für das Starten des Zeichnens
+     * mithilfe eine Buttons benötigt.
+     */
     public void StartDrawing()
     {
         _isDrawing = true;
         Draw();
     }
 
+    /**
+     * StopDrawing() beendet eine Zeichnung, indem _isDrawing = false gesetzt wird.
+     */
     public void StopDrawing()
     {
         _isDrawing = false;
     }
 
-    private void DrawLine()
-    {
-        _index = 0;
-        _currentDrawing = new GameObject().AddComponent<LineRenderer>();
-        _currentDrawing.material = drawingMaterial;
-        _currentDrawing.startColor = _currentDrawing.endColor = penColors[_currentColorIndex];
-        _currentDrawing.startWidth = _currentDrawing.endWidth = penWidth;
-        _currentDrawing.positionCount = 1;
-        _currentDrawing.SetPosition(0, tip.position);
-    }
-
+    /**
+     * SwitchColor() verändert die Farbe des Stifts, allerdings muss dazu noch ein Mechanismus
+     * entworfen werden, um das möglichst intuitiv und benutzerfreundlich zu gestalten.
+     * SwitchColor() wird dementsprechend noch an keiner Stelle aufgerufen.
+     */
     private void SwitchColor()
     {
         if (_currentColorIndex == penColors.Length - 1)
@@ -160,6 +136,9 @@ public class VRDrawingManager : MonoBehaviour
         tipMaterial.color = penColors[_currentColorIndex];
     }
 
+    /**
+     * ClearDrawing() wird aufgerufen, um die Szene von einer 3D-Zeichnung zu befreien.
+     */
     public void ClearDrawing()
     {
         _currentDrawing.positionCount = 0;

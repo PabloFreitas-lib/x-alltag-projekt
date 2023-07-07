@@ -126,7 +126,7 @@ public class Interactable_Pen : Scripted_Interactable_Object
     {      
         if (drawingManager != null)
         {
-            drawingManager.setDrawingHand(Handedness.Invalid);
+            drawingManager.SetDrawingHand(Handedness.Invalid);
             drawingManager.ClearDrawing();
         }
     }
@@ -134,6 +134,6 @@ public class Interactable_Pen : Scripted_Interactable_Object
     protected override void objectSpecificActivation()
     {
         drawingManager = GetComponent<VRDrawingManager>();
-        drawingManager.setDrawingHand(controllingHand);
+        drawingManager.SetDrawingHand(controllingHand);
     }
 }

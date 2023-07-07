@@ -12,7 +12,7 @@ public class DayNightController : MonoBehaviour
     [Header("Sun")]
     public Light sun; // Reference to the sun's light component
     public float intensity; // Intensity of the sun
-    public float sunIntensityScale;
+ 
 
     [Header("Sun Animation")]
     public bool useTestAnimation = false; // Set to true to use test animation

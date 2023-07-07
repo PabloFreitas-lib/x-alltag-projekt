@@ -6,12 +6,17 @@ public class LightController : MonoBehaviour
 {
     private CustomLightScript[] lights;
 
-    public bool useTemperatureControl = true; // Toggle between temperature and RGB control
-    public float brightness = 1f;
-    public Color color = new Color(255f / 255f, 180f / 255f, 107f / 255f);
+    [Header("UI Components")]
     public UIColorPickButton colorPickButton;
     public Slider brightnessSlider; // Reference to the UI Slider for brightness control
     public Toggle activateAllLightsToggle; // Reference to the UI Toggle for activating or disabling all lights
+    public Toggle activateTempToggle;// Reference to the UI Toggle for Temperature
+    public Slider temperatureSlider;
+
+    [Header("Manual Control")]
+    public bool useTemperatureControl; // Toggle between temperature and RGB control
+    public float brightness = 1f;
+    public Color color = new Color(255f / 255f, 180f / 255f, 107f / 255f);
     public bool activateAllLights;
 
     // Slider for light temperature / color change
@@ -31,6 +36,8 @@ public class LightController : MonoBehaviour
         // Add listeners to the UI Slider and Toggle
         brightnessSlider.onValueChanged.AddListener(OnBrightnessSliderValueChanged);
         activateAllLightsToggle.onValueChanged.AddListener(OnActivateAllLightsToggleValueChanged);
+        temperatureSlider.onValueChanged.AddListener(OnTemperatureSliderValueChanged);
+        activateTempToggle.onValueChanged.AddListener(OnActivateTemperatureControlToggleValueChanged);
     }
 
     public void SetBrightness(float brightness)
@@ -62,10 +69,22 @@ public class LightController : MonoBehaviour
         SetBrightness(brightness);
     }
 
+    // Event listener for temperature slider value changed
+    private void OnTemperatureSliderValueChanged(float value)
+    {
+        tempSlider = value;
+    }
+
     // Event listener for activate all lights toggle value changed
     private void OnActivateAllLightsToggleValueChanged(bool value)
     {
         activateAllLights = value;
+    }
+
+    // Event listener for activate temperature control
+    private void OnActivateTemperatureControlToggleValueChanged(bool value)
+    {
+        useTemperatureControl = value;
     }
 
     private void Update()
@@ -101,4 +120,3 @@ public class LightController : MonoBehaviour
         SetBrightness(brightness);
     }
 }
-

@@ -19,6 +19,7 @@ public class tester : MonoBehaviour
 
     private void onCut()
     {
+        Debug.Log("Cut");
     }
 
     // Update is called once per frame

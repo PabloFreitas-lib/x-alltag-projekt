@@ -11,18 +11,17 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Maximal opening angle between the two blade-components
     /// </summary>
-    [Tooltip("The maximal opening angle between the two blade parts")]
-    [Range(20, 60)]
-    [SerializeField]
-    private float maxAngle = 37;
+    private float maxBladeAngle = 45;
 
     /// <summary>
     /// Minimal opening angle between the two blade-components
     /// </summary>
-    [Tooltip("The maximal opening angle between the two blade parts")]
-    [Range(20, 60)]
-    [SerializeField]
-    private float minAngle = 3;
+    private float minFingerAngle = 4;
+
+    /// <summary>
+    /// Maximal angle between real fingers
+    /// </summary>
+    private float maxFingerAngle = 30;
 
     /// <summary>
     /// defined by testing around
@@ -34,7 +33,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private float m_rotationXOffset = 17.1f;
     private float m_rotationZOffset = 0.0f;
 
-    private float cutThreshold = 5;
+    private float cutThreshold = 3;
 
     /// <summary>
     /// Anchor to rotate the whole object around
@@ -146,7 +145,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
         //distance between distal index and middle finger
         float distance = Vector3.Distance(indexDistalPose.position, middleDistalPose.position);
-        distance = Mathf.Clamp(distance, 0, maxAngle);
+        distance = Mathf.Clamp(distance, 0, maxBladeAngle);
         //  moveBlades(distance);
 
         Vector3 middleForward = middleDistalPose.position - middleProcimalPose.position;
@@ -164,10 +163,15 @@ public class Scissor_interaction : Scripted_Interactable_Object
         float angleBetween = Math.Abs(Vector3.Angle(middleForward, indexForward));
         if (angleBetween < 0)
         {
-            angleBetween = minAngle;
+            angleBetween = minFingerAngle;
         }
 
-        if(angleBetween <= cutThreshold)
+        if(angleBetween > maxFingerAngle)
+        { angleBetween = maxFingerAngle; }
+        if(angleBetween < minFingerAngle)
+        { angleBetween = minFingerAngle;  }
+        float mappedAngle = 0f + (angleBetween - minFingerAngle) * (maxBladeAngle- 0f) / (maxFingerAngle - minFingerAngle);
+        if (mappedAngle <= cutThreshold)
         {
             if(OnScissorsCut != null)
             {
@@ -175,11 +179,16 @@ public class Scissor_interaction : Scripted_Interactable_Object
             }
         }
 
-        float delta = angleBetween - lastAngle;
+        if(mappedAngle < 0)
+        {
+            mappedAngle = 0;
+        }
 
-        untereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, -delta / 2);
-        obereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, delta / 2);
-        lastAngle = angleBetween;
+        float delta = mappedAngle - lastAngle;
+
+        untereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, delta / 2);
+        obereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, -delta / 2);
+        lastAngle = mappedAngle;
     }
 
     /// <summary>
@@ -189,7 +198,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private void moveBlades(float distance)
     {
         //remapping values https://forum.unity.com/threads/re-map-a-number-from-one-range-to-another.119437/
-        float angle = (distance - minDistance) / (0f - minDistance) * (maxAngle - maxDistance) + maxDistance;
+        float angle = (distance - minDistance) / (0f - minDistance) * (maxBladeAngle - maxDistance) + maxDistance;
 
         if (ninja)
         {

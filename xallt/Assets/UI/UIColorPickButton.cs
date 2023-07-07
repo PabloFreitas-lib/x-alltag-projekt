@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -17,8 +18,9 @@ namespace InfoGamerHubAssets
         public RectTransform colorChartRect;
 
         public RectTransform cursor;
-        public XRRayInteractor rayinteractor;
 
+        public XRRayInteractor rayinteractor;
+        public XRSimpleInteractable interactable;
 
         public Color newcolor;
         [SerializeField] Image button;
@@ -27,27 +29,38 @@ namespace InfoGamerHubAssets
         public int xcol = 0;
         public int ycol = 0;
 
-        public void PickColor(BaseEventData data)
+        public void PickColor()
         {
-            PointerEventData pointer = data as PointerEventData;
-
-            cursor.position = pointer.position;
-
-            rayinteractor.TryGetCurrent3DRaycastHit(out RaycastHit raycastHit);
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(colorChartRect, raycastHit.point, Camera.main, out Vector2 localPoint);
-            Debug.Log(localPoint.x);
-            Debug.Log(localPoint.y);
-            //Vector2 cursorRealPosition = new Vector2(colorChartRect.rect.width / 2 + cursor.localPosition.x, colorChartRect.rect.height / 2 + cursor.localPosition.y);
-
-            //Color pickedColor = colorChart.GetPixel((int)(cursorRealPosition.x * (colorChart.width / colorChartRect.rect.width)), (int)(cursorRealPosition.y * (colorChart.height / colorChartRect.rect.height)));
+            if(rayinteractor == null) // nur wenn ein Interactor gefunden wurde, kann der Code arbeiten -> wird automatisch hinzugefügt.
+            {
+                return; 
+            }
+            rayinteractor.TryGetCurrent3DRaycastHit(out RaycastHit raycastHit); // Wo trifft dieser Interactor mit dem ray hin? gib mir den hit Point (UI hat ein Collider jetzt)
             
-            Color pickedColor = colorChart.GetPixel((int) (localPoint.x * (colorChart.width / colorChartRect.rect.width)), (int)( localPoint.y * (colorChart.height / colorChartRect.rect.height)));
-            newcolor = pickedColor;
+            cursor.SetPositionAndRotation(new Vector3(raycastHit.point.x, raycastHit.point.y, raycastHit.point.z), cursor.rotation); // Benutze den HitPoint um die Position des Cursors festzulegen.
+            cursor.SetLocalPositionAndRotation(new Vector3(Math.Clamp(cursor.localPosition.x, -10, 10), Math.Clamp(cursor.localPosition.y, -10, 10), cursor.localPosition.z),cursor.localRotation); // Ein bisschen Vektormathematik mit der lokalen Position des Cursors.
+            Color pickedColor = colorChart.GetPixel((int) ((cursor.localPosition.x + 10) * (colorChart.width / colorChartRect.rect.width)), (int)((cursor.localPosition.y + 10) * (colorChart.height / colorChartRect.rect.height))); // Ein bisschen mehr Vektormathematik, um die Farbe zu bestimmen
+            newcolor = pickedColor; // Na endlich, wir haben eine Farbe gefunden!
 
-            //Debug.Log(pickedColor);
+            Debug.Log(pickedColor);
             button.color = pickedColor;
             cursorColor.color = pickedColor;
             ColorPickerEvent.Invoke(pickedColor);
+        }
+        private void Start()
+        {
+            interactable = GetComponent<XRSimpleInteractable>(); // XR stuff
+            interactable.selectEntered.AddListener(OnSelectEntered);
+        }
+
+        private void OnDestroy()
+        {
+            interactable.selectEntered.RemoveListener(OnSelectEntered);// XR stuff
+        }
+
+        private void OnSelectEntered(SelectEnterEventArgs args)
+        {
+            rayinteractor = (XRRayInteractor) args.interactor; // Gib mir doch mal bitte den Interactor, den du benutzt hast, um auf die UI zu klicken. Dann kann auch ColorPicker funktionieren.
         }
     }
 }

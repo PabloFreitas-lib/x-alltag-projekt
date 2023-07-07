@@ -96,7 +96,6 @@ GameObject:
   - component: {fileID: 1562724184071086504}
   - component: {fileID: 2468638952995832475}
   - component: {fileID: 7056331298312823638}
-  - component: {fileID: -5972294099088666596}
   - component: {fileID: -936026745922366678}
   - component: {fileID: 3442681793999656953}
   m_Layer: 0
@@ -401,8 +400,6 @@ MonoBehaviour:
   text: 
   parent: {fileID: 0}
   children: []
-  lineRenderer: {fileID: 0}
-  rayMaterial: {fileID: 2100000, guid: 396b20f5a904cc94fb0a6211604fdc6f, type: 2}
   isRoot: 0
 --- !u!114 &7056331298312823638
 MonoBehaviour:
@@ -420,20 +417,6 @@ MonoBehaviour:
   highLightColor: {r: 0.7383046, g: 0.753293, b: 0.15126534, a: 0}
   isHighlighted: 0
   pointLight: {fileID: 0}
---- !u!114 &-5972294099088666596
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1562724184071086511}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 162b4e5a3d1fcd043afbc6bf71ab2e51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_MultiSelectPosition: 0
-  m_MultiSelectRotation: 2
 --- !u!114 &-936026745922366678
 MonoBehaviour:
   m_ObjectHideFlags: 0

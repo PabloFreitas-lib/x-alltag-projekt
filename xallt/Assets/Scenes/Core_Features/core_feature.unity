@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731704, g: 0.13414727, b: 0.121078536, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -226,6 +226,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: scissors_interactable 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7357353156898480862, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877148809727850594, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
+      propertyPath: handToHold
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7877148809727850594, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
       propertyPath: _coreController
       value: 
@@ -342,6 +350,7 @@ MonoBehaviour:
   _coreController: {fileID: 501085118}
   leftSelected: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightSelected: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  handToHold: 2
 --- !u!114 &796599521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,7 +522,7 @@ MonoBehaviour:
   - {r: 0.052954715, g: 0.990566, b: 0.0744706, a: 1}
   - {r: 0.70980394, g: 0.1254902, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
-  _interactable: {fileID: 796599521}
+  interactable: {fileID: 0}
   leftSelect: {fileID: -302068329176465271, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightSelect: {fileID: -2887381417032762628, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!136 &796599524
@@ -768,7 +777,7 @@ MonoBehaviour:
   - {r: 0.052954715, g: 0.990566, b: 0.0744706, a: 1}
   - {r: 0.70980394, g: 0.1254902, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
-  _interactable: {fileID: 1035513893}
+  interactable: {fileID: 0}
   leftSelect: {fileID: 0}
   rightSelect: {fileID: 0}
 --- !u!136 &1035513889
@@ -1264,6 +1273,7 @@ MonoBehaviour:
   _coreController: {fileID: 501085118}
   leftSelected: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightSelected: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  handToHold: 2
 --- !u!114 &1927259203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1431,6 +1441,7 @@ MonoBehaviour:
   animationMaterial: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
   moveBack: 1
   maxAngle: 40
+  minAngle: 3
   anchor: {fileID: 1927259197}
   untereKlinge: {fileID: 1933502051}
   obereKlinge: {fileID: 1933502050}
@@ -1603,9 +1614,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: scissors_interactable
       objectReference: {fileID: 0}
+    - target: {fileID: 7357353156898480862, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7877148809727850592, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
       propertyPath: m_Mass
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877148809727850594, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
+      propertyPath: handToHold
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7877148809727850594, guid: 0a442f840d9425644abf766ef91e8f11, type: 3}
       propertyPath: _coreController

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements.Experimental;
 
 public class DayNightController : MonoBehaviour
 {
@@ -63,27 +65,38 @@ public class DayNightController : MonoBehaviour
     private void UpdateSunIntensity()
     {
         float sunRotationX = sun.transform.localRotation.eulerAngles.x;
-        intensity = Mathf.InverseLerp(-15f, 20f, sunRotationX);
+        float targetIntensity = Mathf.InverseLerp(-15f, 20f, sunRotationX);
+
+        // Set intensity to 0 if the sun is below the horizon
+        if (sunRotationX < 0f || sunRotationX > 180f)
+        {
+            targetIntensity = 0f;
+        }
+
+        // Adjust intensity gradually for a smooth transition
+        intensity = Mathf.Lerp(intensity, targetIntensity, Time.deltaTime);
+
+        // Adjust shadow strength based on sun intensity
+        sun.shadowStrength = intensity;
     }
+
+
 
     private void AdjustSunAnimation()
     {
         float animationTime = CalculateAnimationTime();
         PlaySunAnimation(animationTime);
     }
-
     private void AdjustTestSunTime(int hours, int minutes, int seconds)
     {
         float animationTime = CalculateTestAnimationTime(hours, minutes, seconds);
         PlaySunAnimation(animationTime);
     }
-
     private void PlaySunAnimation(float animationTime)
     {
         lightAnimator.SetFloat("Sunposition", animationTime);
         lightAnimator.Play(sunAnimationClip.name);
     }
-
     private float CalculateAnimationTime()
     {
         float animationTime = 0f;

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -21,9 +22,21 @@ public class Selection_checker : MonoBehaviour
     [Tooltip("Right hand selection input")]
     InputActionReference rightSelected;
 
+
+    [SerializeField]
+    [Tooltip("Defines in which hand this object can be hold.")]
+    private PossibleHand handToHold = PossibleHand.BOTH;
+
     private bool m_lastSelected = false;
 
     private core_feature_controller controller;
+    public enum PossibleHand
+    {
+        LEFT,
+        RIGHT,
+        BOTH,
+        NONE
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -38,24 +51,31 @@ public class Selection_checker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(handToHold == PossibleHand.NONE)
+        { return; }
         if (m_Interactable.isSelected && !m_lastSelected)
         {
             if (controller != null)
             {
-                if (leftSelected.action.WasPressedThisFrame())
+                if(handToHold == PossibleHand.LEFT || handToHold == PossibleHand.BOTH)
                 {
-                    if (controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left))
+                    if (leftSelected.action.WasPressedThisFrame())
                     {
-                        m_lastSelected = true;
+                        if (controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Left))
+                        {
+                            m_lastSelected = true;
+                        }
                     }
                 }
-                else if (rightSelected.action.WasPressedThisFrame())
+                if(handToHold == PossibleHand.RIGHT || handToHold == PossibleHand.BOTH)
                 {
-                    if (controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right))
+                    if (rightSelected.action.WasPressedThisFrame())
                     {
-                        m_lastSelected = true;
+                        if (controller.activateGameObject(gameObject, UnityEngine.XR.Hands.Handedness.Right))
+                        {
+                            m_lastSelected = true;
+                        }
                     }
-
                 }
             }
         }

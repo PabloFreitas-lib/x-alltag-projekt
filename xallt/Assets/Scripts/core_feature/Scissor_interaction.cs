@@ -17,6 +17,14 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private float maxAngle = 37;
 
     /// <summary>
+    /// Minimal opening angle between the two blade-components
+    /// </summary>
+    [Tooltip("The maximal opening angle between the two blade parts")]
+    [Range(20, 60)]
+    [SerializeField]
+    private float minAngle = 3;
+
+    /// <summary>
     /// defined by testing around
     /// </summary>
     private float m_zOffset = 0.05f;
@@ -91,6 +99,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private static XRHandJointID m_middle_distal = XRHandJointID.MiddleDistal;
     private static XRHandJointID m_palm = XRHandJointID.Palm;
     private static XRHandJointID m_procimalMiddle = XRHandJointID.MiddleProximal;
+    private static XRHandJointID m_procimalIndex = XRHandJointID.IndexProximal;
     private static XRHandJointID m_wrist = XRHandJointID.Wrist;
 
     /// <summary>
@@ -107,6 +116,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
             m_middle_distal,
             m_palm,
             m_procimalMiddle,
+            m_procimalIndex,
             m_wrist
         };
         return joints;
@@ -122,18 +132,54 @@ public class Scissor_interaction : Scripted_Interactable_Object
         pivot.transform.rotation = finalRot;
         pivot.transform.position = finalPos;
 
-        if (!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint index)
-    && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middle)))
+        if (!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint indexDistalJoint)
+    && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middleDistalJoint)
+    && necessaryJointData.TryGetValue(m_procimalIndex, out XRHandJoint indexProcimalJoint)
+    && necessaryJointData.TryGetValue(m_procimalMiddle, out XRHandJoint middleProcimalJoint)))
         { return; }
 
-        if (!(index.TryGetPose(out Pose indexPose)
-    && middle.TryGetPose(out Pose middlePose)))
+        if (!(indexDistalJoint.TryGetPose(out Pose indexDistalPose)
+    && middleDistalJoint.TryGetPose(out Pose middleDistalPose)
+    && indexProcimalJoint.TryGetPose(out Pose indexProcimalPose)
+    && middleProcimalJoint.TryGetPose(out Pose middleProcimalPose)))
         { return; }
 
         //distance between distal index and middle finger
-        float distance = Vector3.Distance(indexPose.position, middlePose.position);
+        float distance = Vector3.Distance(indexDistalPose.position, middleDistalPose.position);
         distance = Mathf.Clamp(distance, 0, maxAngle);
-        moveBlades(distance);
+        //  moveBlades(distance);
+
+        Vector3 middleForward = middleDistalPose.position - middleProcimalPose.position;
+        Vector3 indexForward = indexDistalPose.position - indexProcimalPose.position;
+        moveBladesByAngle(middleForward, indexForward);
+    }
+
+    /// <summary>
+    /// Method that rotates the blades of scissors by the angle between the to blades
+    /// </summary>
+    /// <param name="middleForward">Vector from middle proximal to middle distal joint</param>
+    /// <param name="indexForward">Vector from index proximal to index distal joint</param>
+    private void moveBladesByAngle(Vector3 middleForward, Vector3 indexForward)
+    {
+        float angleBetween = Math.Abs(Vector3.Angle(middleForward, indexForward));
+        if (angleBetween < 0)
+        {
+            angleBetween = minAngle;
+        }
+
+        if(angleBetween <= cutThreshold)
+        {
+            if(OnScissorsCut != null)
+            {
+                OnScissorsCut.Invoke();
+            }
+        }
+
+        float delta = angleBetween - lastAngle;
+
+        untereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, -delta / 2);
+        obereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, delta / 2);
+        lastAngle = angleBetween;
     }
 
     /// <summary>

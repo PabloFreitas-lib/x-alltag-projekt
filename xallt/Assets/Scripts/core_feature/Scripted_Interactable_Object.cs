@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.Hands;
 using Vector3 = UnityEngine.Vector3;
@@ -181,10 +182,13 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <exception cref="NotImplementedException">Not implemented yet</exception>
     void moveBackToOrigin()
     {
-        Collider collider = gameObject.GetComponent<Collider>();
-        if(collider != null)
+        Collider[] colList = transform.GetComponentsInChildren<Collider>();
+        if (colList != null && colList.Count() > 0)
         {
-            collider.enabled = false;
+            foreach(Collider col in colList) 
+            {
+                col.enabled = false;
+            }
         }
         moveAnimation =  gameObject.AddComponent<MoveAnimation>();
         moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.DETACH);
@@ -198,10 +202,13 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// </summary>
     private void UpdatePhysics()
     {
-        Collider collider = gameObject.GetComponent<Collider>();
-        if(collider != null)
+        Collider[] colList = transform.GetComponentsInChildren<Collider>();
+        if (colList != null && colList.Count() > 0)
         {
-            collider.enabled = true;
+            foreach (Collider col in colList)
+            {
+                col.enabled = true;
+            }
         }
         rigidbody.position = transform.position;
         rigidbody.velocity = Vector3.zero;

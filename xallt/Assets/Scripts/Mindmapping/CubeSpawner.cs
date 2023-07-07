@@ -12,6 +12,7 @@ public class CubeSpawner : MonoBehaviour
     public Transform mindMapSpawnPosition;
 
     private GameObject cube;
+    bool moved = true;
 
     private void Update()
     {
@@ -23,10 +24,11 @@ public class CubeSpawner : MonoBehaviour
         }
 
         if (cube != null)
-            if (cube.transform.childCount == 2 && cube.GetComponent<Rigidbody>().isKinematic)
+            if (cube.transform.childCount >= 2 && cube.GetComponent<Rigidbody>().isKinematic)
             {
                 cube.transform.parent = null;
                 cube.GetComponent<Rigidbody>().isKinematic = false;
+                moved = true;
             }
     }
 
@@ -46,13 +48,18 @@ public class CubeSpawner : MonoBehaviour
 
     public void SpawnCubeUI(Transform spawnPosition)
     {
-        // Instantiate a cube prefab at the position of the hand controller
-        this.cube = Instantiate(filePrefab, spawnPosition.position, Quaternion.identity);
-        GameObject map = Instantiate(mindmap, mindMapSpawnPosition.position, Quaternion.identity);
-        cube.GetComponent<File>().map = map.GetComponent<Mindmap>();
-        isSpawned = true;
-        cube.GetComponent<Rigidbody>().isKinematic = true;
-        cube.transform.parent = spawnPosition;
+        if (moved == true)
+        {
+            // Instantiate a cube prefab at the position of the hand controller
+            this.cube = Instantiate(filePrefab, spawnPosition.position, Quaternion.identity);
+            GameObject map = Instantiate(mindmap, mindMapSpawnPosition.position, Quaternion.identity);
+            cube.GetComponent<File>().map = map.GetComponent<Mindmap>();
+            isSpawned = true;
+            cube.GetComponent<Rigidbody>().isKinematic = true;
+            cube.transform.parent = spawnPosition;
+            moved = false;
+        }
+        
     }
 }
 

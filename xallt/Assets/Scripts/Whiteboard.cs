@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Whiteboard : MonoBehaviour
 {
+    public string id;
     public Texture2D drawingTexture;
     public Vector2 textureSize = new Vector2(2048, 2048);
     public RawImage whiteboardImage; // Referenz zum RawImage-Komponenten des Whiteboards

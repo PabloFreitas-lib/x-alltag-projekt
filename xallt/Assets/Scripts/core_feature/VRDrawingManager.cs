@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class VRDrawingManager : MonoBehaviour
 {
+    public uint id;
     [Header("Pen Properties")]
     public Transform tip;
     public Material drawingMaterial;
@@ -14,7 +15,7 @@ public class VRDrawingManager : MonoBehaviour
     public Color[] penColors;
 
     [Header("Drawing Properties")]
-    private LineRenderer _currentDrawing;
+    public LineRenderer _currentDrawing;
     private int _index;
     private int _currentColorIndex;
     private bool _isDrawing;

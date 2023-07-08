@@ -61,7 +61,7 @@ public class Connection : MonoBehaviour
             if (from.parent.GetComponent<Node>() != null)
             {
                 to.parent = null;
-                from.parent.GetComponent<Node>().children.Remove(to.gameObject);
+                from.parent.children.Remove(to);
                 from.mindmap.mode = Mindmap.Mode.defaultMode;
                 Destroy(this);
             }

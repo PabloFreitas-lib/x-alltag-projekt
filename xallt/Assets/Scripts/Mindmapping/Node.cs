@@ -6,7 +6,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     //Metadata
-    public int id;
+    public uint id;
     public DateTime creationDate;
     public Mindmap mindmap;
 
@@ -15,11 +15,18 @@ public class Node : MonoBehaviour
     //Lists or variables for each type of appendable data
 
     //Model
-    public GameObject parent;                       //empty parent -> treat node as root
-    public List<GameObject> children;
+    public Node parent;                       //empty parent -> treat node as root
+    public List<Node> children;
 
     //Boolean
     public bool isRoot;
+
+    public Node(uint pId, string pText, Color pUserColor)
+    {
+        id = pId;
+        text = pText;
+        //userColor = pUserColor;
+    }
 
 
     private void Start()

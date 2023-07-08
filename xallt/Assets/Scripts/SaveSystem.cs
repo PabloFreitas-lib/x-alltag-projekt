@@ -259,7 +259,7 @@ public class SaveSystem : MonoBehaviour
      */
     public static void SaveWhiteboard(Whiteboard whiteboard)
     {
-        byte[] whiteBoardtexture = whiteboard.texture.EncodeToPNG();
+        byte[] whiteBoardtexture = whiteboard.drawingTexture.EncodeToPNG();
 
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "whiteboards");
@@ -289,7 +289,7 @@ public class SaveSystem : MonoBehaviour
             fileData = System.IO.File.ReadAllBytes(fullPath);
             texture = new Texture2D((int)whiteboard.textureSize.x, (int)whiteboard.textureSize.y);
             texture.LoadImage(fileData);
-            whiteboard.texture = texture;
+            whiteboard.drawingTexture = texture;
             Debug.Log("Whiteboard loaded");
         }
         else

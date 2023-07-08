@@ -17,9 +17,6 @@ public class LightController : MonoBehaviour
     public bool useTemperatureControl; // Toggle between temperature and RGB control
     public float brightness = 1f;
     public Color color = new Color(255f / 255f, 180f / 255f, 107f / 255f);
-    public UIColorPickButton colorPickButton;
-    public Slider brightnessSlider; // Reference to the UI Slider for brightness control
-    public Toggle activateAllLightsToggle; // Reference to the UI Toggle for activating or disabling all lights
     public bool activateAllLights;
 
     // Slider for light temperature / color change

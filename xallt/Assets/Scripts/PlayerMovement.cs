@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public Transform camera;
+    public new Transform camera;
     public Vector3 offset;
 
     // Update is called once per frame

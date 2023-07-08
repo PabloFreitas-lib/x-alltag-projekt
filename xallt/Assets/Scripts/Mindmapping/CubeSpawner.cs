@@ -5,44 +5,61 @@ using UnityEngine.InputSystem.XR;
 
 public class CubeSpawner : MonoBehaviour
 {
-    public Transform rightHand;
-    public InputActionReference pinchAction; // Reference to the Trigger input action
-    public GameObject cubePrefab; // Prefab of the cube to spawn
+    public GameObject filePrefab; // Prefab of the cube to spawn
+    public bool isSpawned;
+    public Collider detectionCollider;
+    public GameObject mindmap;
+    public Transform mindMapSpawnPosition;
 
-    private bool isTriggerPressed = false;
-
-    private void Start()
-    {
-        // Enable the trigger action
-        pinchAction.action.Enable();
-    }
+    private GameObject cube;
+    bool moved = true;
 
     private void Update()
     {
-        // Check if the trigger button is pressed
-        if (pinchAction.action.triggered && !isTriggerPressed)
+       Collider[] colliders = Physics.OverlapBox(detectionCollider.bounds.center, detectionCollider.bounds.extents, detectionCollider.transform.rotation);
+       
+        if (colliders.Length == 1)
         {
-            isTriggerPressed = true;
-            SpawnCube();
+            SpawnCube(transform);
         }
-        else if (!pinchAction.action.triggered && isTriggerPressed)
-        {
-            isTriggerPressed = false;
-        }
+
+        if (cube != null)
+            if (cube.transform.childCount >= 2 && cube.GetComponent<Rigidbody>().isKinematic)
+            {
+                cube.transform.parent = null;
+                cube.GetComponent<Rigidbody>().isKinematic = false;
+                moved = true;
+            }
     }
 
-    private void SpawnCube()
+    private void Start()
+    {
+        SpawnCube(transform);
+    }
+
+    public void SpawnCube(Transform spawnPosition)
     {
         // Instantiate a cube prefab at the position of the hand controller
-        GameObject cube = Instantiate(cubePrefab, rightHand.position, Quaternion.identity);
-        // Parent the cube to the hand controller
-        cube.transform.SetParent(transform);
+        GameObject cube = Instantiate(filePrefab, spawnPosition.position, Quaternion.identity);
+        GameObject map = Instantiate(mindmap,mindMapSpawnPosition.position, Quaternion.identity);
+        cube.GetComponent<File>().map = map.GetComponent<Mindmap>();
+        isSpawned = true;
     }
 
-    private void OnDisable()
+    public void SpawnCubeUI(Transform spawnPosition)
     {
-        // Disable the trigger action
-        pinchAction.action.Disable();
+        if (moved == true)
+        {
+            // Instantiate a cube prefab at the position of the hand controller
+            this.cube = Instantiate(filePrefab, spawnPosition.position, Quaternion.identity);
+            GameObject map = Instantiate(mindmap, mindMapSpawnPosition.position, Quaternion.identity);
+            cube.GetComponent<File>().map = map.GetComponent<Mindmap>();
+            isSpawned = true;
+            cube.GetComponent<Rigidbody>().isKinematic = true;
+            cube.transform.parent = spawnPosition;
+            moved = false;
+        }
+        
     }
 }
 

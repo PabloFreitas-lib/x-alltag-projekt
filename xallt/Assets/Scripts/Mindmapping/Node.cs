@@ -6,29 +6,59 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
     //Metadata
-    private static uint id;
-    private static DateTime creationDate;
+    public int id;
+    public DateTime creationDate;
+    public Mindmap mindmap;
 
     //Display information
     public string text;
-    public Color userColor;
-        //Lists or variables for each type of appendable data
+    //Lists or variables for each type of appendable data
 
     //Model
     public GameObject parent;                       //empty parent -> treat node as root
     public List<GameObject> children;
 
+    //Boolean
+    public bool isRoot;
 
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        if (!isRoot)
+        {
+            ConnectToParent();
+        }
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void ConnectToParent()
     {
+        GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
+        if(parent != null)
+        {
+            connection.GetComponent<Connection>().SetFromTo(this, parent.GetComponent<Node>());
+        }
+        else
+        {
+            connection.GetComponent<Connection>().SetFromTo(this, mindmap.root);
+        }
+        connection.transform.parent = mindmap.transform;
+    }
+    public void SelectSelf()
+    {
+        if(mindmap != null)
+            mindmap.SelectNode(this);
         
+    }
+
+    public void ConnectNodes()
+    {
+        if(mindmap.mode == Mindmap.Mode.ConnectMode && mindmap.prevSelected != null && mindmap.selected != null)
+        {
+            GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
+            connection.GetComponent<Connection>().SetFromTo(mindmap.prevSelected, mindmap.selected);
+            connection.transform.parent = mindmap.transform;
+            mindmap.mode = Mindmap.Mode.defaultMode;
+        }
     }
 }

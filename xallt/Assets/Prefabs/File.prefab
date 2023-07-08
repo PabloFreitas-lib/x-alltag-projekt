@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 4412990469660499043}
   - component: {fileID: 4412990469660499041}
   - component: {fileID: -5079004943770826728}
+  - component: {fileID: -8547216532933288366}
   m_Layer: 0
   m_Name: File
   m_TagString: File
@@ -374,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec2c0d8273daba1469377d31c1f8fd81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: 
+  fileName: 
   map: {fileID: 0}
   isOpen: 0
 --- !u!114 &-5079004943770826728
@@ -389,5 +390,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5765f2e46fd04274c8dd03233139597c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cubeColor: {r: 0.45443216, g: 0.6629365, b: 0.8679245, a: 0}
+  objectColor: {r: 0.34950158, g: 0.9380237, b: 0.9622642, a: 0}
+  highLightColor: {r: 0.23282307, g: 0.44601876, b: 0.4528302, a: 0}
+  isHighlighted: 0
   pointLight: {fileID: 4412990467803725326}
+--- !u!114 &-8547216532933288366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4412990469660499065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0494216f146186f43ae10873cfa088ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

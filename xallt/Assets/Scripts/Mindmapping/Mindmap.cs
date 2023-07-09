@@ -8,7 +8,7 @@ public class Mindmap : MonoBehaviour
     public Node selected;
     public Node prevSelected;
     [Header("Prefabs")]
-    public Node NodePrefab;
+    public GameObject NodePrefab;
     public GameObject connectionPrefab;
     [HideInInspector]public Transform Spawnposition;
     public List<Node> nodes;
@@ -24,7 +24,7 @@ public class Mindmap : MonoBehaviour
 
     public void DeleteNode()
     {
-        if(selected != null)
+        if(selected != null && mode == Mode.DeleteMode)
         {
             if (!selected.isRoot)
             {
@@ -35,6 +35,7 @@ public class Mindmap : MonoBehaviour
                 nodes.Remove(selected);
                 Destroy(selected.gameObject);
                 selected = null;
+                mode = Mode.defaultMode;
             }
         }
     }
@@ -56,16 +57,17 @@ public class Mindmap : MonoBehaviour
         }
         Vector3 currentPosition = Spawnposition.position;
         Vector3 newPosition = new Vector3(currentPosition.x + 0.5f, currentPosition.y, currentPosition.z);
-        Node node = Instantiate(NodePrefab, newPosition, Quaternion.identity);
-        node.gameObject.transform.SetParent(transform);
-        node.mindmap = this;
-        nodes.Add(node);
+        GameObject node = Instantiate(NodePrefab, newPosition, Quaternion.identity);
+        node.transform.SetParent(transform);
+        Node nodeScript = node.GetComponent<Node>();
+        nodeScript.mindmap = this;
+        nodes.Add(nodeScript);
         
         if (selected != null)
         {
-            node.parent = selected;
-            selected.children.Add(node);
-            node.transform.parent = node.parent.transform; // nodeScript.transform.parent = nodeScript.parent.transform;
+            nodeScript.parent = selected;
+            selected.children.Add(nodeScript);
+            nodeScript.transform.parent = nodeScript.parent.transform;
         }
     }
 
@@ -79,6 +81,8 @@ public class Mindmap : MonoBehaviour
                         break;
                 case 2: mode = Mode.EditMode;
                     break;
-            }
+                case 3: mode = Mode.DeleteMode;
+                break;
+        }
     }
 }

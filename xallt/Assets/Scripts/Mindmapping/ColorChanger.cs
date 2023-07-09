@@ -62,4 +62,9 @@ public class ColorChanger : MonoBehaviour
     {
         isHighlighted = highlight;
     }
+
+    public void SetColor(Color color)
+    {
+        objectColor = color;
+    }
 }

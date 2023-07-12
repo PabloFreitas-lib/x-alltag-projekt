@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +9,6 @@ public class Whiteboard : MonoBehaviour
     public Texture2D drawingTexture;
     public Vector2 textureSize = new Vector2(2048, 2048);
     public RawImage whiteboardImage; // Referenz zum RawImage-Komponenten des Whiteboards
-    private Texture2D whiteboardTexture;
 
     void Start()
     {
@@ -22,6 +20,10 @@ public class Whiteboard : MonoBehaviour
         {
             emptyColors[i] = Color.white; // Setze die Farbe auf Weiß (transparent)
         }
+
+        GameObject markerObject = GameObject.Find("Pen_Interactable");
+        WhiteboardMarker marker = markerObject.GetComponent<WhiteboardMarker>();
+        marker.addPath(id);
 
         // Überschreibe die gesamte Zeichnung auf dem Whiteboard mit der leeren Farbe
         drawingTexture.SetPixels(emptyColors);

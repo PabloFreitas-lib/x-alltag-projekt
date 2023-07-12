@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 using UnityEngine.Serialization;
 
 public class WhiteboardMarker : MonoBehaviour
 {
     [FormerlySerializedAs("_tip")] [SerializeField] private Transform tip;
     [FormerlySerializedAs("_penSize")] [SerializeField] private int penSize = 5;
+
+    public List<string> paths = new List<string>();
 
     private Renderer _renderer;
     private Color[] _colors;
@@ -23,6 +26,11 @@ public class WhiteboardMarker : MonoBehaviour
         _renderer = tip.GetComponent<Renderer>();
         _colors = Enumerable.Repeat(_renderer.material.color, penSize * penSize).ToArray();
         _tipHeight = tip.localScale.y;
+    }
+
+    public void addPath(string id)
+    {
+        paths.Add(id);
     }
 
     void Update()

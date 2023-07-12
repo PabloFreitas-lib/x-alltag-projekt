@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.Hands;
-using Vector3 = UnityEngine.Vector3;
 
 /// <summary>
 /// Parent class of all objects performing an scripted interaction based of hand-tracking data based in plugin XRHand

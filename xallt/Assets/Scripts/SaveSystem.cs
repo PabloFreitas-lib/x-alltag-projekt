@@ -1,22 +1,13 @@
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.Experimental.GraphView;
 using System.Linq;
-using static SaveSystem;
-using UnityEngine.EventSystems;
 
 
 /* TODO:
  *  
- *  ComplexPlayerPrefs:
- *      -everything
- *  Mindmap:
- *      - move nodes into mindmap container, so it can be disabled in unity hirachy
- *      - add remaining Attributes to Save/Load Cycle
- *          - gameObject related (Mesh, Scale, Material, Position, Components)
+ *  
  * 
  */
 [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
@@ -25,29 +16,32 @@ public class SaveSystem : MonoBehaviour
     [System.Serializable]
     public class ComplexUserPrefsPersistentObject
     {
-        public LightPersistentObject[] lights;
+        public Color lightColor;
+        public float lightIntensity;
+
         public FilePersistentObject[] files;
+        public string[] whiteboards;
 
         public ComplexUserPrefsPersistentObject()
         {
+            LightController lights = GameObject.Find("Lights").GetComponent<LightController>();
+            lightColor = lights.color;
+            lightIntensity = lights.brightness;
+
             //Add Tags to acutal Files
             int f = 0;
             File[] filesToEncode = Resources.FindObjectsOfTypeAll<File>();
             files = new FilePersistentObject[filesToEncode.Length];
+
             foreach (File file in filesToEncode)
             {
                 files[f] = new FilePersistentObject(file);
                 f++;
             }
 
-            /* Lookup actual implementation of Lights and and Tags
-            static List<Light> lightsToEncode = GameObject.FindGameObjectsWithTag("Light");
-            foreach (GameObject light in GameObject.FindGameObjectsWithTag("Light"))
-            {
-                lights.Add(new FilePersistentObject(light));
-            }
-            */
-
+            GameObject markerObject = GameObject.Find("Pen_Interactable");
+            WhiteboardMarker marker = markerObject.GetComponent<WhiteboardMarker>();
+            whiteboards = marker.paths.ToArray();
         }
     }
 
@@ -61,7 +55,7 @@ public class SaveSystem : MonoBehaviour
         public FilePersistentObject(File file)
         {
             name = file.name;
-            // color = file.userColor; Access ColorChanger Script of file
+            color = file.GetComponent<ColorChanger>().objectColor; // Access ColorChanger Script of file
             position = file.gameObject.transform.position;
         }
     }
@@ -75,6 +69,22 @@ public class SaveSystem : MonoBehaviour
         Vector3 positon;
 
         //Constructor
+    }
+
+    public class FreeDrawPersistentObject
+    {
+        uint id;
+        Color color;
+        Vector3[] vectors;
+
+        public FreeDrawPersistentObject(VRDrawingManager manager)
+        {
+            id = manager.id;
+            color = manager.tipMaterial.color;
+
+            vectors = new Vector3[manager._currentDrawing.positionCount];              //still private in CORE Version of VRDrawingManager, change to param maybe?
+            manager._currentDrawing.GetPositions(vectors);
+        }
     }
 
     /*
@@ -99,7 +109,7 @@ public class SaveSystem : MonoBehaviour
             text = node.text;
 
             //Encode userColor
-            //userColor = node.userColor;
+            userColor = node.GetComponent<ColorChanger>().objectColor;
 
             //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
@@ -153,10 +163,9 @@ public class SaveSystem : MonoBehaviour
 
     public static void SaveFreeDraw(VRDrawingManager drawing)
     {
-        Vector3[] positions = new Vector3[drawing._currentDrawing.positionCount];              //still private in CORE Version of VRDrawingManager, change to param maybe?
-        drawing._currentDrawing.GetPositions(positions);
+        FreeDrawPersistentObject freeDraw = new FreeDrawPersistentObject(drawing);
 
-        string json = JsonUtility.ToJson(positions);
+        string json = JsonUtility.ToJson(freeDraw);
 
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");

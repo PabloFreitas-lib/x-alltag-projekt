@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +24,7 @@ public class Node : MonoBehaviour
     {
         id = pId;
         text = pText;
-        //userColor = pUserColor;
+        this.GetComponent<ColorChanger>().objectColor = pUserColor;
     }
 
 

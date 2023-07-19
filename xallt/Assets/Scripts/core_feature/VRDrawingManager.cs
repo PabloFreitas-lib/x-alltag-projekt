@@ -7,7 +7,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 /// <summary>
 /// This class is used to describe the behavior of the VR drawing manager.
 /// </summary>
-/// <author> Authors </author>
+/// <author> Celina Dadschun, Fabian Schmurr </author>
 public class VRDrawingManager : MonoBehaviour
 {
     public uint id;
@@ -39,7 +39,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <summary>
     /// This function is called when an object is initialized.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Celina Dadschun </author>
     private void Start()
     {
         _currentColorIndex = 0;
@@ -49,7 +49,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     private void Update()
     {
         if (_drawingHand == Handedness.Left)
@@ -82,7 +82,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <summary>
     /// This function is called when the object is activated by the core feature controller.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     /// <param name="hand">Handedness of the hand that activated the object</param>
     public void SetDrawingHand(Handedness hand)
     {
@@ -93,9 +93,9 @@ public class VRDrawingManager : MonoBehaviour
     }
 
      /// <summary>
-    /// Die Draw()-Methode wird genutzt, um eine 3D-Linie im Raum zu zeichnen.
+    /// This method is used to draw a line.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Celina Dadschun </author>
     private void Draw()
     {
         if (_currentDrawing == null)
@@ -123,7 +123,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <summary>
     /// This function starts the drawing by setting _isDrawing to true.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Celina Dadschun </author>
     public void StartDrawing()
     {
         _isDrawing = true;
@@ -132,8 +132,9 @@ public class VRDrawingManager : MonoBehaviour
 
 
     /// <summary>
-    /// This function end the drawin by setting _isDrawing to false.
+    /// This function end the drawing by setting _isDrawing to false.
     /// </summary>
+    /// <author> Celina Dadschun </author>
     public void StopDrawing()
     {
         _isDrawing = false;
@@ -142,7 +143,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <summary>
     /// This function switches the color of the pen.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Celina Dadschun </author>
     private void SwitchColor()
     {
         if (_currentColorIndex == penColors.Length - 1)
@@ -159,7 +160,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <summary>
     /// This function clears the drawing.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Celina Dadschun </author>
     public void ClearDrawing()
     {
         _currentDrawing.positionCount = 0;

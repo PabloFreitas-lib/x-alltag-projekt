@@ -10,14 +10,14 @@ public class LightController : MonoBehaviour
 {
     private CustomLightScript[] lights;
 
-    // UI Components
+    [Header("UI Components")]
     public UIColorPickButton colorPickButton; // Color picker button for selecting a color
     public Slider brightnessSlider; // UI Slider for brightness control
     public Toggle activateAllLightsToggle; // UI Toggle for activating or disabling all lights
     public Toggle activateTempToggle; // UI Toggle for switching between temperature and RGB control
     public Slider temperatureSlider; // Slider for light temperature / color change
 
-    // Manual Control Parameters
+    [Header("Manual Control")]
     public bool useTemperatureControl; // Toggle between temperature and RGB control
     public float brightness = 1f; // Current brightness value
     public Color color = new Color(255f / 255f, 180f / 255f, 107f / 255f); // Current color value

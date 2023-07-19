@@ -6,8 +6,8 @@ using UnityEngine.XR.Hands;
 
 /// <summary>
 /// Parent class of all objects performing an scripted interaction based of hand-tracking data based in plugin XRHand
-/// Author: Fabian Schmurr
 /// </summary>
+/// <author> Fabian Schmurr </author>
 [RequireComponent(typeof(Rigidbody))]
 public abstract class Scripted_Interactable_Object : MonoBehaviour
 {
@@ -64,6 +64,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Constructor that only checks if given list isn't empty
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     /// <param name="necessaryJoints">List if needed joint indices to get the joint pose information</param>
     /// <exception cref="ArgumentException">If necessary hand-joint ID's are not set in Editor</exception>
     public Scripted_Interactable_Object(List<XRHandJointID> necessaryJoints)
@@ -75,24 +76,31 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         handJointIDs = necessaryJoints;
     }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// This function is called when the object becomes enabled and active.
+    /// </summary>
+    /// <author> Fabian Schmurr </author>
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Fabian Schmurr </author>
     void Update()
     {
     }
 
-/// <summary>
-/// Method that tries to activate an given object
-/// </summary>
-/// <param name="joints">Necessary hand-tracking data</param>
-/// <param name="handedness">Indicator in which hand the object should be held in</param>
-/// <exception cref="ArgumentException">If joints dictionary length is not matching initial joint index list od
-/// given handedness has value Invalid.</exception>
+    /// <summary>
+    /// Method that tries to activate an given object
+    /// </summary>
+    /// <author> Fabian Schmurr </author>
+    /// <param name="joints">Necessary hand-tracking data</param>
+    /// <param name="handedness">Indicator in which hand the object should be held in</param>
+    /// <exception cref="ArgumentException">If joints dictionary length is not matching initial joint index list od
+    /// given handedness has value Invalid.</exception>
     public void Activate(Dictionary<XRHandJointID, XRHandJoint> joints, Handedness handedness)
     {
         if(handedness != Handedness.Invalid)
@@ -129,10 +137,16 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Returns the controlling hand of object.
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     /// <returns>Either left or right, if object is in  control or Invalid if it's not selected.</returns>
     public Handedness getControllingHand()
     { return controllingHand; }
 
+
+    /// <summary>
+    /// Call back method that is triggered when the animation is finished
+    /// </summary>
+    /// <author> Fabian Schmurr </author>
     private void OnAnimationEnd()
     {
         if(moveAnimation != null)
@@ -149,6 +163,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Updates the data used for interaction
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     /// <param name="joints">Dictionary of all joint data. Must be matching the joint indices</param>
     public void updateData(Dictionary<XRHandJointID, XRHandJoint> joints)
     {
@@ -161,6 +176,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Method to deactivate the interaction of an object
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     /// <param name="moveBack">If true the deactivated object will be set back to it's origin before interaction</param>
     public void deactivate()
     {
@@ -182,6 +198,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Moves the game-object back to the position stored in lastTransformBeforeActivation
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     /// <exception cref="NotImplementedException">Not implemented yet</exception>
     void moveBackToOrigin()
     {
@@ -206,6 +223,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// Updates the physic constraints of rigidbody component
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     private void UpdateToObjectStatic()
     {
         Collider[] colList = transform.GetComponentsInChildren<Collider>();
@@ -227,17 +245,20 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <summary>
     /// This method  performs individual stuff if deactivating an object
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     protected abstract void objectSpecificDeactivation();
 
 
     /// <summary>
     /// This method  performs individual stuff if activating an object
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     protected abstract void objectSpecificActivation();
 
     /// <summary>
     /// Updates the displayed animation in relation to the current hand joint data 
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     public abstract void updateInteraction();
 
     /// <summary>

@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.XR.Hands;
 /// <summary>
 /// Scripted scissor-interaction based on earlier script cutting.cs by Laura Gietschel and Fabian Schmurr
-/// Author Fabian Schmurr
 /// </summary>
+/// <author> Fabian Schmurr, Laura Gietschel</author>
 public class Scissor_interaction : Scripted_Interactable_Object
 {
     /// <summary>
@@ -62,7 +62,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     [SerializeField]
     private GameObject pivot;
 
-    [Tooltip("Try it if you´re a real ninja.")]
+    [Tooltip("Try it if youï¿½re a real ninja.")]
     public bool ninja = false;
 
     /// <summary>
@@ -104,8 +104,17 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Only passing the indices list to base constructor
     /// </summary>
+    /// <author> Fabian Schmurr</author>
+    /// <author> Laura Gietschel</author>
+    /// <param name="jointList">List of joint indices</param>
     public Scissor_interaction() : base(GetJointList()){}
 
+
+    /// <summary>
+    /// Method that returns the list of joint indices
+    /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
+    /// <returns>List of joint indices</returns>
     private static List<XRHandJointID> GetJointList()
     {
         ///creating list of static defined hand joint indices
@@ -124,6 +133,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Method that updates the scripted interaction by using the current hand joint data
     /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     public override void updateInteraction()
     {
         getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
@@ -132,21 +142,21 @@ public class Scissor_interaction : Scripted_Interactable_Object
         pivot.transform.position = finalPos;
 
         if (!(necessaryJointData.TryGetValue(m_index_distal, out XRHandJoint indexDistalJoint)
-    && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middleDistalJoint)
-    && necessaryJointData.TryGetValue(m_procimalIndex, out XRHandJoint indexProcimalJoint)
-    && necessaryJointData.TryGetValue(m_procimalMiddle, out XRHandJoint middleProcimalJoint)))
+        && necessaryJointData.TryGetValue(m_middle_distal, out XRHandJoint middleDistalJoint)
+        && necessaryJointData.TryGetValue(m_procimalIndex, out XRHandJoint indexProcimalJoint)
+        && necessaryJointData.TryGetValue(m_procimalMiddle, out XRHandJoint middleProcimalJoint)))
         { return; }
 
         if (!(indexDistalJoint.TryGetPose(out Pose indexDistalPose)
-    && middleDistalJoint.TryGetPose(out Pose middleDistalPose)
-    && indexProcimalJoint.TryGetPose(out Pose indexProcimalPose)
-    && middleProcimalJoint.TryGetPose(out Pose middleProcimalPose)))
+        && middleDistalJoint.TryGetPose(out Pose middleDistalPose)
+        && indexProcimalJoint.TryGetPose(out Pose indexProcimalPose)
+        && middleProcimalJoint.TryGetPose(out Pose middleProcimalPose)))
         { return; }
 
         //distance between distal index and middle finger
         float distance = Vector3.Distance(indexDistalPose.position, middleDistalPose.position);
         distance = Mathf.Clamp(distance, 0, maxBladeAngle);
-          moveBlades(distance);
+        moveBlades(distance);
 
         Vector3 middleForward = middleDistalPose.position - middleProcimalPose.position;
         Vector3 indexForward = indexDistalPose.position - indexProcimalPose.position;
@@ -156,6 +166,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Method that rotates the blades of scissors by the angle between the to blades
     /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     /// <param name="middleForward">Vector from middle proximal to middle distal joint</param>
     /// <param name="indexForward">Vector from index proximal to index distal joint</param>
     private void moveBladesByAngle(Vector3 middleForward, Vector3 indexForward)
@@ -168,9 +179,12 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
         if(angleBetween > maxFingerAngle)
         { angleBetween = maxFingerAngle; }
+
         if(angleBetween < minFingerAngle)
         { angleBetween = minFingerAngle;  }
+
         float mappedAngle = 0f + (angleBetween - minFingerAngle) * (maxBladeAngle- 0f) / (maxFingerAngle - minFingerAngle);
+        
         if (mappedAngle <= cutThreshold)
         {
             if(OnScissorsCut != null)
@@ -194,6 +208,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Rotates the blades of scissors correctly, this method is also invoking the OnCut Action
     /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     /// <param name="distance">Distance between distal joints</param>
     private void moveBlades(float distance)
     {
@@ -226,8 +241,10 @@ public class Scissor_interaction : Scripted_Interactable_Object
     }
 
 
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// Method that returns the final position and rotation of the object
+    /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     void Start()
     {
         //getting reference to XR origin
@@ -239,10 +256,22 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Method that is called once per frame
+    /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     void Update()
     {
     }
+
+    /// <summary>
+    /// Method that returns the final position and rotation of the object
+    /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
+    /// <param name="animationAction">The animation action that is currently performed</param>
+    /// <param name="finalPosition">The final position of the object</param>
+    /// <param name="finalRotation">The final rotation of the object</param>
+    /// <returns>True if the final position and rotation could be calculated, false otherwise</returns>
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
     {
 
@@ -262,18 +291,18 @@ public class Scissor_interaction : Scripted_Interactable_Object
             && necessaryJointData.TryGetValue(m_palm, out XRHandJoint palm)
             && necessaryJointData.TryGetValue(m_procimalMiddle, out XRHandJoint procimalMiddle)
             && necessaryJointData.TryGetValue(m_wrist, out XRHandJoint wrist)))
-        {
-            return false;
-        }
+            {
+                return false;
+            }
         //getting poses of joints
         if (!(index.TryGetPose(out Pose indexPose)
             && middle.TryGetPose(out Pose middlePose)
             && palm.TryGetPose(out Pose palmPose)
             && procimalMiddle.TryGetPose(out Pose proximalMiddlePose)
             && wrist.TryGetPose(out Pose wristPose)))
-        {
-            return false;
-        }
+            {
+                return false;
+            }
 
         //apply new pos
         Vector3 origin = m_XROrigin.transform.position;
@@ -291,12 +320,21 @@ public class Scissor_interaction : Scripted_Interactable_Object
         return true;
     }
 
+    /// <summary>
+    /// Method that is called when the object is activated
+    /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     protected override void objectSpecificDeactivation()
     {
+        /// Not implemented
     }
 
+    /// <summary>
+    /// Method that is called when the object is deactivated
+    /// </summary>
+    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     protected override void objectSpecificActivation()
     {
-        
+        /// Not implemented
     }
 }

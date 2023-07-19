@@ -4,6 +4,10 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// This class is used to describe the behavior of the teleportation ray.
+/// </summary>
+/// <author> Authors </author>
 public class activate_teleportaion_ray : MonoBehaviour
 {
     public GameObject leftTeleportation;
@@ -18,13 +22,19 @@ public class activate_teleportaion_ray : MonoBehaviour
     public XRRayInteractor leftRay;
     public XRRayInteractor rightRay;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// This function is called when an object is initialized.
+    /// </summary>
+    /// <author> Authors </author>
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Authors </author>
     void Update()
     {
         bool isLeftRayHovering = leftRay.TryGetHitInfo(out Vector3 leftPos, out Vector3 leftNormal, out int leftNumber, out bool leftValid);

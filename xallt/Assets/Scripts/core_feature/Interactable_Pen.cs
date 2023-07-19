@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
 
+/// <summary>
+/// This class is used to describe the behavior of the pen.
+/// </summary>
+/// <author> Authors </author>
 [RequireComponent(typeof(VRDrawingManager))]
 public class Interactable_Pen : Scripted_Interactable_Object
 {
@@ -16,6 +20,9 @@ public class Interactable_Pen : Scripted_Interactable_Object
 
     public Interactable_Pen() : base(GetJointList()) { }
 
+    /// <summary>
+    /// </summary>
+    /// <author> Authors </author>
     private static List<XRHandJointID> GetJointList()
     {
         List<XRHandJointID> joints = new List<XRHandJointID>()
@@ -48,6 +55,14 @@ public class Interactable_Pen : Scripted_Interactable_Object
     private VRDrawingManager drawingManager;
 
 
+    /// <summary>
+    /// This function give access to the final transform of the object.
+    /// </summary>
+    /// <param name="animationAction"> The animation action that is currently performed. </param>
+    /// <param name="finalPosition"> The final position of the object. </param>
+    /// <param name="finalRotation"> The final rotation of the object. </param>
+    /// <returns> True if the final transform could be calculated, false otherwise. </returns>
+    /// <author> Authors </author>
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
     {
         finalPosition = Vector3.zero;
@@ -97,6 +112,10 @@ public class Interactable_Pen : Scripted_Interactable_Object
         return false;
     }
 
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Authors </author>
     public override void updateInteraction()
     {
         getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
@@ -104,7 +123,10 @@ public class Interactable_Pen : Scripted_Interactable_Object
         transform.position = finalPos;
     }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// This function is called when an object is initialized.
+    /// </summary>
+    /// <author> Authors </author>
     void Start()
     {
         //getting reference to XR origin
@@ -115,13 +137,18 @@ public class Interactable_Pen : Scripted_Interactable_Object
         }
     }
 
-
-    // Update is called once per frame
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Authors </author>
     void Update()
     {
-        
+        /// Not implemented yet
     }
 
+    /// <summary>
+    /// </summary>
+    /// <author> Authors </author>
     protected override void objectSpecificDeactivation()
     {      
         if (drawingManager != null)
@@ -131,6 +158,9 @@ public class Interactable_Pen : Scripted_Interactable_Object
         }
     }
 
+    /// <summary>
+    /// </summary>
+    /// <author> Authors </author>
     protected override void objectSpecificActivation()
     {
         drawingManager = GetComponent<VRDrawingManager>();

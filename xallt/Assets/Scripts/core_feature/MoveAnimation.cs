@@ -1,6 +1,9 @@
 using System;
 using UnityEngine;
-
+/// <summary>
+///    This class is responsible for moving the object to a new position
+/// </summary>
+/// <author> Fabian Schmurr</author>
 [RequireComponent(typeof(Scripted_Interactable_Object))]
 public class MoveAnimation : MonoBehaviour
 {
@@ -76,12 +79,28 @@ public class MoveAnimation : MonoBehaviour
 
     private AnimationAction animationAction;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <author> Authoren </author>
+    /// <param name="param_0"> Description </param>
+    /// <param name="param_n"> Description </param>
+    public MoveAnimation()
+    {
+    }
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// Start is called before the first frame update
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     void Start()
     {
     }
 
+    /// <summary>
+    /// Describes the animation type
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     public enum AnimationType
     {
         LINEAR,
@@ -93,6 +112,7 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Indicated which action was performed that started the animation
     /// </summary>
+    /// <author> Fabian Schmurr</author>
     public enum AnimationAction
     {
         SELECT,
@@ -102,6 +122,7 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Starts an animation of object
     /// </summary>
+    /// <author> Fabian Schmurr</author>
     /// <param name="objectToMove">The object that should be moved to a new position</param>
     /// <param name="action">Whether the animation is due to detach or select action</param>
     public void startAnimation(Scripted_Interactable_Object objectToMove, AnimationAction action)
@@ -118,9 +139,10 @@ public class MoveAnimation : MonoBehaviour
         }
     }
 
-/// <summary>
-/// Set up line renderer
-/// </summary>
+    /// <summary>
+    /// Set up line renderer
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void setupRenderer()
     {
         renderer = new GameObject().AddComponent<LineRenderer>();
@@ -129,8 +151,10 @@ public class MoveAnimation : MonoBehaviour
         renderer.startWidth = renderer.endWidth = animationWidth;
     }
 
-
-    // Update is called once per frame
+    /// <summary>
+    /// Update is called once per frame
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     void Update()
     {
         if (m_isRunning)
@@ -159,6 +183,7 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Ends the animation nothing more to say
     /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void endAnimation()
     {
         m_isRunning = false;
@@ -176,6 +201,10 @@ public class MoveAnimation : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Animates the object
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void animate()
     {
         if (timeAnimating == float.NegativeInfinity)
@@ -198,6 +227,11 @@ public class MoveAnimation : MonoBehaviour
         drawNextPoint();
     }
 
+    /// <summary>
+    /// Calculates the progress of the animation
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
+    /// <returns>Progress of animation</returns>
     private float getTimeProgress()
     {
         float x = timeAnimating / maxAnimationTime;
@@ -225,6 +259,10 @@ public class MoveAnimation : MonoBehaviour
         return (float)progress;
     }
 
+    /// <summary>
+    /// Draws the next point of the line renderer
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void drawNextPoint()
     {
         renderer.positionCount = lineIndex + 1;

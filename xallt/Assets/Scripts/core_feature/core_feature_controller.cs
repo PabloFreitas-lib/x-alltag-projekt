@@ -8,10 +8,10 @@ using UnityEngine.XR.Management;
 
 /// <summary>
 /// Script that works as a controller between objects controlled directly by
-/// hand-tracking and their selection
-/// Main Author: Fabian Schmurr
-/// Additional authors: Jaap
+/// hand-tracking and their selection.
 /// </summary>
+/// <author> Autoren: Fabien Schmurr, Jaap Braasch </author>
+
 public class core_feature_controller : MonoBehaviour
 {
 
@@ -57,14 +57,22 @@ public class core_feature_controller : MonoBehaviour
     private SeperateHandVisualizer m_handVisualizerScipt;
 
 
-    // Start is called before the first frame update
+    /// <summary>
+    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
+    /// beschreibt.
+    /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>    
     void Start()
     {
         XRHandSubsystem m_Subsystem = XRGeneralSettings.Instance?.Manager?.activeLoader?.GetLoadedSubsystem<XRHandSubsystem>();
 
         //check if loaded system exists 
-        if (m_Subsystem != null)
+        if (m_Subsystem != null){
             m_Subsystem.updatedHands += OnHandUpdate;
+        }
 
 
         // get reference to HandVisualizer Script
@@ -89,6 +97,10 @@ public class core_feature_controller : MonoBehaviour
     /// <summary>
     /// Method that performs actions every time an hand-update occurred
     /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>
     void OnHandUpdate(XRHandSubsystem subsystem,
                       XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
                       XRHandSubsystem.UpdateType updateType)
@@ -146,7 +158,15 @@ public class core_feature_controller : MonoBehaviour
         }
     }
 
-private void updateLeft()
+    /// <summary>
+    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
+    /// beschreibt.
+    /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>
+    private void updateLeft()
     {
         //no need for checking if != null because this object has already been proofed
         m_leftHandObj.updateData(getHandDataDictionary(Handedness.Left, m_leftHandObj.handJointIDs));
@@ -155,7 +175,14 @@ private void updateLeft()
             m_leftHandObj.updateInteraction();
         }
     }
-
+    /// <summary>
+    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
+    /// beschreibt.
+    /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>
     private void updateRigth()
     {
         //no need for checking if != null because this object has already been proofed
@@ -231,13 +258,28 @@ private void updateLeft()
         }
         return false;
     }
-
+    /// <summary>
+    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
+    /// beschreibt.
+    /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>
     private void OnRightInInteractionPosition()
     {
         m_rightObjInInteractionPos = true;
         m_rightHandObj.OnObjectPositioned -= OnRightInInteractionPosition;
     }
 
+    /// <summary>
+    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
+    /// beschreibt.
+    /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>
     private void OnLeftInInteractionPosition()
     {
         m_leftObjInInteractionPosition = true;
@@ -248,6 +290,7 @@ private void updateLeft()
     /// <summary>
     /// Method that disables the interaction of object currently being held in given hand
     /// </summary>
+    /// <author> Autoren </author>
     /// <param name="hand">Either Left or Right, Invalid will cause a false return</param>
     /// <returns>If disabling interaction was successful</returns>
     public bool disableGameObject(Handedness hand)
@@ -284,6 +327,7 @@ private void updateLeft()
     /// <summary>
     /// This method deactivates the rendering of chosen hand
     /// </summary>
+    /// <author> Autoren </author>
     /// <param name="hand">whether left or right</param>
     /// <exception cref="NotImplementedException"></exception>
     private void makeHandVisible(Handedness hand)
@@ -301,6 +345,7 @@ private void updateLeft()
     /// <summary>
     /// This method activates the rendering of chosen hand
     /// </summary>
+    /// <author> Autoren </author>
     /// <param name="hand">whether left or right</param>
     /// <exception cref="NotImplementedException"></exception>
     private void makeHandInvisible(Handedness hand)
@@ -318,6 +363,7 @@ private void updateLeft()
     /// <summary>
     /// Gets all needed joint data in form of a dictionary
     /// </summary>
+    /// <author> Autoren </author>
     /// <param name="handedness">Whether left or right</param>
     /// <param name="jointIds">ID's of necessary hand joints</param>
     /// <returns>Dictionary containing all hand joints of given indices.</returns>
@@ -347,7 +393,14 @@ private void updateLeft()
         return null;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
+    /// beschreibt.
+    /// </summary>
+    /// <author> Autoren </author>
+    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
+    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
+    /// <returns> Beschreibung des Rückgabewerts </return>
     void Update()
     {
         //check for detach gesture

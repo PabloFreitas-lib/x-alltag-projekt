@@ -4,6 +4,11 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
+
+/// <summary>
+/// This class is used to check if an object is selected and if so, it will be activated by the core feature controller.
+/// </summary>
+/// <author> Authors </author>
 [RequireComponent(typeof(XRGrabInteractable))]
 public class Selection_checker : MonoBehaviour
 {
@@ -30,6 +35,11 @@ public class Selection_checker : MonoBehaviour
     private bool m_lastSelected = false;
 
     private core_feature_controller controller;
+
+    /// <summary>
+    /// Defines in which hand this object can be hold.
+    /// </summary>
+    /// <author> Authors </author>
     public enum PossibleHand
     {
         LEFT,
@@ -37,8 +47,10 @@ public class Selection_checker : MonoBehaviour
         BOTH,
         NONE
     }
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// This function is called when the object is activated by the core feature controller.
+    /// </summary>
+    /// <author> Authors </author>
     void Start()
     {
         controller = _coreController.GetComponent<core_feature_controller>();
@@ -48,7 +60,11 @@ public class Selection_checker : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
+
+    /// <summary>
+    /// This function is called every frame and checks if the object is selected and if so, it will be activated by the core feature controller.
+    /// </summary>
+    /// <author> Authors </author>
     void Update()
     {
         if(handToHold == PossibleHand.NONE)

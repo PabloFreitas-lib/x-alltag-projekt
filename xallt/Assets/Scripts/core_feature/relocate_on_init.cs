@@ -4,6 +4,10 @@ using UnityEngine.InputSystem;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Management;
 
+/// <summary>
+///    This class is responsible for relocating the player in the scene
+/// </summary>
+/// <author> Fabian Schmurr</author>
 
 public class relocate_on_init : MonoBehaviour
 {
@@ -39,8 +43,10 @@ public class relocate_on_init : MonoBehaviour
     UnityEngine.XR.InputDeviceCharacteristics desiredCharacteristics = UnityEngine.XR.InputDeviceCharacteristics.Left | UnityEngine.XR.InputDeviceCharacteristics.HandTracking;
 
 
-
-    // Start is called before the first frame update
+    /// <summary>
+    ///    This function is called when the object becomes enabled and active.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     void Start()
     {
         /**get subsystem for hands to access it's data
@@ -64,8 +70,10 @@ public class relocate_on_init : MonoBehaviour
 
     }
 
-
-    // Gets by the subsystem if a hand update occurs
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     void OnHandUpdate(XRHandSubsystem subsystem,
                       XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
                       XRHandSubsystem.UpdateType updateType)
@@ -99,8 +107,10 @@ public class relocate_on_init : MonoBehaviour
 
     }
 
-
-    // Update is called once per frame
+    /// <summary>
+    ///    This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     void Update()
     {
         //check if ring finger got pinched this frame
@@ -144,6 +154,10 @@ public class relocate_on_init : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void updateOriginPosition()
     {
         //vector from real-world edge to hmd
@@ -156,11 +170,19 @@ public class relocate_on_init : MonoBehaviour
 
     }
 
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void updateDistalPose(Pose pose)
     {
         currentDistanJointPose = pose;
     }
 
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private bool trySetFingerEndPoint()
     {
         float distance = Vector3.Distance(startPointEdge, currentDistanJointPose.position);
@@ -176,12 +198,19 @@ public class relocate_on_init : MonoBehaviour
         }
         return false;
     }
-
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private void setFingerStartPoint()
     {
         startPointEdge = currentDistanJointPose.position;
     }
 
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Fabian Schmurr</author>
     private bool getLeftHandedController()
     {
         //loading XR input devices by given characteristics
@@ -214,6 +243,10 @@ public class relocate_on_init : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Authors</author>
     private void setXROrigin()
     {
         // printDebug("controller at:" + leftController.action.ReadValue<Vector3>());
@@ -222,7 +255,11 @@ public class relocate_on_init : MonoBehaviour
         //printDebug("Distance:" + distanceLeftHMD);
         // xrOrigin.position = new Vector3(leftAnchor.position.x + distanceLeftHMD.x, xrOrigin.position.y, leftAnchor.position.z + distanceLeftHMD.z + offset);
     }
-
+    /// <summary>
+    ///    This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    /// <author> Authors</author>
+    /// <param name="message">The message to print</param>
     private void printDebug(string message)
     {
         if (Debug.isDebugBuild)

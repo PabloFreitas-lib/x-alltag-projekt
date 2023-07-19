@@ -2,10 +2,18 @@ using System;
 using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 
+/// <summary>
+/// This class is used to visualize the hand tracking data of the XRHand class.
+/// </summary>
+/// <author> Authors </author>
+
 namespace UnityEngine.XR.Hands.Samples.VisualizerSample
 {
     public class SeperateHandVisualizer : MonoBehaviour
-    {
+    {   
+        /// <summary>
+        /// Defines the type of velocity that is visualized.
+        /// </summary>
         public enum VelocityType
         {
             Linear,
@@ -29,6 +37,20 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
         [SerializeField]
         Material m_HandMeshMaterial;
 
+        /// <summary>
+        /// Constructor for SeperateHandVisualizer
+        /// </summary>
+        /// <author> Authors </author>
+        public SeperateHandVisualizer()
+        { 
+            /// Not Implemented
+        }
+
+        /// <summary>
+        /// This function is called when the object is activated by the core feature controller.
+        /// </summary>
+        /// <author> Authors </author>
+        /// <param name="drawing">If true, the hand meshes will be drawn.</param>
         [ContextMenu("SetDrawMeshesLeftRight")]
         public void SetDrawMeshesLeftRight(bool drawing)
         {
@@ -44,12 +66,23 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             }
                   
         }
+
+        /// <summary>
+        /// This property is used to draw the left hand meshes.
+        /// </summary>
+        /// <author> Authors </author>
+        /// <returns>Template return value.</returns>
         public bool drawLeftMeshes
         {
             get => m_DrawLeftMeshes;
             set => m_DrawLeftMeshes = value;
         }
 
+        /// <summary>
+        /// This property is used to draw the right hand meshes.
+        /// </summary>
+        /// <author> Authors </author>
+        /// <returns>Template return value.</returns>
         public bool drawRightMeshes
         {
             get => m_DrawRightMeshes;
@@ -67,6 +100,11 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
         [SerializeField]
         GameObject m_DebugDrawPrefab;
 
+        /// <summary>
+        /// This property is used to draw the joints.
+        /// </summary>
+        /// <author> Authors </author>
+        /// <returns>Template return value.</returns>
         public bool debugDrawJoints
         {
             get => m_DebugDrawJoints;
@@ -80,6 +118,11 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
         [SerializeField]
         GameObject m_VelocityPrefab;
 
+        /// <summary>
+        /// This property is used to set the velocity type.
+        /// </summary>
+        /// <author> Authors </author>
+        /// <returns>Template return value.</returns>
         public VelocityType velocityType
         {
             get => m_VelocityType;
@@ -96,14 +139,20 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
 
         static readonly List<XRHandSubsystem> s_SubsystemsReuse = new List<XRHandSubsystem>();
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
         protected void Awake()
         {
-#if ENABLE_INPUT_SYSTEM
-            if (m_UseOptimizedControls)
-                InputSystem.InputSystem.settings.SetInternalFeatureFlag("USE_OPTIMIZED_CONTROLS", true);
-#endif // ENABLE_INPUT_SYSTEM
+            #if ENABLE_INPUT_SYSTEM
+                if (m_UseOptimizedControls)
+                    InputSystem.InputSystem.settings.SetInternalFeatureFlag("USE_OPTIMIZED_CONTROLS", true);
+            #endif // ENABLE_INPUT_SYSTEM
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
         protected void OnEnable()
         {
             if (m_Subsystem == null)
@@ -113,6 +162,9 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             UpdateRenderingVisibility(m_RightHandGameObjects, m_Subsystem.rightHand.isTracked);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
         protected void OnDisable()
         {
             if (m_Subsystem != null)
@@ -127,6 +179,9 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             UpdateRenderingVisibility(m_RightHandGameObjects, false);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
         protected void OnDestroy()
         {
             if (m_LeftHandGameObjects != null)
@@ -142,6 +197,9 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
         protected void Update()
         {
             if (m_Subsystem != null)
@@ -188,6 +246,11 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             m_Subsystem.updatedHands += OnUpdatedHands;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
+        /// <param name="handGameObjects">Template parameter handGameObjects.</param>
+        /// <param name="isTracked">Template parameter isTracked.</param>
         void UpdateRenderingVisibility(HandGameObjects handGameObjects, bool isTracked)
         {
             if (handGameObjects == null)
@@ -199,6 +262,10 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             handGameObjects.SetVelocityType(isTracked ? m_VelocityType : VelocityType.None);
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
+        /// <param name="hand">Object XRHand used to check the left and right usage.</param>
         void OnTrackingAcquired(XRHand hand)
         {
             switch (hand.handedness)
@@ -213,6 +280,10 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
+        /// <param name="hand">Object XRHand used to check the left and right usage.</param>
         void OnTrackingLost(XRHand hand)
         {
             switch (hand.handedness)
@@ -227,6 +298,12 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             }
         }
 
+        /// <summary>
+        /// </summary>
+        /// <author> Authors </author>
+        /// <param name="subsystem">XXXXXX</param>
+        /// <param name="updateSuccessFlags">XXXXXX</param>
+        /// <param name="updateType">XXXXXX</param>
         void OnUpdatedHands(XRHandSubsystem subsystem, XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags, XRHandSubsystem.UpdateType updateType)
         {
             // We have no game logic depending on the Transforms, so early out here
@@ -287,6 +364,9 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 m_RightHandGameObjects.UpdateRootPose(subsystem.rightHand);
         }
 
+        /// <summary>
+        /// This is the class that is used to visualize the hand tracking data of the XRHand class.
+        /// </summary>
         class HandGameObjects
         {
             GameObject m_HandRoot;
@@ -301,6 +381,16 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
             static Vector3[] s_LinePointsReuse = new Vector3[2];
             const float k_LineWidth = 0.005f;
 
+            /// <summary>
+            /// Constructor for HandGameObjects
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="handedness">Template parameter handedness.</param>
+            /// <param name="parent">Template parameter parent.</param>
+            /// <param name="meshPrefab">Template parameter meshPrefab.</param>
+            /// <param name="meshMaterial">Template parameter meshMaterial.</param>
+            /// <param name="debugDrawPrefab">Template parameter debugDrawPrefab.</param>
+            /// <param name="velocityPrefab">Template parameter velocityPrefab.</param>
             public HandGameObjects(
                 Handedness handedness,
                 Transform parent,
@@ -309,6 +399,12 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 GameObject debugDrawPrefab,
                 GameObject velocityPrefab)
             {
+                /// <summary>
+                /// </summary>
+                /// <author> Authors </author>
+                /// <param name="jointId">Template parameter jointId.</param>
+                /// <param name="jointXform">Template parameter jointXform.</param>
+                /// <param name="drawJointsParent">Template parameter drawJointsParent.</param>
                 void AssignJoint(
                     XRHandJointID jointId,
                     Transform jointXform,
@@ -417,6 +513,9 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 }
             }
 
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
             public void OnDestroy()
             {
                 Destroy(m_HandRoot);
@@ -438,6 +537,9 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 m_DrawJointsParent = null;
             }
 
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
             public void ToggleDrawMesh(bool drawMesh)
             {
                 for (int childIndex = 0; childIndex < m_HandRoot.transform.childCount; ++childIndex)
@@ -448,6 +550,10 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 }
             }
 
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="debugDrawJoints">Template parameter debugDrawJoints.</param>
             public void ToggleDebugDrawJoints(bool debugDrawJoints)
             {
                 for (int jointIndex = 0; jointIndex < m_DrawJoints.Length; ++jointIndex)
@@ -459,12 +565,21 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 m_Lines[0].enabled = false;
             }
 
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="velocityType">Template parameter velocityType.</param>
             public void SetVelocityType(VelocityType velocityType)
             {
                 for (int jointIndex = 0; jointIndex < m_VelocityParents.Length; ++jointIndex)
                     ToggleRenderers<LineRenderer>(velocityType != VelocityType.None, m_VelocityParents[jointIndex].transform);
             }
 
+
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="hand">Template parameter hand.</param>
             public void UpdateRootPose(XRHand hand)
             {
                 var xform = m_JointXforms[XRHandJointID.Wrist.ToIndex()];
@@ -472,6 +587,15 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 xform.localRotation = hand.rootPose.rotation;
             }
 
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="xrOrigin">Template parameter xrOrigin.</param>
+            /// <param name="hand">Template parameter hand.</param>
+            /// <param name="areJointsTracked">Template parameter areJointsTracked.</param>
+            /// <param name="drawMeshes">Template parameter drawMeshes.</param>
+            /// <param name="debugDrawJoints">Template parameter debugDrawJoints.</param>
+            /// <param name="velocityType">Template parameter velocityType.</param>
             public void UpdateJoints(
                 XROrigin xrOrigin,
                 XRHand hand,
@@ -515,7 +639,15 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                     }
                 }
             }
-
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="debugDrawJoints">Template parameter debugDrawJoints.</param>
+            /// <param name="velocityType">Template parameter velocityType.</param>
+            /// <param name="originPose">Template parameter originPose.</param>
+            /// <param name="joint">Template parameter joint.</param>
+            /// <param name="parentPose">Template parameter parentPose.</param>
+            /// <param name="cacheParentPose">Template parameter cacheParentPose.</param>
             void UpdateJoint(
                 bool debugDrawJoints,
                 VelocityType velocityType,
@@ -566,6 +698,11 @@ namespace UnityEngine.XR.Hands.Samples.VisualizerSample
                 }
             }
 
+            /// <summary>
+            /// </summary>
+            /// <author> Authors </author>
+            /// <param name="toggle">Template parameter toggle.</param>
+            /// <param name="xform">Template parameter xform.</param>
             static void ToggleRenderers<TRenderer>(bool toggle, Transform xform)
                 where TRenderer : Renderer
             {

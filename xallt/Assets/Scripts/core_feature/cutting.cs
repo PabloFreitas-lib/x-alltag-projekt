@@ -3,30 +3,48 @@ using UnityEngine.XR.Hands;
 using UnityEngine.XR.Management;
 using UnityEngine.XR.Interaction.Toolkit;
 
-[RequireComponent(typeof(XRGrabInteractable))]
 
+/// <summary>
+/// This class is used to describe the behavior of the VR drawing manager.
+/// </summary>
+/// <author> Authors </author>
+[RequireComponent(typeof(XRGrabInteractable))]
 public class cutting : MonoBehaviour
 {
+    /// Mesurable values for the blades
     public float maxAngle = 40;
+    private float minDistance = 0.025f;
+    private float maxDistance = 0.055f;
+
+    /// GameObjects for the blades
     public GameObject untereKlinge;
     public GameObject obereKlinge;
     public GameObject pivot;
-    public bool ninja = false;
-    private float minDistance = 0.025f;
-    private float maxDistance = 0.055f;
+
+    
+    /// Position of the blades
     private Pose currentDistalIndexJointPose;
     private Pose currentDistalMiddleJointPose;
-    private bool dataLoaded = false;
     private float lastAngle;
+
+    /// Data loaded
+    private bool dataLoaded = false;
+
+
+    /// Extra feature
+    public bool ninja = false;
+
     [SerializeField]
     private XRGrabInteractable Interactable;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// This function is called when an object is initialized.
+    /// get subsystem for hands to access it's data
+    /// See https://docs.unity3d.com/Packages/com.unity.xr.hands@1.1/manual/hand-data/xr-hand-access-data.html for more information
+    /// </summary>
+    /// <author> Authors </author>
     void Start()
     {
-        /**get subsystem for hands to access it's data
- * See https://docs.unity3d.com/Packages/com.unity.xr.hands@1.1/manual/hand-data/xr-hand-access-data.html for more information
- **/
         XRHandSubsystem m_Subsystem = XRGeneralSettings.Instance?.Manager?.activeLoader?.GetLoadedSubsystem<XRHandSubsystem>();
 
         //check if loaded system exists 
@@ -35,6 +53,10 @@ public class cutting : MonoBehaviour
     }
 
     // Gets by the subsystem if a hand update occurs
+    /// <summary>
+    /// Gets by the subsystem if a hand update occurs
+    /// </summary>
+    /// <author> Authors </author>
     void OnHandUpdate(XRHandSubsystem subsystem,
                       XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
                       XRHandSubsystem.UpdateType updateType)
@@ -68,7 +90,10 @@ public class cutting : MonoBehaviour
     }
 
 
-    // Update is called once per frame
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Authors </author>
     void Update()
     {
         if (Interactable.isSelected)

@@ -3,6 +3,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Interaction.Toolkit;
 
+
+/// <summary>
+/// This class is used to describe the behavior of the VR drawing manager.
+/// </summary>
+/// <author> Authors </author>
 public class VRDrawingManager : MonoBehaviour
 {
     public uint id;
@@ -31,12 +36,20 @@ public class VRDrawingManager : MonoBehaviour
 
     private Handedness _drawingHand = Handedness.Invalid;
 
+    /// <summary>
+    /// This function is called when an object is initialized.
+    /// </summary>
+    /// <author> Authors </author>
     private void Start()
     {
         _currentColorIndex = 0;
         tipMaterial.color = penColors[_currentColorIndex];
     }
 
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    /// <author> Authors </author>
     private void Update()
     {
         if (_drawingHand == Handedness.Left)
@@ -66,6 +79,11 @@ public class VRDrawingManager : MonoBehaviour
         }*/
     }
 
+    /// <summary>
+    /// This function is called when the object is activated by the core feature controller.
+    /// </summary>
+    /// <author> Authors </author>
+    /// <param name="hand">Handedness of the hand that activated the object</param>
     public void SetDrawingHand(Handedness hand)
     {
         if (hand != Handedness.Invalid)
@@ -73,10 +91,11 @@ public class VRDrawingManager : MonoBehaviour
             _drawingHand = hand;
         }
     }
-    
-    /**
-     * Die Draw()-Methode wird genutzt, um eine 3D-Linie im Raum zu zeichnen.
-     */
+
+     /// <summary>
+    /// Die Draw()-Methode wird genutzt, um eine 3D-Linie im Raum zu zeichnen.
+    /// </summary>
+    /// <author> Authors </author>
     private void Draw()
     {
         if (_currentDrawing == null)
@@ -101,29 +120,29 @@ public class VRDrawingManager : MonoBehaviour
         }
     }
 
-    /*
-     * StartDrawing() startet die Zeichnung. Wurde für das Starten des Zeichnens
-     * mithilfe eine Buttons benötigt.
-     */
+    /// <summary>
+    /// This function starts the drawing by setting _isDrawing to true.
+    /// </summary>
+    /// <author> Authors </author>
     public void StartDrawing()
     {
         _isDrawing = true;
         Draw();
     }
 
-    /**
-     * StopDrawing() beendet eine Zeichnung, indem _isDrawing = false gesetzt wird.
-     */
+
+    /// <summary>
+    /// This function end the drawin by setting _isDrawing to false.
+    /// </summary>
     public void StopDrawing()
     {
         _isDrawing = false;
     }
 
-    /**
-     * SwitchColor() verändert die Farbe des Stifts, allerdings muss dazu noch ein Mechanismus
-     * entworfen werden, um das möglichst intuitiv und benutzerfreundlich zu gestalten.
-     * SwitchColor() wird dementsprechend noch an keiner Stelle aufgerufen.
-     */
+    /// <summary>
+    /// This function switches the color of the pen.
+    /// </summary>
+    /// <author> Authors </author>
     private void SwitchColor()
     {
         if (_currentColorIndex == penColors.Length - 1)
@@ -136,10 +155,11 @@ public class VRDrawingManager : MonoBehaviour
         }
         tipMaterial.color = penColors[_currentColorIndex];
     }
-
-    /**
-     * ClearDrawing() wird aufgerufen, um die Szene von einer 3D-Zeichnung zu befreien.
-     */
+    
+    /// <summary>
+    /// This function clears the drawing.
+    /// </summary>
+    /// <author> Authors </author>
     public void ClearDrawing()
     {
         _currentDrawing.positionCount = 0;

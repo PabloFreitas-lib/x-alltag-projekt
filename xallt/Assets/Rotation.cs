@@ -2,45 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// rotates text in viewing direction (of the camera), makes text readable from every position
+/// </summary>
+/// <author> Mailin </author>
+
+
 public class Rotation : MonoBehaviour
 {
-        //private Vector3 startUpdateNormalPosition = Vector3.zero;
-        public float moveSpeed = 1f;
-        //public Vector3 KameraUp = Camera.main.transform.up;
-
 
     // Start is called before the first frame update
     void Start()
     {
-        //
-        //v = (transform.position - center.position);
-        //startUpdateNormalPosition = GazeManager.Instance.Normal;
-
-
+       
     }
 
     // Update is called once per frame
     void Update()
     {        
-        //rotiert Text in Richtung Kamera
-        transform.LookAt(Camera.main.transform);
-        transform.rotation = new Quaternion(0, transform.rotation.y, 0,transform.rotation.w);
+        /// <summary>
+        /// rotates text in viewing direction (of the camera)
+        /// </summary>
+        /// <author> Mailin </author>
+        /// <param name="Camera.main.transform"> needs position of the camera </param>
+        public transform.LookAt(Camera.main.transform);
 
-        //transform.LookAt(Camera.main.transform.forward);
+        /// <summary>
+        /// disables rotation in x and z direction (otherwise text will appear stretched)
+        /// </summary>
+        /// <author> Dmitry </author>
+        /// <param name="0"> sets x-axis rotation to zero </param>
+        /// <param name="transform.rotation.y"> allows y-axis rotation </param>
+        /// <param name="0"> sets z-axis rotation to zero </param>
+        /// <param name="transform.rotation.w"> allows w-axis rotation </param>
+        public transform.rotation = new Quaternion(0, transform.rotation.y, 0,transform.rotation.w);
 
-        //Versuch Text um Punkt zu rotieren:
-        //transform.RotateAround(1,1,1);
-        //(transform.position.x,transform.position.y-2,transform.position.z);
-        //transform.position.y=transform.position.y-2;
-        //transform.RotateAround(transform.position, startUpdateNormalPosition);
-        //transform.Rotate(Vector3.right);
+        /// <summary>
+        /// mirrors text (or text will be inversed)
+        /// </summary>
+        /// <author> Mailin </author>
+        /// <param name="0f"> keeps original x-orientation </param>
+        /// <param name="180f"> flips y-orientation </param>
+        /// <param name="0f"> keeps original z-orientation </param>
 
-        //Text fliegt um mich rum (auch cool) (vllt spaeter fuer Avatare-Emojis nutzbar)
-        //float moveAmount = moveSpeed * Time.deltaTime;
-        //transform.Translate(moveAmount, 0f, 0f);
-
-        //dreht Text um (sonst immer spiegelverkehrt)
-        transform.rotation *= Quaternion.Euler(0f, 180f, 0f);
+        public transform.rotation *= Quaternion.Euler(0f, 180f, 0f);
 
 
     }

@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// file socket detects mind map
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
 
 public class FileSocket : MonoBehaviour
 {
+    // file and file name
     public File socketFile;
     public Text fileNameText;
     [HideInInspector]public Mindmap map;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +26,7 @@ public class FileSocket : MonoBehaviour
     {
         
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("File"))
@@ -30,6 +37,7 @@ public class FileSocket : MonoBehaviour
             map = socketFile.map;
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("File"))
@@ -41,6 +49,10 @@ public class FileSocket : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// calls upon functions from hand UI
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void CreateNodeUI()
     {
         if(map != null)
@@ -71,6 +83,11 @@ public class FileSocket : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// changes the color
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="Color color"> requires color </param>
     public void ChangeColorUI(Color color)
     {
         if (map != null && map.selected != null)

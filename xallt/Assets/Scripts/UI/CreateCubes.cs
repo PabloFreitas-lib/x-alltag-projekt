@@ -3,20 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+    /// UI for cube creation
+    /// </summary>
+    /// <author>  </author>
+
 public class CreateCubes : MonoBehaviour
 {
+    //
     public GameObject cubePrefab;
-        public Transform cubeParent;
-        public Vector3 cubeScale = Vector3.one; // Variable für die Würfelgröße
+    public Transform cubeParent;
+    public Vector3 cubeScale = Vector3.one; // Variable für die Würfelgröße
 
-        private Button button;
-        private bool buttonPressed = false;
+    private Button button;
+    private bool buttonPressed = false;
 
     // Start is called before the first frame update
     void Start()
     {
         button = GetComponent<Button>();
-               button.onClick.AddListener(TriggerButtonPress);    }
+        button.onClick.AddListener(TriggerButtonPress);    
+    }
 
     // Update is called once per frame
     void Update()

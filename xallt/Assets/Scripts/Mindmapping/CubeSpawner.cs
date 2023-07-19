@@ -3,8 +3,14 @@ using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
+/// <summary>
+/// spawns cubes
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
+
 public class CubeSpawner : MonoBehaviour
 {
+    //prefab, collider, position
     public GameObject filePrefab; // Prefab of the cube to spawn
     public bool isSpawned;
     public Collider detectionCollider;
@@ -37,6 +43,11 @@ public class CubeSpawner : MonoBehaviour
         SpawnCube(transform);
     }
 
+    /// <summary>
+    /// spawns cube on socket
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="Transform spawn Position"> requires spawn position </param>
     public void SpawnCube(Transform spawnPosition)
     {
         // Instantiate a cube prefab at the position of the hand controller
@@ -46,6 +57,11 @@ public class CubeSpawner : MonoBehaviour
         isSpawned = true;
     }
 
+    /// <summary>
+    /// spawns cube in hand UI
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="Transform spawn Position"> requires spawn position </param>
     public void SpawnCubeUI(Transform spawnPosition)
     {
         if (moved == true)

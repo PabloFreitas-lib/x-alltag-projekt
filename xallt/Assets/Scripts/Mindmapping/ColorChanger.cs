@@ -1,9 +1,15 @@
 using UnityEngine;
 
+/// <summary>
+/// changes color of nodes and cube
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
+
 [ExecuteAlways]
 public class ColorChanger : MonoBehaviour
 {
-    public Color objectColor; // Öffentliche Variable für die Würfelfarbe im Inspector
+    // public variables for the cube color in inspector
+    public Color objectColor; // ï¿½ffentliche Variable fï¿½r die Wï¿½rfelfarbe im Inspector
     public Color highLightColor;
     public bool isHighlighted;
     public Light pointLight; // Referenz auf das Point Light
@@ -25,44 +31,58 @@ public class ColorChanger : MonoBehaviour
         UpdateCubeColor();
     }
 
+    /// <summary>
+    /// changes cube color
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void UpdateCubeColor()
     {
         if (!isHighlighted)
         {
             if (cubeMaterial.GetColor("_Color") != objectColor && cubeMaterial.GetColor("_EmissionColor") != objectColor)
             {
-                cubeMaterial.SetColor("_Color", objectColor); // Ändert die Hauptfarbe des Materials
-                cubeMaterial.SetColor("_EmissionColor", objectColor); // Ändert die Emissionsfarbe des Materials
+                cubeMaterial.SetColor("_Color", objectColor); // ï¿½ndert die Hauptfarbe des Materials
+                cubeMaterial.SetColor("_EmissionColor", objectColor); // ï¿½ndert die Emissionsfarbe des Materials
                 cubeRenderer.sharedMaterial.EnableKeyword("_EMISSION"); // Aktiviert die Emission im Material
             }
 
             if (pointLight != null && pointLight.color != objectColor)
             {
-                pointLight.color = objectColor; // Setzt die Farbe des Point Lights entsprechend der Würfelfarbe
+                pointLight.color = objectColor; // Setzt die Farbe des Point Lights entsprechend der Wï¿½rfelfarbe
             }
         }
         else
         {
             if (cubeMaterial.GetColor("_Color") != highLightColor && cubeMaterial.GetColor("_EmissionColor") != highLightColor)
             {
-                cubeMaterial.SetColor("_Color", highLightColor); // Ändert die Hauptfarbe des Materials
-                cubeMaterial.SetColor("_EmissionColor", highLightColor); // Ändert die Emissionsfarbe des Materials
+                cubeMaterial.SetColor("_Color", highLightColor); // ï¿½ndert die Hauptfarbe des Materials
+                cubeMaterial.SetColor("_EmissionColor", highLightColor); // ï¿½ndert die Emissionsfarbe des Materials
                 cubeRenderer.sharedMaterial.EnableKeyword("_EMISSION"); // Aktiviert die Emission im Material
             }
 
             if (pointLight != null && pointLight.color != highLightColor)
             {
-                pointLight.color = highLightColor; // Setzt die Farbe des Point Lights entsprechend der Würfelfarbe
+                pointLight.color = highLightColor; // Setzt die Farbe des Point Lights entsprechend der Wï¿½rfelfarbe
             }
         }
         
     }
 
+    /// <summary>
+    /// highlights selected nodes
+    /// </summary
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="bool highlight"> needs to know if node is highlighted </param>
     public void HighlightObject(bool highlight)
     {
         isHighlighted = highlight;
     }
 
+    /// <summary>
+    /// sets node color
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="Color color"> requires a color </param>
     public void SetColor(Color color)
     {
         objectColor = color;

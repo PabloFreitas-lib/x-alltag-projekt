@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// puts files in list
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
+
 public class Shelfplate : MonoBehaviour
 {
+    // file and file name and list of all files
     public File socketFile;
     public Text fileNameText;
 

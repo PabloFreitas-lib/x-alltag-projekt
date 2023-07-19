@@ -2,18 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// includes functions for the spawn position, creating, selecting and deleting nodes and the changing the mode
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
+
+
 public class Mindmap : MonoBehaviour
 {
+    // special nodes (root, selected, prevSelected (previously selected))
     public Node root;
     public Node selected;
     public Node prevSelected;
+
+    // prefabs for node and connection
     [Header("Prefabs")]
     public GameObject NodePrefab;
     public GameObject connectionPrefab;
-    [HideInInspector]public Transform Spawnposition;
-    public List<Node> nodes;
-    public Mode mode;
 
+    // spawn position
+    [HideInInspector]public Transform Spawnposition;
+    
+    // list of nodes
+    public List<Node> nodes;
+
+    // modes (default, connect, edit, delete)
+    public Mode mode;
     public enum Mode
     {
         defaultMode = 0,
@@ -22,6 +36,11 @@ public class Mindmap : MonoBehaviour
         DeleteMode = 3
     }
 
+    /// <summary>
+    /// deletes nodes (if a node is selected in delete mode and the node isn't the root) 
+    /// (also removes parent-children relation in structure)
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void DeleteNode()
     {
         if(selected != null && mode == Mode.DeleteMode)
@@ -39,12 +58,23 @@ public class Mindmap : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// selects nodes
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="Node node"> requires a node </param>
     public void SelectNode(Node node)
     {
         prevSelected = selected;
         selected = node;
     }
 
+    /// <summary>
+    /// creates nodes
+    /// determines spawn position, sets parents
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void CreateNode()
     {
         if(selected != null)
@@ -71,6 +101,11 @@ public class Mindmap : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// changes the mode
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="int index"> requires the mode index </param>
     public void changeMode(int index)
     {
             switch (index){

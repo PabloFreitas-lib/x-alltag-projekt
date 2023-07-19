@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// selects node, establishes connections between child node and parent and node and node
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
+
 public class Node : MonoBehaviour
 {
     //Metadata
@@ -20,6 +25,13 @@ public class Node : MonoBehaviour
     //Boolean
     public bool isRoot;
 
+    /// <summary> 
+    /// gives nodes metadata
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="uint pId"> requires the node ID </param>
+    /// <param name="string pText"> requires text </param>
+    /// <param name="Color pUserColor"> requires Color </param>
     public Node(uint pId, string pText, Color pUserColor)
     {
         id = pId;
@@ -27,7 +39,10 @@ public class Node : MonoBehaviour
         this.GetComponent<ColorChanger>().objectColor = pUserColor;
     }
 
-
+    /// <summary>
+    /// calls the function ConnectToParent if the node isn't the root
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void Start()
     {
         if (!isRoot)
@@ -37,6 +52,10 @@ public class Node : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// connects node to parent
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void ConnectToParent()
     {
         GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
@@ -50,6 +69,11 @@ public class Node : MonoBehaviour
         }
         connection.transform.parent = mindmap.transform;
     }
+
+    /// <summary>
+    /// selects the node
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void SelectSelf()
     {
         if(mindmap != null)
@@ -57,6 +81,10 @@ public class Node : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// sets connections between nodes
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void ConnectNodes()
     {
         if(mindmap.mode == Mindmap.Mode.ConnectMode && mindmap.prevSelected != null && mindmap.selected != null)

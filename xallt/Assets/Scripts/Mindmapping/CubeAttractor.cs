@@ -1,12 +1,22 @@
 using UnityEngine;
 
+/// <summary>
+/// makes cubes magnetic to file socket
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
+
 public class CubeAttractor : MonoBehaviour
 {
+    //force, radius, tag, color
     public float attractForce = 10f;
     public float attractRadius = 5f;
     public string objectTag;
     public Color gizmoColor;
 
+    /// <summary>
+    /// makes cube magnetic to file socket
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void FixedUpdate()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, attractRadius);
@@ -28,6 +38,7 @@ public class CubeAttractor : MonoBehaviour
             }
         }
     }
+    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = gizmoColor;

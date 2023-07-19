@@ -2,31 +2,36 @@ using InfoGamerHubAssets;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controls the behavior of multiple custom lights in the scene, allowing manual control of brightness and color.
+/// </summary>
+/// <author> Collin June, Christoph Dreier </author>
 public class LightController : MonoBehaviour
 {
     private CustomLightScript[] lights;
 
-    [Header("UI Components")]
-    public UIColorPickButton colorPickButton;
-    public Slider brightnessSlider; // Reference to the UI Slider for brightness control
-    public Toggle activateAllLightsToggle; // Reference to the UI Toggle for activating or disabling all lights
-    public Toggle activateTempToggle;// Reference to the UI Toggle for Temperature
-    public Slider temperatureSlider;
+    // UI Components
+    public UIColorPickButton colorPickButton; // Color picker button for selecting a color
+    public Slider brightnessSlider; // UI Slider for brightness control
+    public Toggle activateAllLightsToggle; // UI Toggle for activating or disabling all lights
+    public Toggle activateTempToggle; // UI Toggle for switching between temperature and RGB control
+    public Slider temperatureSlider; // Slider for light temperature / color change
 
-    [Header("Manual Control")]
+    // Manual Control Parameters
     public bool useTemperatureControl; // Toggle between temperature and RGB control
-    public float brightness = 1f;
-    public Color color = new Color(255f / 255f, 180f / 255f, 107f / 255f);
-    public bool activateAllLights;
+    public float brightness = 1f; // Current brightness value
+    public Color color = new Color(255f / 255f, 180f / 255f, 107f / 255f); // Current color value
+    public bool activateAllLights; // Toggle for activating or disabling all lights
 
     // Slider for light temperature / color change
     [Range(0f, 130f)]
-    public float tempSlider;
+    public float tempSlider; // Current value of the temperature slider
 
     private void Start()
     {
         // Find all light components with the CustomLightScript attached
         lights = FindObjectsOfType<CustomLightScript>();
+
         // Starting point on slider
         tempSlider = 0f;
 
@@ -40,6 +45,11 @@ public class LightController : MonoBehaviour
         activateTempToggle.onValueChanged.AddListener(OnActivateTemperatureControlToggleValueChanged);
     }
 
+    /// <summary>
+    /// Sets the brightness for all lights in the scene.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="brightness"> The new brightness value. </param>
     public void SetBrightness(float brightness)
     {
         foreach (CustomLightScript light in lights)
@@ -48,6 +58,11 @@ public class LightController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the color for all lights in the scene.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="color"> The new color value. </param>
     public void SetColor(Color color)
     {
         foreach (CustomLightScript light in lights)
@@ -56,37 +71,61 @@ public class LightController : MonoBehaviour
         }
     }
 
-    // Event listener for ColorPickerEvent
+    /// <summary>
+    /// Event listener for the ColorPickerEvent.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="pickedColor"> The color picked by the color picker. </param>
     private void OnColorPicked(Color pickedColor)
     {
-        color = pickedColor;
+        color = pickedColor; // Update the current color with the picked color
     }
 
-    // Event listener for brightness slider value changed
+    /// <summary>
+    /// Event listener for brightness slider value changed.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="value"> The new value of the brightness slider. </param>
     private void OnBrightnessSliderValueChanged(float value)
     {
-        brightness = value;
-        SetBrightness(brightness);
+        brightness = value; // Update the current brightness with the slider value
+        SetBrightness(brightness); // Set the new brightness for all lights
     }
 
-    // Event listener for temperature slider value changed
+    /// <summary>
+    /// Event listener for temperature slider value changed.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="value"> The new value of the temperature slider. </param>
     private void OnTemperatureSliderValueChanged(float value)
     {
-        tempSlider = value;
+        tempSlider = value; // Update the current temperature slider value
     }
 
-    // Event listener for activate all lights toggle value changed
+    /// <summary>
+    /// Event listener for activate all lights toggle value changed.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="value"> The new value of the activate all lights toggle. </param>
     private void OnActivateAllLightsToggleValueChanged(bool value)
     {
-        activateAllLights = value;
+        activateAllLights = value; // Update the activateAllLights toggle
     }
 
-    // Event listener for activate temperature control
+    /// <summary>
+    /// Event listener for activate temperature control toggle value changed.
+    /// </summary>
+    /// <author> Collin June, Christoph Dreier </author>
+    /// <param name="value"> The new value of the activate temperature control toggle. </param>
     private void OnActivateTemperatureControlToggleValueChanged(bool value)
     {
-        useTemperatureControl = value;
+        useTemperatureControl = value; // Update the useTemperatureControl toggle
     }
 
+    /// <summary>
+    /// updating the light objects and logic for changing the lights.
+    /// </summary>
+    /// <author> Christoph Dreier </author>
     private void Update()
     {
         if (activateAllLights)
@@ -109,13 +148,16 @@ public class LightController : MonoBehaviour
         Color currentColor;
         if (useTemperatureControl)
         {
+            // Calculate the current color based on the temperature slider
             currentColor = new Color(1f, ((169f + (tempSlider / 2)) / 255), ((87 + tempSlider) / 255));
         }
         else
         {
+            // Use the color selected with the Color Picker button
             currentColor = colorPickButton.newcolor;
         }
 
+        // Set the current color and brightness for all lights
         SetColor(currentColor);
         SetBrightness(brightness);
     }

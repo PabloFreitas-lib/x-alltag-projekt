@@ -4,24 +4,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-
-/* TODO:
- *  
- *  
- * 
- */
+/// <summary>
+///    Class implementing functions for persisting general software-state (CUP), mindmaps, whiteboards or freeDraw.
+///    JSON is used for serialization.
+/// </summary>
+/// <author> Noah Horn, Jakob Kern, Jie Su </author>
 [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 public class SaveSystem : MonoBehaviour
 {
+
+    /// <summary>
+    /// Wrapper-Class for serialization of general software-state (CUP) in JSON.
+    /// </summary>
+    /// <author> Jakob Kern</author>    
     [System.Serializable]
     public class ComplexUserPrefsPersistentObject
     {
+        //Central Lighting values
         public Color lightColor;
         public float lightIntensity;
 
+        //Files and Whiteboards existent in the scene
         public FilePersistentObject[] files;
         public string[] whiteboards;
 
+
+        /// <summary>
+        ///    Called by SaveComplexUserPrefs() to easily encapsulate necessary game state data.
+        /// </summary>
+        /// <author> Jakob Kern </author>
         public ComplexUserPrefsPersistentObject()
         {
             LightController lights = GameObject.Find("Lights").GetComponent<LightController>();
@@ -45,6 +56,10 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Wrapper-Class for serialization of fileCubes in JSON. Part of CUP.
+    /// </summary>
+    /// <author> Jakob Kern </author> 
     [System.Serializable]
     public class FilePersistentObject
     {
@@ -52,6 +67,11 @@ public class SaveSystem : MonoBehaviour
         Color color;
         Vector3 position;
 
+        /// <summary>
+        /// Called by CUP Constructor to get a serializable fileCube representation.
+        /// </summary>
+        /// <author> Autoren </author>
+        /// <param name="file"> The File to be serialized. </param>
         public FilePersistentObject(File file)
         {
             name = file.name;
@@ -60,6 +80,10 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Wrapper-Class for serialization of single lights in JSON. Part of (CUP), not used yet.
+    /// </summary>
+    /// <author> Jakob Kern</author> 
     [System.Serializable]
     public class LightPersistentObject
     {
@@ -67,16 +91,24 @@ public class SaveSystem : MonoBehaviour
         Color color;
         float intesity; //float?
         Vector3 positon;
-
-        //Constructor
     }
 
+    /// <summary>
+    /// Wrapper-Class for serialization of a free draw scene element in JSON.
+    /// </summary>
+    /// <author> Jakob Kern</author> 
     public class FreeDrawPersistentObject
     {
         uint id;
         Color color;
         Vector3[] vectors;
 
+        /// <summary>
+        /// Called by SaveFreeDraw(VRDrawingManager manager) to extract a managers current LineRenderer.
+        /// Persitent-relevant data contains an identifier, the color and the vector positions of a free draw.
+        /// </summary>
+        /// <author> Jakob Kern </author>
+        /// <param name="manager"> Contains the LineRender whose information is to be persisted. </param>
         public FreeDrawPersistentObject(VRDrawingManager manager)
         {
             id = manager.id;
@@ -87,9 +119,10 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    /*
-    * Objects of this class have the purpose of collecting serializable data of a mindmap to be saved from or respectively be loaded to.
-    */
+    /// <summary>
+    ///  Wrapper-Class for serialization of a single mindmap node in JSON. Used to serialize a mindmap as a list of nodes.
+    /// </summary>
+    /// <author> Jakob Kern</author> 
     [System.Serializable]
     public class NodePersistentObject
     {
@@ -101,6 +134,12 @@ public class SaveSystem : MonoBehaviour
 
         public uint[] childrenIds { get; }
 
+        /// <summary>
+        /// Called by SaveMindmap(Mindmap mindmap) to easily encapsulate a mindmaps nodes.
+        /// A mindmap is primarily described by its name (which is its path) and a list of nodes.
+        /// </summary>
+        /// <author> Autoren </author>
+        /// <param name="node"> The node to be wrapped. </param>
         public NodePersistentObject(Node node)
         {
             //Set simple parameters
@@ -120,14 +159,13 @@ public class SaveSystem : MonoBehaviour
                 i++;
             }
         }
-
     }
 
-
-    /*
-    * Used to save general GameState.
-    * (Player position, how many and which files cubes are there?, user(?))
-    */
+    /// <summary>
+    /// Save the general software state (CUP).
+    /// Should be called on start of the software.
+    /// </summary>
+    /// <author> Jakob Kern, Jie Su </author>
     public void SaveComplexUserPrefs()
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
@@ -137,10 +175,11 @@ public class SaveSystem : MonoBehaviour
         System.IO.File.WriteAllText(fullPath, json);
     }
 
-    /*
-     * Used to load general GameState.
-     * (Player position, how many and which files cubes are there?, user(?))
-     */
+    /// <summary>
+    /// Load the general software state (CUP).
+    /// Should be called at least when the software is closed.
+    /// </summary>
+    /// <author> Jakob Kern, Jie Su </author>
     public void LoadComplexUserPrefs()
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
@@ -161,6 +200,11 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Save the current FreeDraw by use of VRDrawingManager.
+    /// </summary>
+    /// <author> Jakob Kern </author>
+    /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
     public static void SaveFreeDraw(VRDrawingManager drawing)
     {
         FreeDrawPersistentObject freeDraw = new FreeDrawPersistentObject(drawing);
@@ -174,7 +218,13 @@ public class SaveSystem : MonoBehaviour
         System.IO.File.WriteAllText(fullPath, json);
     }
 
-    public static Vector3[] LoadFreeDraw(uint drawingID)
+    /// <summary>
+    /// Load a FreeDraw by its id.
+    /// </summary>
+    /// <author> Jakob Kern </author>
+    /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
+    /// <returns> An object containing all the (now deserialized) data of the freeDraw with id=drawingID </returns>
+    public static FreeDrawPersistentObject LoadFreeDraw(uint drawingID)
     {
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");
@@ -184,7 +234,7 @@ public class SaveSystem : MonoBehaviour
         {
             string json = System.IO.File.ReadAllText(fullPath);
 
-            Vector3[] positions = JsonUtility.FromJson<Vector3[]>(json);
+            FreeDrawPersistentObject positions = JsonUtility.FromJson<FreeDrawPersistentObject>(json);
             return positions;
         }
         else
@@ -194,9 +244,11 @@ public class SaveSystem : MonoBehaviour
         }
     }
 
-    /*
-     * Called to save Mindmap when clicking button or on socket interaction.
-     */
+    /// <summary>
+    /// Save a given Mindmap. This function is to be called on GUI- or socket-interaction of the fileCube correlating with the mindmap.
+    /// </summary>
+    /// <author> Jakob Kern </author>
+    /// <param name="mindmap"> The Mindmap object to be wrapped and saved. </param>
     public static void SaveMindmap(Mindmap mindmap)
     {
         Node[] nodes = mindmap.nodes.ToArray();
@@ -218,9 +270,11 @@ public class SaveSystem : MonoBehaviour
     }
 
 
-    /*
-     * Called to load Mindmap when clicking button or on socket interaction.
-     */
+    /// <summary>
+    /// Load a given Mindmap. This function is to be called on GUI- or socket-interaction of the fileCube correlating with the mindmap.
+    /// </summary>
+    /// <param name="mindmap"> A Mindmap Object, which is allowed to be empty except for its name (correlating to path). The Function fills this Mindmap object, according to saved data. </param>
+    /// <returns> A list of all the nodes that have been succesfully deserialized. Not needed for implementation, but helpful for debugging.</returns>
     public static List<Node> LoadMindmap(Mindmap mindmap)
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
@@ -263,9 +317,10 @@ public class SaveSystem : MonoBehaviour
     }
 
 
-    /*
-     * Called to save all Whiteboards when clicking L.
-     */
+    /// <summary>
+    /// Save a given Whiteboard. This function is to be called on GUI- or socket-interaction.
+    /// </summary>
+    /// <param name="whiteboard"> A whiteboard that is to be persisted </param>
     public static void SaveWhiteboard(Whiteboard whiteboard)
     {
         byte[] whiteBoardtexture = whiteboard.drawingTexture.EncodeToPNG();
@@ -279,11 +334,12 @@ public class SaveSystem : MonoBehaviour
         Debug.Log("Whiteboard saved to: " + fullPath);
     }
 
-    /*
-     * Called to load Whiteboard when clicking button or on whiteboard interaction..
-     * Which argument use to load just ID 
-     */
-    public static void LoadWhitebaord(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
+    /// <summary>
+    /// Save a given Whiteboard. This function is to be called on GUI- or socket-interaction.
+    /// </summary>
+    /// <param name="whiteboard"> A Whiteboard object, which is allowed to be empty except for its id (correlating to path). Will be filled with stored information.</param>
+    /// <returns> Texture2D that shows the loaded whiteboard. Caller can ignore this, as it is the same contained in the given Whiteboard, though helpful for debugging.</returns>
+    public static Texture2D LoadWhiteboard(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
     {
 
         Texture2D texture;
@@ -300,6 +356,7 @@ public class SaveSystem : MonoBehaviour
             texture.LoadImage(fileData);
             whiteboard.drawingTexture = texture;
             Debug.Log("Whiteboard loaded");
+            return texture;
         }
         else
         {
@@ -381,8 +438,6 @@ public class SaveSystem : MonoBehaviour
         nodes[i] = nodes[j];
         nodes[j] = temp;
     }
-
-
 
     private string GetDebuggerDisplay()
     {

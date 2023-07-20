@@ -4,8 +4,10 @@ using Unity.XR.CoreUtils;
 
 /// <summary>
 /// This class is used to visualize the hand tracking data of the XRHand class.
+/// We edited it a little to add the ability to only draw meshes for a specific hand, instead of both at the same time.
+/// E.g. if the scissors or marker objects replace one hand, the other will still be drawed.
 /// </summary>
-/// <author> Authors </author>
+/// <author> Autoren: Fabian Schmurr, Jaap Braasch </author>
 
 namespace UnityEngine.XR.Hands.Samples.VisualizerSample
 {

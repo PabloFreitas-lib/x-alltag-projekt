@@ -10,7 +10,7 @@ using UnityEngine.XR.Management;
 /// Script that works as a controller between objects controlled directly by
 /// hand-tracking and their selection.
 /// </summary>
-/// <author> Autoren: Fabien Schmurr, Jaap Braasch </author>
+/// <author> Autoren: Fabian Schmurr, Jaap Braasch </author>
 
 public class core_feature_controller : MonoBehaviour
 {

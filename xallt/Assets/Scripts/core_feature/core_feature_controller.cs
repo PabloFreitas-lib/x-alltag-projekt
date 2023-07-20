@@ -8,7 +8,8 @@ using UnityEngine.XR.Management;
 
 /// <summary>
 /// Script that works as a controller between objects controlled directly by
-/// hand-tracking and their selection.
+/// hand-tracking and their selection. <see cref="Scripted_Interactable_Object"/>
+/// Therefore this class gathers access to the raw hand joint data provided by <see cref="XRHandSubsystem"/>
 /// </summary>
 /// <author> Autoren: Fabian Schmurr, Jaap Braasch </author>
 
@@ -26,6 +27,9 @@ public class core_feature_controller : MonoBehaviour
     /// </summary>
     private Scripted_Interactable_Object m_rightHandObj = null;
 
+    /// <summary>
+    /// Indicates if the selected objects reached their position and the interaction of them can therefore be activated
+    /// </summary>
     private bool m_leftObjInInteractionPosition = false;
     private bool m_rightObjInInteractionPos = false;
 
@@ -43,28 +47,32 @@ public class core_feature_controller : MonoBehaviour
     [Tooltip("Name of XR main object")]
     private string m_XRObjectName;
 
+    /// <summary>
+    /// Gesture that shall be used to detach the object currently held in left hand
+    /// </summary>
     [SerializeField]
     [Tooltip("Pinch gesture to detach the left object")]
     private InputActionReference m_detachPinchLeft;
 
+    /// <summary>
+    /// Gesture that shall be used to detach the object currently held in right hand
+    /// </summary>
     [SerializeField]
     [Tooltip("Pinch gesture to detach the right object")]
     private InputActionReference m_detachPinchRight;
 
     /// <summary>
-    /// Script to control which hands should currently be displayed or not
+    /// Script to used to separately change the visibility of left and right hand to visible or invisible
     /// </summary>
     private SeperateHandVisualizer m_handVisualizerScipt;
 
 
     /// <summary>
-    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
-    /// beschreibt.
+    /// At start the script  tries to get access to the <see cref="XRHandSubsystem"/> to deliver the hand joint
+    /// date to the managed objects. Also a reference to <see cref="SeperateHandVisualizer"/> is being accessed.
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>    
+    /// <author> Fabian Schmurr </author> 
+    /// <exception cref="MissingComponentException" if <see cref="SeperateHandVisualizer"/> or xr origin could not be found
     void Start()
     {
         XRHandSubsystem m_Subsystem = XRGeneralSettings.Instance?.Manager?.activeLoader?.GetLoadedSubsystem<XRHandSubsystem>();
@@ -95,12 +103,9 @@ public class core_feature_controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Method that performs actions every time an hand-update occurred
+    /// Gets called by <see cref="XRHandSubsystem"/> every time the hand subsystem was updated
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>
+    /// <author> Fabian Schmurr </author>
     void OnHandUpdate(XRHandSubsystem subsystem,
                       XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags,
                       XRHandSubsystem.UpdateType updateType)
@@ -159,13 +164,9 @@ public class core_feature_controller : MonoBehaviour
     }
 
     /// <summary>
-    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
-    /// beschreibt.
+    /// Updates data of object held in left hand and also the interaction if the object has reached the left hand
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>
+    /// <author> Fabian Schmurr </author>
     private void updateLeft()
     {
         //no need for checking if != null because this object has already been proofed
@@ -175,14 +176,11 @@ public class core_feature_controller : MonoBehaviour
             m_leftHandObj.updateInteraction();
         }
     }
+
     /// <summary>
-    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
-    /// beschreibt.
+    /// Updates data of object held in right hand and also the interaction if the object has reached the left hand
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>
+    /// <author> Fabian Schmurr </author>
     private void updateRigth()
     {
         //no need for checking if != null because this object has already been proofed
@@ -194,8 +192,11 @@ public class core_feature_controller : MonoBehaviour
     }
 
     /// <summary>
-    /// Method to activates an intractable GameObject if selecting hand is free
+    /// Method to activate an intractable GameObject if selecting hand is free.
+    /// Activation in this context means, make selecting hand invisible, start animation and at the end
+    /// make the object interactable
     /// </summary>
+    /// <Author>Fabian Schmurr</Author>
     /// <param name="obj">Reference to object that should be activated
     /// </param>
     /// <param name="selectingHand">The Hand that selected the object</param>
@@ -258,14 +259,12 @@ public class core_feature_controller : MonoBehaviour
         }
         return false;
     }
+
     /// <summary>
-    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
-    /// beschreibt.
+    /// Sets the right hand object to interactable if object reached the designated hand position.
+    /// This Method is triggered by the <see cref="Scripted_Interactable_Object"/> if the action was performed
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>
+    /// <author> Fabian Schmurr </author>
     private void OnRightInInteractionPosition()
     {
         m_rightObjInInteractionPos = true;
@@ -273,13 +272,10 @@ public class core_feature_controller : MonoBehaviour
     }
 
     /// <summary>
-    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
-    /// beschreibt.
+    /// Sets the left hand object to interactable if object reached the designated hand position.
+    /// This method is triggered by the <see cref="Scripted_Interactable_Object"/> if the action was performed
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>
+    /// <author> Fabian Schmurr </author>
     private void OnLeftInInteractionPosition()
     {
         m_leftObjInInteractionPosition = true;
@@ -290,9 +286,9 @@ public class core_feature_controller : MonoBehaviour
     /// <summary>
     /// Method that disables the interaction of object currently being held in given hand
     /// </summary>
-    /// <author> Autoren </author>
+    /// <author> Fabian Schmurr </author>
     /// <param name="hand">Either Left or Right, Invalid will cause a false return</param>
-    /// <returns>If disabling interaction was successful</returns>
+    /// <returns>True if disabling the interaction was successful</returns>
     public bool disableGameObject(Handedness hand)
     {
         // can't deactivate an invalid hand lol
@@ -311,7 +307,7 @@ public class core_feature_controller : MonoBehaviour
             return true;
         }
 
-        //// object in right hand should be deactivated and is existing
+        // object in right hand should be deactivated and is existing
         if (hand == Handedness.Right && m_rightHandObj != null)
         {
             m_rightHandObj.deactivate();
@@ -327,9 +323,8 @@ public class core_feature_controller : MonoBehaviour
     /// <summary>
     /// This method deactivates the rendering of chosen hand
     /// </summary>
-    /// <author> Autoren </author>
+    /// <author> Fabian Schmurr </author>
     /// <param name="hand">whether left or right</param>
-    /// <exception cref="NotImplementedException"></exception>
     private void makeHandVisible(Handedness hand)
     {
         if (hand == Handedness.Left)
@@ -345,9 +340,8 @@ public class core_feature_controller : MonoBehaviour
     /// <summary>
     /// This method activates the rendering of chosen hand
     /// </summary>
-    /// <author> Autoren </author>
+    /// <author> Fabian Schmurr </author>
     /// <param name="hand">whether left or right</param>
-    /// <exception cref="NotImplementedException"></exception>
     private void makeHandInvisible(Handedness hand)
     {
         if (hand == Handedness.Left)
@@ -363,9 +357,9 @@ public class core_feature_controller : MonoBehaviour
     /// <summary>
     /// Gets all needed joint data in form of a dictionary
     /// </summary>
-    /// <author> Autoren </author>
+    /// <author> Fabian Schmurr </author>
     /// <param name="handedness">Whether left or right</param>
-    /// <param name="jointIds">ID's of necessary hand joints</param>
+    /// <param name="jointIds">ID's of necessary hand joints for object held in indicated hand</param>
     /// <returns>Dictionary containing all hand joints of given indices.</returns>
     private Dictionary<XRHandJointID, XRHandJoint> getHandDataDictionary(Handedness handedness, List<XRHandJointID> jointIds)
     {
@@ -394,13 +388,10 @@ public class core_feature_controller : MonoBehaviour
     }
 
     /// <summary>
-    ///    Hier steht ein Text der den Kontext für den eine Funktion gedacht ist sowie deren Eingaben     
-    /// beschreibt.
+    /// Checks if detach gesture was performed
     /// </summary>
-    /// <author> Autoren </author>
-    /// <param name="param_0"> Beschreibung des Eingabewerts </param>
-    /// <param name="param_n"> Beschreibung des Eingabewerts </param>
-    /// <returns> Beschreibung des Rückgabewerts </return>
+    /// <author> Fabian Schmurr </author>
+    
     void Update()
     {
         //check for detach gesture

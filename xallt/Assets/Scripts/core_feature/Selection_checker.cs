@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
@@ -8,17 +6,20 @@ using UnityEngine.XR.Interaction.Toolkit;
 /// <summary>
 /// This class is used to check if an object is selected and if so, it will be activated by the core feature controller.
 /// </summary>
-/// <author> Authors </author>
+/// <author> Fabian Schmurr </author>
 [RequireComponent(typeof(XRGrabInteractable))]
 public class Selection_checker : MonoBehaviour
 {
-
     [SerializeField]
     private XRGrabInteractable m_Interactable;
     [SerializeField]
+
     [Tooltip("The controller holder of core feature controller script.")]
     private GameObject _coreController;
 
+    /// <summary>
+    /// Selection gesture for objects
+    /// </summary>
     [SerializeField]
     [Tooltip("Left hand selection input")]
     InputActionReference leftSelected;
@@ -39,7 +40,7 @@ public class Selection_checker : MonoBehaviour
     /// <summary>
     /// Defines in which hand this object can be hold.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     public enum PossibleHand
     {
         LEFT,
@@ -47,10 +48,12 @@ public class Selection_checker : MonoBehaviour
         BOTH,
         NONE
     }
+
     /// <summary>
     /// This function is called when the object is activated by the core feature controller.
     /// </summary>
-    /// <author> Authors </author>
+    /// <exception cref="MissingComponentException" if <see cref="core_feature_controller"/> couldn't be found
+    /// <author> Fabian Schmurr </author>
     void Start()
     {
         controller = _coreController.GetComponent<core_feature_controller>();
@@ -64,7 +67,7 @@ public class Selection_checker : MonoBehaviour
     /// <summary>
     /// This function is called every frame and checks if the object is selected and if so, it will be activated by the core feature controller.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     void Update()
     {
         if(handToHold == PossibleHand.NONE)

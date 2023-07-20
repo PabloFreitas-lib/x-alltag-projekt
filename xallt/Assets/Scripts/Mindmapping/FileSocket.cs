@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// file socket detects mind map
+/// The file socket detects mindmaps and handles the connection between the selected Mindmap and the User Interface.
+/// Here are the methods, that the UI is calling to create, edit and work with mindmaps based on the current socketFile.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
 
@@ -14,18 +15,6 @@ public class FileSocket : MonoBehaviour
     public File socketFile;
     public Text fileNameText;
     [HideInInspector]public Mindmap map;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -50,7 +39,7 @@ public class FileSocket : MonoBehaviour
     }
 
     /// <summary>
-    /// calls upon functions from hand UI
+    /// Creates a node from the selected mindmap
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void CreateNodeUI()
@@ -60,6 +49,10 @@ public class FileSocket : MonoBehaviour
             map.CreateNode();
         }
     }
+    /// <summary>
+    /// Deletes a node from the selected mindmap
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void DeleteNodeUI()
     {
         if (map != null)
@@ -68,6 +61,10 @@ public class FileSocket : MonoBehaviour
             map.DeleteNode();
         }
     }
+    /// <summary>
+    /// Creates a connection from the selected mindmap
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void CreateConnectionUI()
     {
         if (map != null)
@@ -75,6 +72,10 @@ public class FileSocket : MonoBehaviour
             map.changeMode(1);
         }
     }
+    /// <summary>
+    /// Deletes a connection from the selected mindmap
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void DeleteConnectionUI()
     {
         if (map != null)

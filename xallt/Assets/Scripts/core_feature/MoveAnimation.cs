@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 /// <summary>
-///    This class is responsible for moving the object to a new position
+///    This class is responsible to animate the movement of objects flying from a start to end point
+///    The animated object must implement <see cref="Scripted_Interactable_Object"/>
 /// </summary>
 /// <author> Fabian Schmurr</author>
 [RequireComponent(typeof(Scripted_Interactable_Object))]
@@ -9,11 +10,12 @@ public class MoveAnimation : MonoBehaviour
 {
     /// <summary>
     /// Describes the animation type
+    /// Currently <see cref="AnimationType.EASEIN"/> looks the best 
     /// </summary>
     public AnimationType easing = AnimationType.EASEIN;
 
     /// <summary>
-    /// Event that is called if the maximal animation was reached
+    /// Event that is called if the animation has ended
     /// </summary>
     public Action OnAnimationEnd;
 
@@ -23,12 +25,12 @@ public class MoveAnimation : MonoBehaviour
     public Material drawingMaterial;
 
     /// <summary>
-    /// For my understanding this should be somehow the start and end color, but it does not affect the color at all LOL
+    /// For my understanding this should be the start and end color, but it does not affect the color at all LOL
     /// </summary>
     public Color pathColor;
 
     /// <summary>
-    /// Time after the animation ends
+    /// Time after the animation ends, this is therefore also the time the animated abject is flying
     /// </summary>
     public float maxAnimationTime = 1.5f;
 
@@ -38,32 +40,34 @@ public class MoveAnimation : MonoBehaviour
     public float animationWidth = 0.02f;
 
     /// <summary>
-    /// End rotation for animation
+    /// Start/End rotation for animation
     /// </summary>
     private Quaternion m_endRotation;
-    
+    private Quaternion m_startRotation;
+
     /// <summary>
     /// End position for animation
     /// </summary>
     private Vector3 m_endPosition;
 
     /// <summary>
-    /// obvious
+    /// Indicates whether the animation is running or not
     /// </summary>
     private bool m_isRunning = false;
 
     /// <summary>
-    /// Distance to stop animation
+    /// Threshold at which the animation stops (If current distance < threshhold). 
+    /// This can be used to prevent glitching behaviour near the hand
     /// </summary>
-    private float animationEndThreshhold = 0.001f;
+    private float animationDistanceEndThreshhold = 0.005f;
     
     /// <summary>
-    /// current time since animation is running
+    /// Time since animation is running
     /// </summary>
     private float timeAnimating = float.NegativeInfinity;
 
     /// <summary>
-    /// distance to final position
+    /// Distance to final position
     /// </summary>
     private float remainingDistance = float.MaxValue;
 
@@ -72,22 +76,19 @@ public class MoveAnimation : MonoBehaviour
     /// </summary>
     private float startDistance = float.NaN;
     private int lineIndex = 0;
-    private Quaternion m_startRotation;
+    
+    /// <summary>
+    /// Reference to animated object
+    /// </summary>
     private Scripted_Interactable_Object objectToMove;
 
     private LineRenderer renderer;
 
+    /// <summary>
+    /// Indicates whether the current animation is due to a detach or select operation
+    /// </summary>
     private AnimationAction animationAction;
 
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <author> Authoren </author>
-    /// <param name="param_0"> Description </param>
-    /// <param name="param_n"> Description </param>
-    public MoveAnimation()
-    {
-    }
 
     /// <summary>
     /// Start is called before the first frame update
@@ -98,7 +99,7 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Describes the animation type
+    /// Describes the animation progress type. Currently EASEIN looks the best
     /// </summary>
     /// <author> Fabian Schmurr</author>
     public enum AnimationType
@@ -110,7 +111,7 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Indicated which action was performed that started the animation
+    /// Indicates which action was performed that started the animation
     /// </summary>
     /// <author> Fabian Schmurr</author>
     public enum AnimationAction
@@ -120,11 +121,13 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Starts an animation of object
+    /// Starts the animation of an object
     /// </summary>
     /// <author> Fabian Schmurr</author>
     /// <param name="objectToMove">The object that should be moved to a new position</param>
-    /// <param name="action">Whether the animation is due to detach or select action</param>
+    /// <param name="action">Whether the animation is due to detach or select action. This is important
+    /// because the end-position varies if the object is moving to the hand, since its an scripted_interaction
+    /// and the final position therefore a specific joint at the hand <see cref="Scripted_Interactable_Object.getFinalTransform(in AnimationAction, out Vector3, out Quaternion)"/></param>
     public void startAnimation(Scripted_Interactable_Object objectToMove, AnimationAction action)
     {
         if (!m_isRunning)
@@ -140,7 +143,7 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Set up line renderer
+    /// Set up line renderer to draw the line of animation
     /// </summary>
     /// <author> Fabian Schmurr</author>
     private void setupRenderer()
@@ -166,7 +169,7 @@ public class MoveAnimation : MonoBehaviour
             else
             {
 
-                if (remainingDistance <= animationEndThreshhold)
+                if (remainingDistance <= animationDistanceEndThreshhold)
                 {
                     endAnimation();
                 }
@@ -181,7 +184,7 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Ends the animation nothing more to say
+    /// Ends the animation and resets the values of MoveAnimation instance
     /// </summary>
     /// <author> Fabian Schmurr</author>
     private void endAnimation()
@@ -202,7 +205,7 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Animates the object
+    /// Animates the object by using the current time and the therefore resulting percental progress   
     /// </summary>
     /// <author> Fabian Schmurr</author>
     private void animate()
@@ -214,7 +217,6 @@ public class MoveAnimation : MonoBehaviour
         timeAnimating += Time.deltaTime;
         //calculate forward vector
         Vector3 forward = m_endPosition - objectToMove.transform.position;
-        Quaternion rotationTowardsEnd = Quaternion.Inverse(objectToMove.transform.rotation) * m_endRotation;
         remainingDistance = Vector3.Magnitude(forward);
 
         Vector3 forwardNorm = Vector3.Normalize(forward);
@@ -228,7 +230,7 @@ public class MoveAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// Calculates the progress of the animation
+    /// Calculates the progress of the animation of given time under influence of the defined animation time.
     /// </summary>
     /// <author> Fabian Schmurr</author>
     /// <returns>Progress of animation</returns>
@@ -265,9 +267,7 @@ public class MoveAnimation : MonoBehaviour
     /// <author> Fabian Schmurr</author>
     private void drawNextPoint()
     {
-        renderer.positionCount = lineIndex + 1;
-        renderer.SetPosition(lineIndex, objectToMove.transform.position);
-        lineIndex++;
+        renderer.SetPosition(lineIndex++, objectToMove.transform.position);
     }
 }
 

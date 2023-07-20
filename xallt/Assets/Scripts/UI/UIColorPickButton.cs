@@ -91,8 +91,6 @@ namespace InfoGamerHubAssets
         /// <summary>
         /// Called when the button is destroyed, cleans up the interaction events.
         /// </summary>
-        /// <author> Dmitry </author>
-        </param>
         private void OnDestroy()
         {
             // Unregister the OnSelectEntered method when the button is destroyed.
@@ -107,7 +105,7 @@ namespace InfoGamerHubAssets
         private void OnSelectEntered(SelectEnterEventArgs args)
         {
             // Get the XR ray interactor used to select the UI button.
-            rayinteractor = (XRRayInteractor) args.interactor; /
+            rayinteractor = (XRRayInteractor)args.interactor;
         }
     }
 }

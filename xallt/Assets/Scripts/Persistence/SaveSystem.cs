@@ -361,6 +361,7 @@ public class SaveSystem : MonoBehaviour
         else
         {
             Debug.Log("There is no save to this whiteboard");
+            return null; // "Nicht jeder Pfad hatte eine Rückgabe" Fehler - Dmitry
         }
     }
 

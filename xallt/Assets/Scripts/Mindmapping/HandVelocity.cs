@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-/// <summary
+/// <summary>
 /// eases pulling closer objects
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>

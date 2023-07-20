@@ -14,16 +14,6 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private float maxBladeAngle = 45;
 
     /// <summary>
-    /// Minimal opening angle between the two blade-components
-    /// </summary>
-    private float minFingerAngle = 4;
-
-    /// <summary>
-    /// Maximal angle between real fingers
-    /// </summary>
-    private float maxFingerAngle = 30;
-
-    /// <summary>
     /// defined by testing around
     /// </summary>
     private float m_zOffset = 0.05f;
@@ -33,6 +23,9 @@ public class Scissor_interaction : Scripted_Interactable_Object
     private float m_rotationXOffset = 17.1f;
     private float m_rotationZOffset = 0.0f;
 
+    /// <summary>
+    /// Below this angle the cut events gets invoked
+    /// </summary>
     private float cutThreshold = 3;
 
     /// <summary>
@@ -89,6 +82,9 @@ public class Scissor_interaction : Scripted_Interactable_Object
     [Tooltip("The name of xr-origin game-object")]
     private string m_XRSetupName;
 
+    /// <summary>
+    /// This action gets called if the conditions for a scissors cut are erfüllt
+    /// </summary>
     public Action OnScissorsCut;
 
     /// <summary>
@@ -105,7 +101,6 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// Only passing the indices list to base constructor
     /// </summary>
     /// <author> Fabian Schmurr</author>
-    /// <author> Laura Gietschel</author>
     /// <param name="jointList">List of joint indices</param>
     public Scissor_interaction() : base(GetJointList()){}
 
@@ -113,7 +108,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Method that returns the list of joint indices
     /// </summary>
-    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
+    /// <authors> Fabian Schmurr</authors>
     /// <returns>List of joint indices</returns>
     private static List<XRHandJointID> GetJointList()
     {
@@ -157,52 +152,6 @@ public class Scissor_interaction : Scripted_Interactable_Object
         float distance = Vector3.Distance(indexDistalPose.position, middleDistalPose.position);
         distance = Mathf.Clamp(distance, 0, maxBladeAngle);
         moveBlades(distance);
-
-        Vector3 middleForward = middleDistalPose.position - middleProcimalPose.position;
-        Vector3 indexForward = indexDistalPose.position - indexProcimalPose.position;
-        //moveBladesByAngle(middleForward, indexForward);
-    }
-
-    /// <summary>
-    /// Method that rotates the blades of scissors by the angle between the to blades
-    /// </summary>
-    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
-    /// <param name="middleForward">Vector from middle proximal to middle distal joint</param>
-    /// <param name="indexForward">Vector from index proximal to index distal joint</param>
-    private void moveBladesByAngle(Vector3 middleForward, Vector3 indexForward)
-    {
-        float angleBetween = Math.Abs(Vector3.Angle(middleForward, indexForward));
-        if (angleBetween < 0)
-        {
-            angleBetween = minFingerAngle;
-        }
-
-        if(angleBetween > maxFingerAngle)
-        { angleBetween = maxFingerAngle; }
-
-        if(angleBetween < minFingerAngle)
-        { angleBetween = minFingerAngle;  }
-
-        float mappedAngle = 0f + (angleBetween - minFingerAngle) * (maxBladeAngle- 0f) / (maxFingerAngle - minFingerAngle);
-        
-        if (mappedAngle <= cutThreshold)
-        {
-            if(OnScissorsCut != null)
-            {
-                OnScissorsCut.Invoke();
-            }
-        }
-
-        if(mappedAngle < 0)
-        {
-            mappedAngle = 0;
-        }
-
-        float delta = mappedAngle - lastAngle;
-
-        untereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, delta / 2);
-        obereKlinge.transform.RotateAround(anchor.transform.position, anchor.transform.up, -delta / 2);
-        lastAngle = mappedAngle;
     }
 
     /// <summary>
@@ -242,8 +191,9 @@ public class Scissor_interaction : Scripted_Interactable_Object
 
 
     /// <summary>
-    /// Method that returns the final position and rotation of the object
+    /// Method that tries to get the reference of XROrigin
     /// </summary>
+    /// <exception cref="NullReferenceException">If reference to XROrigin is null</exception>
     /// <authors> Fabian Schmurr, Laura Gietschel</authors>
     void Start()
     {
@@ -267,7 +217,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Method that returns the final position and rotation of the object
     /// </summary>
-    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
+    /// <authors> Fabian Schmurr</authors>
     /// <param name="animationAction">The animation action that is currently performed</param>
     /// <param name="finalPosition">The final position of the object</param>
     /// <param name="finalRotation">The final rotation of the object</param>
@@ -323,7 +273,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Method that is called when the object is activated
     /// </summary>
-    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
+    /// <authors> Fabian Schmurr</authors>
     protected override void objectSpecificDeactivation()
     {
         /// Not implemented
@@ -332,7 +282,7 @@ public class Scissor_interaction : Scripted_Interactable_Object
     /// <summary>
     /// Method that is called when the object is deactivated
     /// </summary>
-    /// <authors> Fabian Schmurr, Laura Gietschel</authors>
+    /// <authors> Fabian Schmurrl</authors>
     protected override void objectSpecificActivation()
     {
         /// Not implemented

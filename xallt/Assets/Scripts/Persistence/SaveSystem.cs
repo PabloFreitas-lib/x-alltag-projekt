@@ -320,6 +320,7 @@ public class SaveSystem : MonoBehaviour
     /// <summary>
     /// Save a given Whiteboard. This function is to be called on GUI- or socket-interaction.
     /// </summary>
+    /// <author>Noah Horn</author>
     /// <param name="whiteboard"> A whiteboard that is to be persisted </param>
     public static void SaveWhiteboard(Whiteboard whiteboard)
     {
@@ -337,6 +338,7 @@ public class SaveSystem : MonoBehaviour
     /// <summary>
     /// Save a given Whiteboard. This function is to be called on GUI- or socket-interaction.
     /// </summary>
+    /// <author>Noah Horn</author>
     /// <param name="whiteboard"> A Whiteboard object, which is allowed to be empty except for its id (correlating to path). Will be filled with stored information.</param>
     /// <returns> Texture2D that shows the loaded whiteboard. Caller can ignore this, as it is the same contained in the given Whiteboard, though helpful for debugging.</returns>
     public static Texture2D LoadWhiteboard(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
@@ -445,6 +447,8 @@ public class SaveSystem : MonoBehaviour
         return ToString();
     }
 
+
+    /*
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -456,4 +460,5 @@ public class SaveSystem : MonoBehaviour
             LoadComplexUserPrefs();
         }
     }
-}
+}*/
+    }

@@ -72,7 +72,7 @@ public class core_feature_controller : MonoBehaviour
     /// date to the managed objects. Also a reference to <see cref="SeperateHandVisualizer"/> is being accessed.
     /// </summary>
     /// <author> Fabian Schmurr </author> 
-    /// <exception cref="MissingComponentException" if <see cref="SeperateHandVisualizer"/> or xr origin could not be found
+    /// <exception cref="MissingComponentException"> if <see cref="SeperateHandVisualizer"/> or xr origin could not be found</exception>
     void Start()
     {
         XRHandSubsystem m_Subsystem = XRGeneralSettings.Instance?.Manager?.activeLoader?.GetLoadedSubsystem<XRHandSubsystem>();

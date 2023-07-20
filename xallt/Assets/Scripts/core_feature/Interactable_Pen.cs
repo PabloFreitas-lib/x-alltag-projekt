@@ -10,19 +10,28 @@ using UnityEngine.XR.Hands;
 [RequireComponent(typeof(VRDrawingManager))]
 public class Interactable_Pen : Scripted_Interactable_Object
 {
-
+    /// <summary>
+    /// joint indices used for pen interaction
+    /// </summary>
     private static XRHandJointID m_indexDistalJointID = XRHandJointID.IndexDistal;
     private static XRHandJointID m_indexProximalJointId = XRHandJointID.IndexProximal;
+    
+    /// <summary>
+    /// Reference to XROrigin object
+    /// </summary>
     private GameObject m_XROrigin;
+
     [SerializeField]
     [Tooltip("The name of xr-origin game-object")]
+
     private string m_XRSetupName;
 
     public Interactable_Pen() : base(GetJointList()) { }
 
     /// <summary>
+    /// Generates a list of needed joint-indices
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     private static List<XRHandJointID> GetJointList()
     {
         List<XRHandJointID> joints = new List<XRHandJointID>()
@@ -62,7 +71,7 @@ public class Interactable_Pen : Scripted_Interactable_Object
     /// <param name="finalPosition"> The final position of the object. </param>
     /// <param name="finalRotation"> The final rotation of the object. </param>
     /// <returns> True if the final transform could be calculated, false otherwise. </returns>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     public override bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out Quaternion finalRotation)
     {
         finalPosition = Vector3.zero;
@@ -115,7 +124,7 @@ public class Interactable_Pen : Scripted_Interactable_Object
     /// <summary>
     /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     public override void updateInteraction()
     {
         getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
@@ -126,7 +135,8 @@ public class Interactable_Pen : Scripted_Interactable_Object
     /// <summary>
     /// This function is called when an object is initialized.
     /// </summary>
-    /// <author> Authors </author>
+    /// <exception cref="NullReferenceException">If reference to XR-Origin could not be accessed</exception>
+    /// <author> Fabian Schmurr </author>
     void Start()
     {
         //getting reference to XR origin
@@ -147,8 +157,9 @@ public class Interactable_Pen : Scripted_Interactable_Object
     }
 
     /// <summary>
+    /// Drawing gets cleared
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     protected override void objectSpecificDeactivation()
     {      
         if (drawingManager != null)
@@ -159,8 +170,9 @@ public class Interactable_Pen : Scripted_Interactable_Object
     }
 
     /// <summary>
+    /// The <see cref="VRDrawingManager"/> is getting set to this obect
     /// </summary>
-    /// <author> Authors </author>
+    /// <author> Fabian Schmurr </author>
     protected override void objectSpecificActivation()
     {
         drawingManager = GetComponent<VRDrawingManager>();

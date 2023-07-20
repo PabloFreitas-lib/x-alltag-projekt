@@ -99,7 +99,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     /// <param name="joints">Necessary hand-tracking data</param>
     /// <param name="handedness">Indicator in which hand the object should be held in</param>
-    /// <exception cref="ArgumentException">If joints dictionary length is not matching initial joint index list od
+    /// <exception cref="ArgumentException">If joints dictionary length is not matching initial joint index list or
     /// given handedness has value Invalid.</exception>
     public void Activate(Dictionary<XRHandJointID, XRHandJoint> joints, Handedness handedness)
     {
@@ -177,7 +177,6 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// Method to deactivate the interaction of an object
     /// </summary>
     /// <author> Fabian Schmurr </author>
-    /// <param name="moveBack">If true the deactivated object will be set back to it's origin before interaction</param>
     public void deactivate()
     {
         controllingHand = Handedness.Invalid;
@@ -196,10 +195,9 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
 
 
     /// <summary>
-    /// Moves the game-object back to the position stored in lastTransformBeforeActivation
+    /// Moves the game-object back to the position stored in lastTransformBeforeActivation if moveBoack variable is true
     /// </summary>
     /// <author> Fabian Schmurr </author>
-    /// <exception cref="NotImplementedException">Not implemented yet</exception>
     void moveBackToOrigin()
     {
         Collider[] colList = transform.GetComponentsInChildren<Collider>();
@@ -265,9 +263,10 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// Returns the final position and rotation the object should currently be displayed at. If the object is currently in hand these values represents
     /// the current holding transform for th object in hand.
     /// </summary>
+    /// <author> Fabian Schmurr </author>
     /// <param name="animationAction">Defines whether the final transform should be the hand or at the last known transform before selection</param>
     /// <param name="finalPosition">Designated position of object</param>
     /// <param name="finalRotation">Designated rotation of object</param>
-    /// <returns></returns>
+    /// <returns>True if transform could be calculated, false if an error occurred e.g. not all hand data could be loaded</returns>
     public abstract bool getFinalTransform(in MoveAnimation.AnimationAction animationAction, out Vector3 finalPosition, out UnityEngine.Quaternion finalRotation);
 }

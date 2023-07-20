@@ -52,7 +52,7 @@ public class Selection_checker : MonoBehaviour
     /// <summary>
     /// This function is called when the object is activated by the core feature controller.
     /// </summary>
-    /// <exception cref="MissingComponentException" if <see cref="core_feature_controller"/> couldn't be found
+    /// <exception cref="MissingComponentException"> if <see cref="core_feature_controller"/> couldn't be found </exception>
     /// <author> Fabian Schmurr </author>
     void Start()
     {

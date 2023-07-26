@@ -35,7 +35,7 @@ public class Selection_checker : MonoBehaviour
 
     private bool m_lastSelected = false;
 
-    private core_feature_controller controller;
+    private CoreFeatureController controller;
 
     /// <summary>
     /// Defines in which hand this object can be hold.
@@ -52,11 +52,11 @@ public class Selection_checker : MonoBehaviour
     /// <summary>
     /// This function is called when the object is activated by the core feature controller.
     /// </summary>
-    /// <exception cref="MissingComponentException"> if <see cref="core_feature_controller"/> couldn't be found </exception>
+    /// <exception cref="MissingComponentException"> if <see cref="CoreFeatureController"/> couldn't be found </exception>
     /// <author> Fabian Schmurr </author>
     void Start()
     {
-        controller = _coreController.GetComponent<core_feature_controller>();
+        controller = _coreController.GetComponent<CoreFeatureController>();
         if (controller == null)
         {
             throw new MissingComponentException("core feature controller not found in controller holder object.");

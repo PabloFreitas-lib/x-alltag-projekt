@@ -13,10 +13,9 @@ using UnityEngine.XR.Management;
 /// </summary>
 /// <author> Autoren: Fabian Schmurr, Jaap Braasch </author>
 
-public class core_feature_controller : MonoBehaviour
+public class CoreFeatureController : MonoBehaviour
 {
-
-
+    
     /// <summary>
     /// The current object that is being hold by the player in left hand
     /// </summary>

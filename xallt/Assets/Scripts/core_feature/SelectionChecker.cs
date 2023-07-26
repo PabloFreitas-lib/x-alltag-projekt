@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 /// </summary>
 /// <author> Fabian Schmurr </author>
 [RequireComponent(typeof(XRGrabInteractable))]
-public class Selection_checker : MonoBehaviour
+public class SelectionChecker : MonoBehaviour
 {
     [SerializeField]
     private XRGrabInteractable m_Interactable;

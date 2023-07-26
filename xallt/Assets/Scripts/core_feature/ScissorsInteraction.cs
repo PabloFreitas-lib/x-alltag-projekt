@@ -6,7 +6,7 @@ using UnityEngine.XR.Hands;
 /// Scripted scissor-interaction based on earlier script cutting.cs by Laura Gietschel and Fabian Schmurr
 /// </summary>
 /// <author> Fabian Schmurr, Laura Gietschel</author>
-public class ScissorInteraction : ScriptedInteractableObject
+public class ScissorsInteraction : ScriptedInteractableObject
 {
     /// <summary>
     /// Maximal opening angle between the two blade-components
@@ -102,7 +102,7 @@ public class ScissorInteraction : ScriptedInteractableObject
     /// </summary>
     /// <author> Fabian Schmurr</author>
     /// <param name="jointList">List of joint indices</param>
-    public ScissorInteraction() : base(GetJointList()){}
+    public ScissorsInteraction() : base(GetJointList()){}
 
 
     /// <summary>

@@ -25,16 +25,7 @@ public class VRDrawingManager : MonoBehaviour
     private int _currentColorIndex;
     private bool _isDrawing;
     private Vector3 _previousPosition;
-
-    [Header("Hands & Interactable")]
-    [SerializeField]
-    private XRGrabInteractable interactable;
-    [SerializeField]
-    private InputActionReference leftSelect;
-    [SerializeField]
-    private InputActionReference rightSelect;
-
-    private Handedness _drawingHand = Handedness.Invalid;
+    
 
     /// <summary>
     /// This function is called when an object is initialized.
@@ -52,47 +43,13 @@ public class VRDrawingManager : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     private void Update()
     {
-        if (_drawingHand == Handedness.Left)
-        {
-            _isDrawing = leftSelect.action.inProgress; 
-        }
-        else if (_drawingHand == Handedness.Right)
-        {
-            _isDrawing = rightSelect.action.inProgress;
-        }
-        else if (_drawingHand == Handedness.Invalid)
-        {
-            _isDrawing = false;
-        }
         if(_isDrawing)
         {
             Draw();
         }
-        
-        /*if (_interactable.isSelected)
-        {
-            StartDrawing();
-        }
-        else
-        {
-            StopDrawing();
-        }*/
     }
 
     /// <summary>
-    /// This function is called when the object is activated by the core feature controller.
-    /// </summary>
-    /// <author> Fabian Schmurr </author>
-    /// <param name="hand">Handedness of the hand that activated the object</param>
-    public void SetDrawingHand(Handedness hand)
-    {
-        if (hand != Handedness.Invalid)
-        {
-            _drawingHand = hand;
-        }
-    }
-
-     /// <summary>
     /// This method is used to draw a line.
     /// </summary>
     /// <author> Celina Dadschun </author>
@@ -167,4 +124,8 @@ public class VRDrawingManager : MonoBehaviour
         _index = 0;
     }
 
+    public void setIsDrawing(bool actionInProgress)
+    {
+        _isDrawing = actionInProgress;
+    }
 }

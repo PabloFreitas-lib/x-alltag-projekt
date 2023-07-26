@@ -8,7 +8,7 @@ using UnityEngine.XR.Hands;
 /// </summary>
 /// <author> Authors </author>
 [RequireComponent(typeof(VRDrawingManager))]
-public class Interactable_Pen : Scripted_Interactable_Object
+public class Interactable_Pen : ScriptedInteractableObject
 {
     /// <summary>
     /// joint indices used for pen interaction

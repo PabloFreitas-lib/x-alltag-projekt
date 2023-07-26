@@ -9,7 +9,7 @@ using UnityEngine.XR.Hands;
 /// </summary>
 /// <author> Fabian Schmurr </author>
 [RequireComponent(typeof(Rigidbody))]
-public abstract class Scripted_Interactable_Object : MonoBehaviour
+public abstract class ScriptedInteractableObject : MonoBehaviour
 {
 
     /// <summary>
@@ -67,7 +67,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     /// <param name="necessaryJoints">List if needed joint indices to get the joint pose information</param>
     /// <exception cref="ArgumentException">If necessary hand-joint ID's are not set in Editor</exception>
-    public Scripted_Interactable_Object(List<XRHandJointID> necessaryJoints)
+    public ScriptedInteractableObject(List<XRHandJointID> necessaryJoints)
     {
         if(necessaryJoints == null || necessaryJoints.Count == 0)
         {

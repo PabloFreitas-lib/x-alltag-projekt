@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +11,10 @@ using UnityEngine.UI;
 
 public class Whiteboard : MonoBehaviour
 {
+    //private m_ID and getter method as string id
+    [SerializeField] private string m_ID; 
+    public string id => m_ID;
     // variables to describe characteristics of whiteboard texture
-    public string id;
     public Texture2D drawingTexture;
     public Vector2 textureSize = new Vector2(2048, 2048);
     // reference to RawImage-component of whiteboard
@@ -24,6 +27,8 @@ public class Whiteboard : MonoBehaviour
     /// <author> Sophia Gommeringer & Celina Dadschun </author>
     void Start()
     {
+        //Assign GUID unique id to whiteboard
+        m_ID = Guid.NewGuid().ToString();
         // assign texture
         var r = GetComponent<Renderer>();
         drawingTexture = new Texture2D((int)textureSize.x, (int)textureSize.y);
@@ -45,7 +50,8 @@ public class Whiteboard : MonoBehaviour
 
     }
 
-
+    /*
+    ///kann raus 
     /// <summary>
     ///    load and open existing whiteboard drawing
     /// </summary>
@@ -74,4 +80,5 @@ public class Whiteboard : MonoBehaviour
             whiteboardImage.texture = drawingTexture;
         }
     }
+    */
 }

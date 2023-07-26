@@ -1,4 +1,4 @@
-
+ 
 using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ public class WhiteboardMarker : MonoBehaviour
     private Vector2 _touchPos, _lastTouchPos;
     private bool _touchedLastFrame;
     private Quaternion _lastTouchRot;
-    private int _drawingId;
+   
 
 
     /// <summary>
@@ -62,8 +62,7 @@ public class WhiteboardMarker : MonoBehaviour
  
     private void Draw()
     {
-        // generate a new unique drawing ID
-        _drawingId = GenerateUniqueId();
+        
         // checks if marker tip collides with whiteboard
         if (Physics.Raycast(tip.position, transform.up, out _touch, _tipHeight))
         {
@@ -115,39 +114,8 @@ public class WhiteboardMarker : MonoBehaviour
         // if pen does not touch whiteboard set variable to false
         _touchedLastFrame = false;
     }
-
-    /// <summary>
-    ///    initiate saving of whiteboard, by calling SaveTexture()
-    /// </summary>
-    /// <author> Celina Dadschun </author>
-    public void SaveDrawing()
-    {
-        Debug.Log("Drawing saved");
-        // save drawing, eg. with SaveTexture-method
-        SaveTexture(_whiteboard.drawingTexture);
-    }
-
-    // saves texture in .png-format on path
-    private void SaveTexture(Texture2D texture)
-    {
-        string fileName = "Drawing_" + _drawingId + ".png";
-        string filePath = Application.persistentDataPath + "/" + fileName;
-
-        //byte[] pngData = _whiteboard.drawingTexture.EncodeToPNG();
-        byte[] textureBytes = texture.EncodeToPNG();
-        System.IO.File.WriteAllBytes(filePath, textureBytes);
-
-        Debug.Log("Drawing saved to: " + filePath);
-    }
-
-    
-    // generates unique id
-    private int GenerateUniqueId()
-    {
-        // generate a unique ID here (e.g., using a timestamp, random number, etc.)
-        return System.DateTime.Now.GetHashCode();
-    }
-
+       
+   
     /// <summary>
     ///    clears drawing on whiteboard 
     /// </summary>

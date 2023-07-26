@@ -131,14 +131,17 @@ public class SaveSystem : MonoBehaviour
 
         public string text { get; }
         public Color userColor { get; }
+        public Vector3 position { get; }
+        public Vector3 size { get; }
 
         public uint[] childrenIds { get; }
+        public uint[] destinationIds { get; }
 
         /// <summary>
         /// Called by SaveMindmap(Mindmap mindmap) to easily encapsulate a mindmaps nodes.
         /// A mindmap is primarily described by its name (which is its path) and a list of nodes.
         /// </summary>
-        /// <author> Autoren </author>
+        /// <author> Jakob Kern </author>
         /// <param name="node"> The node to be wrapped. </param>
         public NodePersistentObject(Node node)
         {
@@ -146,16 +149,26 @@ public class SaveSystem : MonoBehaviour
             id = node.id;
             parentId = node.parent.id;
             text = node.text;
+            position = node.transform.position;
+            size = node.transform.localScale;
 
             //Encode userColor
             userColor = node.GetComponent<ColorChanger>().objectColor;
 
             //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
+            destinationIds = new uint[node.destinations.ToArray().Length];
             int i = 0;
             foreach (Node child in node.children)
             {
                 childrenIds[i] = child.id;
+                i++;
+            }
+
+            i = 0;
+            foreach (Node destination in node.destinations)
+            {
+                childrenIds[i] = destination.id;
                 i++;
             }
         }
@@ -276,22 +289,27 @@ public class SaveSystem : MonoBehaviour
     /// <param name="mindmap"> A Mindmap Object, which is allowed to be empty except for its name (correlating to path). The Function fills this Mindmap object, according to saved data. </param>
     /// <returns> A list of all the nodes that have been succesfully deserialized. Not needed for implementation, but helpful for debugging.</returns>
     public static List<Node> LoadMindmap(Mindmap mindmap)
-    {
+    {   
+        //construct path
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
 
+        //check if file available
         if (System.IO.File.Exists(fullPath))
         {
+            //read file contents
             string json = System.IO.File.ReadAllText(fullPath);
 
+            //deserialize
             NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
             Node[] nodes = new Node[persistenceMapped.Length];
 
+            //create Nodes from persisted data
             uint i = 0;
             foreach (NodePersistentObject persistedNode in persistenceMapped)
             {
-                Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor);
+                Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor, persistedNode.position, persistedNode.size, mindmap);
                 nodes[i] = node;
                 i++;
             }
@@ -305,6 +323,17 @@ public class SaveSystem : MonoBehaviour
                 {
                     node.children.Add(BinarySearch(nodes, childId));
                 }
+
+                // Add connections
+                foreach (uint destinationId in persistedNode.destinationIds)
+                {
+                    Node destination = BinarySearch(nodes, destinationId);
+                    GameObject connection = Instantiate(mindmap.connectionPrefab, node.transform.position, Quaternion.identity);
+                    connection.GetComponent<Connection>().SetFromTo(node, destination);
+                    node.destinations.Add(destination);               //complete data model by reference to connection destinations of a node
+                    connection.transform.parent = mindmap.transform;
+                }
+
             }
 
             return nodes.ToList();

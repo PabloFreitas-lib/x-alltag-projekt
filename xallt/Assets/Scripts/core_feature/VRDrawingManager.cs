@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.XR.Hands;
-using UnityEngine.XR.Interaction.Toolkit;
 
 
 /// <summary>
@@ -122,6 +119,10 @@ public class VRDrawingManager : MonoBehaviour
     {
         _currentDrawing.positionCount = 0;
         _index = 0;
+        if(_currentDrawing != null)
+        {
+            Destroy(_currentDrawing);
+        }
     }
 
     public void setIsDrawing(bool actionInProgress)

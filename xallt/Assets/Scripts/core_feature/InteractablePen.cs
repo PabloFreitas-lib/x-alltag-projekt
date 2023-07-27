@@ -96,7 +96,6 @@ public class InteractablePen : ScriptedInteractableObject
                 return false;
             }
 
-
             //apply new pos
             Vector3 origin = m_XROrigin.transform.position;
             //transforming the offset from local in world space
@@ -133,8 +132,8 @@ public class InteractablePen : ScriptedInteractableObject
     public override void updateInteraction()
     {
         getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
-        transform.rotation = finalRot;
         transform.position = finalPos;
+        transform.rotation = finalRot;
         drawingManager.setIsDrawing(drawGesture.action.inProgress);
     }
 

@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 1630891021778511682}
   - component: {fileID: 1630891021778511680}
   - component: {fileID: 1630891021778511743}
+  - component: {fileID: 4775844532468524393}
   m_Layer: 0
   m_Name: Pen_Interactable
   m_TagString: Untagged
@@ -383,7 +384,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   tip: {fileID: 1630891021196657275}
-  drawingMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 3}
+  drawingMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   tipMaterial: {fileID: 2100000, guid: 7967e671c4595af41bc590990085f739, type: 2}
   penWidth: 0.01
   penColors:
@@ -438,7 +439,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 1630891021778511682}
   animationMaterial: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
-  moveBack: 0
+  moveBack: 1
   _grabInteractableRef: {fileID: 1630891021778511681}
   drawGesture: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_XRSetupName: Complete XR Origin Set Up
@@ -448,3 +449,20 @@ MonoBehaviour:
   m_rotationYOffset: 0
   m_rotationXOffset: 0
   m_rotationZOffset: 0
+--- !u!114 &4775844532468524393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630891021778511742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1b5a319b4c3614981c35f38aa392a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  easing: 3
+  drawingMaterial: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
+  pathColor: {r: 0, g: 0, b: 0, a: 0}
+  maxAnimationTime: 1.5
+  animationWidth: 0.02

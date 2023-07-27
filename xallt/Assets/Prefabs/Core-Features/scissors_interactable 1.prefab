@@ -605,6 +605,7 @@ GameObject:
   - component: {fileID: 7877148809727850592}
   - component: {fileID: 7877148809727850594}
   - component: {fileID: 7877148809727850597}
+  - component: {fileID: 2100117039002278981}
   m_Layer: 0
   m_Name: scissors_interactable 1
   m_TagString: Untagged
@@ -819,3 +820,20 @@ MonoBehaviour:
   pivot: {fileID: 7357353156898480862}
   ninja: 0
   m_XRSetupName: Complete XR Origin Set Up
+--- !u!114 &2100117039002278981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7357353156898480862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d1b5a319b4c3614981c35f38aa392a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  easing: 3
+  drawingMaterial: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
+  pathColor: {r: 0, g: 0, b: 0, a: 0}
+  maxAnimationTime: 1.5
+  animationWidth: 0.02

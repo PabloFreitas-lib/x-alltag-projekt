@@ -48,22 +48,22 @@ public class InteractablePen : ScriptedInteractableObject
 
 
     [SerializeField]
-    [Range(-0.1f, 0.1f)]
+    [Range(-0.2f, 0.2f)]
     private float m_zOffset = 0f;
     [SerializeField]
-    [Range(-0.1f, 0.1f)]
+    [Range(-0.2f, 0.2f)]
     private float m_xOffset = 0f;
     [SerializeField]
-    [Range(-0.1f, 0.1f)]
+    [Range(-0.2f, 0.2f)]
     private float m_yOffset = 0f;
-    [SerializeField]
-    [Range(-30, 30)]
-    private float m_rotationYOffset = 0f;
-    [SerializeField]
-    [Range(-30, 30)]
+    //[SerializeField]
+    [Range(-60, 60)]
+    private float m_rotationYOffset = 30f;
+    //[SerializeField]
+    [Range(-60, 60)]
     private float m_rotationXOffset = 0f;
-    [SerializeField]
-    [Range(-30, 30)]
+    //[SerializeField]
+    [Range(-60, 60)]
     private float m_rotationZOffset = 0.0f;
 
     private VRDrawingManager drawingManager;

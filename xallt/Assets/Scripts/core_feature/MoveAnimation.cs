@@ -148,7 +148,7 @@ public class MoveAnimation : MonoBehaviour
     /// <author> Fabian Schmurr</author>
     private void setupRenderer()
     {
-        renderer = new GameObject().AddComponent<LineRenderer>();
+        renderer = gameObject.AddComponent<LineRenderer>();
         renderer.material = drawingMaterial;
         renderer.startColor = renderer.endColor = pathColor;
         renderer.startWidth = renderer.endWidth = animationWidth;
@@ -194,9 +194,9 @@ public class MoveAnimation : MonoBehaviour
         remainingDistance = float.MaxValue;
         startDistance = float.NaN;
         m_startRotation = Quaternion.identity;
-        if (renderer.gameObject != null)
+        if (renderer != null)
         {
-            Destroy(renderer.gameObject);
+            Destroy(renderer);
         }
         if (OnAnimationEnd != null)
         {
@@ -267,7 +267,9 @@ public class MoveAnimation : MonoBehaviour
     /// <author> Fabian Schmurr</author>
     private void drawNextPoint()
     {
-        renderer.SetPosition(lineIndex++, objectToMove.transform.position);
+        renderer.positionCount = lineIndex + 1;
+        renderer.SetPosition(lineIndex, objectToMove.transform.position);
+        lineIndex++;
     }
 }
 

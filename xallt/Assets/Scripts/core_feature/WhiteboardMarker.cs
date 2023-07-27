@@ -63,9 +63,10 @@ public class WhiteboardMarker : MonoBehaviour
     private void Draw()
     {
         
-        // checks if marker tip collides with whiteboard
+        // checks if marker tip collides with a collider 
         if (Physics.Raycast(tip.position, transform.up, out _touch, _tipHeight))
         {
+            //checks if collided object is a whiteboard
             if (_touch.transform.CompareTag("Whiteboard"))
             {
                 // if whiteboard reference is null, get it from the collided object
@@ -133,5 +134,15 @@ public class WhiteboardMarker : MonoBehaviour
         // overwrite whole drawing auf on whiteboard with empty color
         _whiteboard.drawingTexture.SetPixels(emptyColors);
         _whiteboard.drawingTexture.Apply();
+    }
+
+
+    /// <summary>
+    ///    returns currently used whiteboard. Getter function, because whiteboard is private
+    /// </summary>
+    /// <author> Noah Horn</author>
+    public Whiteboard get_Whiteboard()
+    {
+        return _whiteboard;
     }
 }

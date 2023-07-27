@@ -49,36 +49,4 @@ public class Whiteboard : MonoBehaviour
         marker.addPath(id);
 
     }
-
-    /*
-    ///kann raus 
-    /// <summary>
-    ///    load and open existing whiteboard drawing
-    /// </summary>
-    /// <author> Celina Dadschun </author>
-    /// <param name="whichFilePath"> file path of to be opened png </param>
-    public void LoadDrawing(string whichFilePath)
-    {
-        // open file-choosing dialog
-        whichFilePath = EditorUtility.OpenFilePanel("Select Drawing", "", "png");
-
-        // check if file is selected
-        if (!string.IsNullOrEmpty(whichFilePath))
-        {
-            // load png of selected file
-            byte[] fileData = System.IO.File.ReadAllBytes(whichFilePath);
-
-            // create new Texture2D-object
-            Texture2D loadedTexture = new Texture2D((int)textureSize.x, (int)textureSize.y);
-            loadedTexture.LoadImage(fileData);
-
-            // transfer pixels of loaded Texture2D-object onto the whiteboard-texture
-            drawingTexture.SetPixels(loadedTexture.GetPixels());
-            drawingTexture.Apply();
-
-            // update whiteboard-image to display changes
-            whiteboardImage.texture = drawingTexture;
-        }
-    }
-    */
 }

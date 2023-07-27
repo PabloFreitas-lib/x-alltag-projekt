@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Hands;
 
 /// <summary>
@@ -15,6 +16,10 @@ public class InteractablePen : ScriptedInteractableObject
     /// </summary>
     private static XRHandJointID m_indexDistalJointID = XRHandJointID.IndexDistal;
     private static XRHandJointID m_indexProximalJointId = XRHandJointID.IndexProximal;
+
+    [SerializeField]
+    [Tooltip("While this gesture is performed, the pen will be drawing")]
+    private InputActionReference drawGesture; 
     
     /// <summary>
     /// Reference to XROrigin object
@@ -91,7 +96,6 @@ public class InteractablePen : ScriptedInteractableObject
                 return false;
             }
 
-
             //apply new pos
             Vector3 origin = m_XROrigin.transform.position;
             //transforming the offset from local in world space
@@ -128,8 +132,9 @@ public class InteractablePen : ScriptedInteractableObject
     public override void updateInteraction()
     {
         getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
-        transform.rotation = finalRot;
         transform.position = finalPos;
+        transform.rotation = finalRot;
+        drawingManager.setIsDrawing(drawGesture.action.inProgress);
     }
 
     /// <summary>
@@ -164,18 +169,20 @@ public class InteractablePen : ScriptedInteractableObject
     {      
         if (drawingManager != null)
         {
-            drawingManager.SetDrawingHand(Handedness.Invalid);
             drawingManager.ClearDrawing();
         }
     }
 
     /// <summary>
-    /// The <see cref="VRDrawingManager"/> is getting set to this obect
+    /// The <see cref="VRDrawingManager"/> is getting set to this object
     /// </summary>
     /// <author> Fabian Schmurr </author>
     protected override void objectSpecificActivation()
     {
-        drawingManager = GetComponent<VRDrawingManager>();
-        drawingManager.SetDrawingHand(controllingHand);
+        //only get VRDrawingManager if null
+        if (drawingManager == null)
+        {
+            drawingManager = GetComponent<VRDrawingManager>();
+        }
     }
 }

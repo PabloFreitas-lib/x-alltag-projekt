@@ -9,6 +9,7 @@ using UnityEngine.XR.Hands;
 /// </summary>
 /// <author> Fabian Schmurr </author>
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable))]
 public abstract class ScriptedInteractableObject : MonoBehaviour
 {
 
@@ -59,6 +60,10 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
     /// Indicates if an object should be moved back to it's last origin
     /// </summary>
     public bool moveBack = false;
+
+    [SerializeField]
+    [Tooltip("add here the reference to the XRGrabInteractable-Script")]
+    private UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable _grabInteractableRef;
 
 
     /// <summary>
@@ -114,8 +119,10 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
                 controllingHand = handedness;
                 necessaryJointData = joints;
                 //update rigidbody so the object is solely controlled by hand data
-                rigidbody.useGravity = false;
+                //therefore the XRGGrabInteractable script gets deactivated because it turns of the value of "isKinematic"
+                _grabInteractableRef.enabled = false;
                 rigidbody.isKinematic = true;
+                
                 moveAnimation = gameObject.AddComponent<MoveAnimation>();
                 moveAnimation.drawingMaterial = animationMaterial;
                 moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.SELECT);
@@ -188,7 +195,6 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
         }
         else
         {
-            objectSpecificDeactivation();
             UpdateToObjectStatic();
         }               
     }
@@ -208,8 +214,8 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
                 col.enabled = false;
             }
         }
-        rigidbody.useGravity = false;
-        rigidbody.isKinematic = true;
+        //rigidbody.useGravity = false;
+        //rigidbody.isKinematic = true;
         moveAnimation =  gameObject.AddComponent<MoveAnimation>();
         moveAnimation.drawingMaterial = animationMaterial;
         moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.DETACH);
@@ -234,8 +240,9 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
         }
         rigidbody.position = transform.position;
         rigidbody.velocity = Vector3.zero;
-        rigidbody.useGravity = true;
+        //give controll over object back to XRGrabInteractableScript
         rigidbody.isKinematic = false;
+        _grabInteractableRef.enabled = true;
         Destroy(moveAnimation);
         necessaryJointData.Clear();
     }

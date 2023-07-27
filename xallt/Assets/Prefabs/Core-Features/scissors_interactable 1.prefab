@@ -796,6 +796,7 @@ MonoBehaviour:
   _coreController: {fileID: 0}
   leftSelected: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightSelected: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  handToHold: 2
 --- !u!114 &7877148809727850597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,7 +811,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 7877148809727850592}
   animationMaterial: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
-  maxAngle: 40
+  moveBack: 1
+  _grabInteractableRef: {fileID: 7877148809727850595}
   anchor: {fileID: 2730615648173528536}
   untereKlinge: {fileID: 5556240792052162544}
   obereKlinge: {fileID: 4460532959904304063}

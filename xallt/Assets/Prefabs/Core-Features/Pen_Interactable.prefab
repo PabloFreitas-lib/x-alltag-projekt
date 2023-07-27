@@ -391,9 +391,6 @@ MonoBehaviour:
   - {r: 0.70980394, g: 0.1254902, b: 1, a: 1}
   - {r: 1, g: 0, b: 0, a: 1}
   _currentDrawing: {fileID: 0}
-  interactable: {fileID: 0}
-  leftSelect: {fileID: -302068329176465271, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  rightSelect: {fileID: -2887381417032762628, guid: c348712bda248c246b8c49b3db54643f, type: 3}
 --- !u!54 &1630891021778511682
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -409,7 +406,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &1630891021778511680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,6 +439,8 @@ MonoBehaviour:
   rigidbody: {fileID: 1630891021778511682}
   animationMaterial: {fileID: 2100000, guid: 512a6703314208048810e4578bbd92a4, type: 2}
   moveBack: 0
+  _grabInteractableRef: {fileID: 1630891021778511681}
+  drawGesture: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_XRSetupName: Complete XR Origin Set Up
   m_zOffset: 0
   m_xOffset: 0

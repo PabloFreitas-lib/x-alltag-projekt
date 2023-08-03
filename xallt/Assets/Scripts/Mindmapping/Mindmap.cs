@@ -68,6 +68,7 @@ public class Mindmap : MonoBehaviour
     {
         prevSelected = selected;
         selected = node;
+        node.label.SelectSelf();
     }
 
     /// <summary>

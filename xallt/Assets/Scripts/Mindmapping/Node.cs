@@ -15,7 +15,7 @@ public class Node : MonoBehaviour
     public Mindmap mindmap;
 
     //Display information
-    public string text;
+    public Label label;
     //Lists or variables for each type of appendable data
 
     //Model
@@ -35,7 +35,7 @@ public class Node : MonoBehaviour
     public Node(uint pId, string pText, Color pUserColor)
     {
         id = pId;
-        text = pText;
+        label.text.text= pText;
         this.GetComponent<ColorChanger>().objectColor = pUserColor;
     }
 
@@ -45,6 +45,7 @@ public class Node : MonoBehaviour
     /// <author> Dmitry, Mert, Mailin </author>
     private void Start()
     {
+        label = GetComponent<Label>();
         if (!isRoot)
         {
             ConnectToParent();
@@ -78,7 +79,6 @@ public class Node : MonoBehaviour
     {
         if(mindmap != null)
             mindmap.SelectNode(this);
-        
     }
 
     /// <summary>

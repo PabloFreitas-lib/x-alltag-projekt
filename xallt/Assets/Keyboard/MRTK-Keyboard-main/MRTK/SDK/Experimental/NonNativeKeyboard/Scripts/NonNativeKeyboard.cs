@@ -798,7 +798,7 @@ namespace Microsoft.MixedReality.Toolkit.Experimental.UI
                 // Send text entered event and close the keyboard
                 OnTextSubmitted?.Invoke(this, EventArgs.Empty);
 
-                Close();
+                //Close();
             }
             else
             {

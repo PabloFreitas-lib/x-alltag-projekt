@@ -205,7 +205,7 @@ public class SaveSystem : MonoBehaviour
     /// </summary>
     /// <author> Jakob Kern </author>
     /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
-    public static void SaveFreeDraw(VRDrawingManager drawing)
+    public void SaveFreeDraw(VRDrawingManager drawing)
     {
         FreeDrawPersistentObject freeDraw = new FreeDrawPersistentObject(drawing);
 
@@ -224,7 +224,7 @@ public class SaveSystem : MonoBehaviour
     /// <author> Jakob Kern </author>
     /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
     /// <returns> An object containing all the (now deserialized) data of the freeDraw with id=drawingID </returns>
-    public static FreeDrawPersistentObject LoadFreeDraw(uint drawingID)
+    public FreeDrawPersistentObject LoadFreeDraw(uint drawingID)
     {
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");
@@ -322,7 +322,7 @@ public class SaveSystem : MonoBehaviour
     /// </summary>
     /// <author>Noah Horn</author>
     /// <param name="whiteboard"> A whiteboard that is to be persisted </param>
-    public static void SaveWhiteboard(Whiteboard whiteboard)
+    public void SaveWhiteboard(Whiteboard whiteboard)
     {
         byte[] whiteBoardtexture = whiteboard.drawingTexture.EncodeToPNG();
 
@@ -341,7 +341,7 @@ public class SaveSystem : MonoBehaviour
     /// <author>Noah Horn</author>
     /// <param name="whiteboard"> A Whiteboard object, which is allowed to be empty except for its id (correlating to path). Will be filled with stored information.</param>
     /// <returns> Texture2D that shows the loaded whiteboard. Caller can ignore this, as it is the same contained in the given Whiteboard, though helpful for debugging.</returns>
-    public static Texture2D LoadWhiteboard(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
+    public void LoadWhiteboard(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
     {
 
         Texture2D texture;
@@ -358,12 +358,11 @@ public class SaveSystem : MonoBehaviour
             texture.LoadImage(fileData);
             whiteboard.drawingTexture = texture;
             Debug.Log("Whiteboard loaded");
-            return texture;
         }
         else
         {
             Debug.Log("There is no save to this whiteboard");
-            return null; // "Nicht jeder Pfad hatte eine Rückgabe" Fehler - Dmitry
+            // "Nicht jeder Pfad hatte eine Rückgabe" Fehler - Dmitry
         }
     }
 

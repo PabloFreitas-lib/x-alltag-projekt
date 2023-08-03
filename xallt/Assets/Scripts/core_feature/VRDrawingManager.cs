@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 
 /// <summary>
@@ -22,7 +23,9 @@ public class VRDrawingManager : MonoBehaviour
     private int _currentColorIndex;
     private bool _isDrawing;
     private Vector3 _previousPosition;
-    
+
+    [SerializeField]
+    private MeshBuffer meshBuffer;
 
     /// <summary>
     /// This function is called when an object is initialized.
@@ -59,6 +62,11 @@ public class VRDrawingManager : MonoBehaviour
             _currentDrawing.material = drawingMaterial;
             _currentDrawing.startColor = _currentDrawing.endColor = penColors[_currentColorIndex];
             _currentDrawing.startWidth = _currentDrawing.endWidth = penWidth;
+            _currentDrawing.positionCount = 1;
+            _currentDrawing.SetPosition(0, tip.position);
+        }
+        else if(_index == 0 && _currentDrawing.positionCount == 0)
+        {
             _currentDrawing.positionCount = 1;
             _currentDrawing.SetPosition(0, tip.position);
         }
@@ -110,6 +118,24 @@ public class VRDrawingManager : MonoBehaviour
         }
         tipMaterial.color = penColors[_currentColorIndex];
     }
+
+    private bool bakeCurrentDrawing()
+    {
+        if(_index < 1)
+        {
+            return false;
+        }
+        if(_currentDrawing == null)
+        {
+            return false;
+        }
+
+        //get mesh from current drawing relative to line renderer
+        Mesh drawing = new Mesh();
+        _currentDrawing.BakeMesh(drawing, true);
+        meshBuffer.addBakedDrawing(drawing);
+        return true;
+    }
     
     /// <summary>
     /// This function clears the drawing.
@@ -128,5 +154,10 @@ public class VRDrawingManager : MonoBehaviour
     public void setIsDrawing(bool actionInProgress)
     {
         _isDrawing = actionInProgress;
+        if (!_isDrawing && bakeCurrentDrawing())
+        {
+            _currentDrawing.positionCount = 1;
+            _index = 0;
+        }
     }
 }

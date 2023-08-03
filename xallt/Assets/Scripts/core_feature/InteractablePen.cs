@@ -169,6 +169,7 @@ public class InteractablePen : ScriptedInteractableObject
     {      
         if (drawingManager != null)
         {
+
             drawingManager.ClearDrawing();
         }
     }

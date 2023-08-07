@@ -62,6 +62,10 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
     public bool moveBack = false;
 
     [SerializeField]
+    [Tooltip("LineRenderer that is use to draw animation and action of this object")]
+    private LineRenderer renderer; 
+
+    [SerializeField]
     [Tooltip("add here the reference to the XRGrabInteractable-Script")]
     private UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable _grabInteractableRef;
 
@@ -87,7 +91,6 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     void Start()
     {
-        
     }
 
     /// <summary>
@@ -122,7 +125,6 @@ public abstract class ScriptedInteractableObject : MonoBehaviour
                 //therefore the XRGGrabInteractable script gets deactivated because it turns of the value of "isKinematic"
                 _grabInteractableRef.enabled = false;
                 rigidbody.isKinematic = true;
-                
                 moveAnimation = gameObject.AddComponent<MoveAnimation>();
                 moveAnimation.drawingMaterial = animationMaterial;
                 moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.SELECT);

@@ -169,11 +169,10 @@ public class InteractablePen : ScriptedInteractableObject
     {      
         if (drawingManager != null)
         {
-
             drawingManager.ClearDrawing();
         }
     }
-
+    
     /// <summary>
     /// The <see cref="VRDrawingManager"/> is getting set to this object
     /// </summary>

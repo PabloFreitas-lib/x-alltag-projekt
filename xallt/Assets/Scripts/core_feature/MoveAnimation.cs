@@ -89,7 +89,6 @@ public class MoveAnimation : MonoBehaviour
     /// </summary>
     private AnimationAction animationAction;
 
-
     /// <summary>
     /// Start is called before the first frame update
     /// </summary>
@@ -148,7 +147,7 @@ public class MoveAnimation : MonoBehaviour
     /// <author> Fabian Schmurr</author>
     private void setupRenderer()
     {
-        renderer = gameObject.AddComponent<LineRenderer>();
+        renderer = gameObject.GetComponent<LineRenderer>();
         renderer.material = drawingMaterial;
         renderer.startColor = renderer.endColor = pathColor;
         renderer.startWidth = renderer.endWidth = animationWidth;
@@ -196,7 +195,8 @@ public class MoveAnimation : MonoBehaviour
         m_startRotation = Quaternion.identity;
         if (renderer != null)
         {
-            Destroy(renderer);
+            renderer.positionCount = 0;
+            renderer = null;
         }
         if (OnAnimationEnd != null)
         {

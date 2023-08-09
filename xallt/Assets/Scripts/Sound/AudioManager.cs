@@ -6,7 +6,7 @@ using UnityEngine;
 /// Maps statements like "Sound with name X and properties Y should be played" to the UnityEngine.Audio logic.
 /// Additional sounds may be added through the editor.
 /// </summary>
-/// <author>Linus Czech, Celina Dadschun, Laura Gietschel, Sophia Gommeringer, Jakob Kern, Pablo Santos</author>
+/// <author>Celina Dadschun, Laura Gietschel, Sophia Gommeringer, Jakob Kern, Norman Köhler, Pablo Santos</author>
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;

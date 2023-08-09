@@ -12,6 +12,15 @@ using System.Linq;
 [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 public class SaveSystem : MonoBehaviour
 {
+    public void Awake()
+    {
+        LoadComplexUserPrefs();
+    }
+
+    public void OnApplicationQuit()
+    {
+        SaveComplexUserPrefs();
+    }
 
     /// <summary>
     /// Wrapper-Class for serialization of general software-state (CUP) in JSON.
@@ -190,8 +199,18 @@ public class SaveSystem : MonoBehaviour
             string json = System.IO.File.ReadAllText(fullPath);
             ComplexUserPrefsPersistentObject cup = JsonUtility.FromJson<ComplexUserPrefsPersistentObject>(json);
 
-            //File Objekte erstellen
-            //Lichtobjekte erstellen
+            //Lichteinstellungen setzen
+            LightController lights = FindObjectOfType<LightController>();
+            lights.color = cup.lightColor;
+            light.brightness = cup.lightIntensity;
+
+            //File-Objekte erstellen
+            foreach (FilePersistentObject persistentFile in cup.files)
+            {
+                
+            }
+
+            //Liste der verfÃ¼gbaren Whiteboards erstellen
         }
         else
         {
@@ -362,7 +381,7 @@ public class SaveSystem : MonoBehaviour
         else
         {
             Debug.Log("There is no save to this whiteboard");
-            // "Nicht jeder Pfad hatte eine Rückgabe" Fehler - Dmitry
+            // "Nicht jeder Pfad hatte eine Rï¿½ckgabe" Fehler - Dmitry
         }
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 /// Maps statements like "Sound with name X and properties Y should be played" to the UnityEngine.Audio logic.
 /// Additional sounds may be added through the editor.
 /// </summary>
-/// <author>Celina Dadschun, Laura Gietschel, Sophia Gommeringer, Jakob Kern, Norman Köhler, Pablo Santos</author>
+/// <author>Celina Dadschun, Laura Gietschel, Sophia Gommeringer, Jakob Kern, Norman Köhler, Minoush Prieb, Pablo Santos</author>
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
@@ -19,7 +19,7 @@ public class AudioManager : MonoBehaviour
     {
         foreach(Sound s in sounds)
         {
-            s.source = gameObject = gameObject.AddComponent<AudioSource>();
+            s.source = gameObject.AddComponent<AudioSource>();
             s.source.clip = s.clip;
             s.source.volume = s.volume;
             s.source.loop = s.loop;
@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour
     public void Stop(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null | !(s.source.isPlaying()))
+        if (s == null | !(s.source.isPlaying))
         {
             Debug.Log(name + " is not an appropriate sound name or the correlating sound is not being played.");
             return;

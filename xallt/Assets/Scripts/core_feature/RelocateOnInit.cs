@@ -9,7 +9,7 @@ using UnityEngine.XR.Management;
 /// </summary>
 /// <author> Fabian Schmurr</author>
 
-public class relocate_on_init : MonoBehaviour
+public class RelocateOnInit : MonoBehaviour
 {
     //Gesture to start relocating
     public InputActionProperty startGesture;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Hands;
 
 /// <summary>
@@ -8,13 +9,17 @@ using UnityEngine.XR.Hands;
 /// </summary>
 /// <author> Authors </author>
 [RequireComponent(typeof(VRDrawingManager))]
-public class Interactable_Pen : Scripted_Interactable_Object
+public class InteractablePen : ScriptedInteractableObject
 {
     /// <summary>
     /// joint indices used for pen interaction
     /// </summary>
     private static XRHandJointID m_indexDistalJointID = XRHandJointID.IndexDistal;
     private static XRHandJointID m_indexProximalJointId = XRHandJointID.IndexProximal;
+
+    [SerializeField]
+    [Tooltip("While this gesture is performed, the pen will be drawing")]
+    private InputActionReference drawGesture; 
     
     /// <summary>
     /// Reference to XROrigin object
@@ -26,7 +31,7 @@ public class Interactable_Pen : Scripted_Interactable_Object
 
     private string m_XRSetupName;
 
-    public Interactable_Pen() : base(GetJointList()) { }
+    public InteractablePen() : base(GetJointList()) { }
 
     /// <summary>
     /// Generates a list of needed joint-indices
@@ -43,22 +48,22 @@ public class Interactable_Pen : Scripted_Interactable_Object
 
 
     [SerializeField]
-    [Range(-0.1f, 0.1f)]
+    [Range(-0.2f, 0.2f)]
     private float m_zOffset = 0f;
     [SerializeField]
-    [Range(-0.1f, 0.1f)]
+    [Range(-0.2f, 0.2f)]
     private float m_xOffset = 0f;
     [SerializeField]
-    [Range(-0.1f, 0.1f)]
+    [Range(-0.2f, 0.2f)]
     private float m_yOffset = 0f;
-    [SerializeField]
-    [Range(-30, 30)]
-    private float m_rotationYOffset = 0f;
-    [SerializeField]
-    [Range(-30, 30)]
+    //[SerializeField]
+    [Range(-60, 60)]
+    private float m_rotationYOffset = 30f;
+    //[SerializeField]
+    [Range(-60, 60)]
     private float m_rotationXOffset = 0f;
-    [SerializeField]
-    [Range(-30, 30)]
+    //[SerializeField]
+    [Range(-60, 60)]
     private float m_rotationZOffset = 0.0f;
 
     private VRDrawingManager drawingManager;
@@ -90,7 +95,6 @@ public class Interactable_Pen : Scripted_Interactable_Object
             {
                 return false;
             }
-
 
             //apply new pos
             Vector3 origin = m_XROrigin.transform.position;
@@ -128,8 +132,9 @@ public class Interactable_Pen : Scripted_Interactable_Object
     public override void updateInteraction()
     {
         getFinalTransform(MoveAnimation.AnimationAction.SELECT, out Vector3 finalPos, out Quaternion finalRot);
-        transform.rotation = finalRot;
         transform.position = finalPos;
+        transform.rotation = finalRot;
+        drawingManager.setIsDrawing(drawGesture.action.inProgress);
     }
 
     /// <summary>
@@ -164,18 +169,20 @@ public class Interactable_Pen : Scripted_Interactable_Object
     {      
         if (drawingManager != null)
         {
-            drawingManager.SetDrawingHand(Handedness.Invalid);
             drawingManager.ClearDrawing();
         }
     }
-
+    
     /// <summary>
-    /// The <see cref="VRDrawingManager"/> is getting set to this obect
+    /// The <see cref="VRDrawingManager"/> is getting set to this object
     /// </summary>
     /// <author> Fabian Schmurr </author>
     protected override void objectSpecificActivation()
     {
-        drawingManager = GetComponent<VRDrawingManager>();
-        drawingManager.SetDrawingHand(controllingHand);
+        //only get VRDrawingManager if null
+        if (drawingManager == null)
+        {
+            drawingManager = GetComponent<VRDrawingManager>();
+        }
     }
 }

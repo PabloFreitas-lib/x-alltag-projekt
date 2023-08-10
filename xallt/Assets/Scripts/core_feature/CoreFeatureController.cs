@@ -8,24 +8,23 @@ using UnityEngine.XR.Management;
 
 /// <summary>
 /// Script that works as a controller between objects controlled directly by
-/// hand-tracking and their selection. <see cref="Scripted_Interactable_Object"/>
+/// hand-tracking and their selection. <see cref="ScriptedInteractableObject"/>
 /// Therefore this class gathers access to the raw hand joint data provided by <see cref="XRHandSubsystem"/>
 /// </summary>
 /// <author> Autoren: Fabian Schmurr, Jaap Braasch </author>
 
-public class core_feature_controller : MonoBehaviour
+public class CoreFeatureController : MonoBehaviour
 {
-
-
+    
     /// <summary>
     /// The current object that is being hold by the player in left hand
     /// </summary>
-    private Scripted_Interactable_Object m_leftHandObj = null;
+    private ScriptedInteractableObject m_leftHandObj = null;
 
     /// <summary>
     /// The current object that is being hold by the player in right hand
     /// </summary>
-    private Scripted_Interactable_Object m_rightHandObj = null;
+    private ScriptedInteractableObject m_rightHandObj = null;
 
     /// <summary>
     /// Indicates if the selected objects reached their position and the interaction of them can therefore be activated
@@ -208,9 +207,9 @@ public class core_feature_controller : MonoBehaviour
             throw new NullReferenceException("Given selected object is null.");
         }
 
-        //object needs to have a configured interaction scripted extending Scripted_Interactable_Object
-        Scripted_Interactable_Object scripted_Interactable_Object = obj.GetComponent<Scripted_Interactable_Object>();
-        if (obj.GetComponent<Scripted_Interactable_Object>() == null)
+        //object needs to have a configured interaction scripted extending ScriptedInteractableObject
+        ScriptedInteractableObject scripted_Interactable_Object = obj.GetComponent<ScriptedInteractableObject>();
+        if (obj.GetComponent<ScriptedInteractableObject>() == null)
         {
             throw new MissingComponentException("selected object does not contain scripted interactable object");
         }
@@ -262,7 +261,7 @@ public class core_feature_controller : MonoBehaviour
 
     /// <summary>
     /// Sets the right hand object to interactable if object reached the designated hand position.
-    /// This Method is triggered by the <see cref="Scripted_Interactable_Object"/> if the action was performed
+    /// This Method is triggered by the <see cref="ScriptedInteractableObject"/> if the action was performed
     /// </summary>
     /// <author> Fabian Schmurr </author>
     private void OnRightInInteractionPosition()
@@ -273,7 +272,7 @@ public class core_feature_controller : MonoBehaviour
 
     /// <summary>
     /// Sets the left hand object to interactable if object reached the designated hand position.
-    /// This method is triggered by the <see cref="Scripted_Interactable_Object"/> if the action was performed
+    /// This method is triggered by the <see cref="ScriptedInteractableObject"/> if the action was performed
     /// </summary>
     /// <author> Fabian Schmurr </author>
     private void OnLeftInInteractionPosition()

@@ -9,7 +9,8 @@ using UnityEngine.XR.Hands;
 /// </summary>
 /// <author> Fabian Schmurr </author>
 [RequireComponent(typeof(Rigidbody))]
-public abstract class Scripted_Interactable_Object : MonoBehaviour
+[RequireComponent(typeof(UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable))]
+public abstract class ScriptedInteractableObject : MonoBehaviour
 {
 
     /// <summary>
@@ -60,6 +61,14 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// </summary>
     public bool moveBack = false;
 
+    [SerializeField]
+    [Tooltip("LineRenderer that is use to draw animation and action of this object")]
+    private LineRenderer renderer; 
+
+    [SerializeField]
+    [Tooltip("add here the reference to the XRGrabInteractable-Script")]
+    private UnityEngine.XR.Interaction.Toolkit.XRGrabInteractable _grabInteractableRef;
+
 
     /// <summary>
     /// Constructor that only checks if given list isn't empty
@@ -67,7 +76,7 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     /// <param name="necessaryJoints">List if needed joint indices to get the joint pose information</param>
     /// <exception cref="ArgumentException">If necessary hand-joint ID's are not set in Editor</exception>
-    public Scripted_Interactable_Object(List<XRHandJointID> necessaryJoints)
+    public ScriptedInteractableObject(List<XRHandJointID> necessaryJoints)
     {
         if(necessaryJoints == null || necessaryJoints.Count == 0)
         {
@@ -82,7 +91,6 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     void Start()
     {
-        
     }
 
     /// <summary>
@@ -114,7 +122,8 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
                 controllingHand = handedness;
                 necessaryJointData = joints;
                 //update rigidbody so the object is solely controlled by hand data
-                rigidbody.useGravity = false;
+                //therefore the XRGGrabInteractable script gets deactivated because it turns of the value of "isKinematic"
+                _grabInteractableRef.enabled = false;
                 rigidbody.isKinematic = true;
                 moveAnimation = gameObject.AddComponent<MoveAnimation>();
                 moveAnimation.drawingMaterial = animationMaterial;
@@ -188,7 +197,6 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         }
         else
         {
-            objectSpecificDeactivation();
             UpdateToObjectStatic();
         }               
     }
@@ -208,8 +216,8 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
                 col.enabled = false;
             }
         }
-        rigidbody.useGravity = false;
-        rigidbody.isKinematic = true;
+        //rigidbody.useGravity = false;
+        //rigidbody.isKinematic = true;
         moveAnimation =  gameObject.AddComponent<MoveAnimation>();
         moveAnimation.drawingMaterial = animationMaterial;
         moveAnimation.startAnimation(this, MoveAnimation.AnimationAction.DETACH);
@@ -234,8 +242,9 @@ public abstract class Scripted_Interactable_Object : MonoBehaviour
         }
         rigidbody.position = transform.position;
         rigidbody.velocity = Vector3.zero;
-        rigidbody.useGravity = true;
+        //give controll over object back to XRGrabInteractableScript
         rigidbody.isKinematic = false;
+        _grabInteractableRef.enabled = true;
         Destroy(moveAnimation);
         necessaryJointData.Clear();
     }

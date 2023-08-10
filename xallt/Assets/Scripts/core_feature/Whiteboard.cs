@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +11,10 @@ using UnityEngine.UI;
 
 public class Whiteboard : MonoBehaviour
 {
+    //private m_ID and getter method as string id
+    [SerializeField] private string m_ID; 
+    public string id => m_ID;
     // variables to describe characteristics of whiteboard texture
-    public string id;
     public Texture2D drawingTexture;
     public Vector2 textureSize = new Vector2(2048, 2048);
     // reference to RawImage-component of whiteboard
@@ -24,6 +27,8 @@ public class Whiteboard : MonoBehaviour
     /// <author> Sophia Gommeringer & Celina Dadschun </author>
     void Start()
     {
+        //Assign GUID unique id to whiteboard
+        m_ID = Guid.NewGuid().ToString();
         // assign texture
         var r = GetComponent<Renderer>();
         drawingTexture = new Texture2D((int)textureSize.x, (int)textureSize.y);
@@ -43,35 +48,5 @@ public class Whiteboard : MonoBehaviour
         WhiteboardMarker marker = markerObject.GetComponent<WhiteboardMarker>();
         marker.addPath(id);
 
-    }
-
-
-    /// <summary>
-    ///    load and open existing whiteboard drawing
-    /// </summary>
-    /// <author> Celina Dadschun </author>
-    /// <param name="whichFilePath"> file path of to be opened png </param>
-    public void LoadDrawing(string whichFilePath)
-    {
-        // open file-choosing dialog
-        whichFilePath = EditorUtility.OpenFilePanel("Select Drawing", "", "png");
-
-        // check if file is selected
-        if (!string.IsNullOrEmpty(whichFilePath))
-        {
-            // load png of selected file
-            byte[] fileData = System.IO.File.ReadAllBytes(whichFilePath);
-
-            // create new Texture2D-object
-            Texture2D loadedTexture = new Texture2D((int)textureSize.x, (int)textureSize.y);
-            loadedTexture.LoadImage(fileData);
-
-            // transfer pixels of loaded Texture2D-object onto the whiteboard-texture
-            drawingTexture.SetPixels(loadedTexture.GetPixels());
-            drawingTexture.Apply();
-
-            // update whiteboard-image to display changes
-            whiteboardImage.texture = drawingTexture;
-        }
     }
 }

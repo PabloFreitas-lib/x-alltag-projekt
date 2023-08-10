@@ -103,7 +103,7 @@ public class core_feature_controller : MonoBehaviour
                 throw new MissingComponentException("XR Object of given name not found.");
             }
         }
-        
+
         _gestureRecognizer.OnGestureDetected.AddListener(handleGesture);
 
     }
@@ -156,6 +156,8 @@ public class core_feature_controller : MonoBehaviour
                     {
                         updateRigth();
                     }
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
                 }
                 else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.LeftHandRootPose | XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints))
                 {
@@ -163,6 +165,7 @@ public class core_feature_controller : MonoBehaviour
                     {
                         updateLeft();
                     }
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
                 }
                 else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.RightHandJoints | XRHandSubsystem.UpdateSuccessFlags.RightHandRootPose))
                 {
@@ -170,6 +173,7 @@ public class core_feature_controller : MonoBehaviour
                     {
                         updateRigth();
                     }
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
                 }
                 break;
         }
@@ -187,8 +191,6 @@ public class core_feature_controller : MonoBehaviour
         {
             m_leftHandObj.updateInteraction();
         }
-
-        _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
     }
 
     /// <summary>
@@ -203,7 +205,6 @@ public class core_feature_controller : MonoBehaviour
         {
             m_rightHandObj.updateInteraction();
         }
-        _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
     }
 
     /// <summary>

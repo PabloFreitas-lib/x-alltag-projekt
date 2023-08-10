@@ -40,7 +40,7 @@ public class GestureRecognizer : MonoBehaviour
     public GestureEvent OnGestureDetected;
     
     public class GestureEvent : UnityEvent<Gesture>{}
-    
+
 
     // Start is called before the first frame update
     void Start()
@@ -51,9 +51,9 @@ public class GestureRecognizer : MonoBehaviour
     void Update()
     {
         Gesture gesture = checkForGesture();
-        if(gesture != null && OnGestureDetected != null)
+        if(gesture != null)
         {
-            OnGestureDetected.Invoke(gesture);
+            Debug.Log(gesture.type + "");
         }
     }
 
@@ -133,7 +133,10 @@ public class GestureRecognizer : MonoBehaviour
             }
 
             float gestureError = calculateGestureError(gesture);
-            results.Add(new Result(gesture, gestureError));
+            if(gestureError >= 0)
+            {
+                results.Add(new Result(gesture, gestureError));
+            }
         }
 
         if (results != null)
@@ -150,11 +153,11 @@ public class GestureRecognizer : MonoBehaviour
         float error;
         List<Vector3> joinData = null;
         Vector3 hand;
-        if (gesture.handedness == Handedness.Left && leftHandLandmarksPosition.Count == gesture.joints.Count)
+        if (leftHandLandmarksPosition != null && gesture.handedness == Handedness.Left && leftHandLandmarksPosition.Count == gesture.joints.Count)
         {
             joinData = leftHandLandmarksPosition;
         }
-        else if (gesture.handedness == Handedness.Right && leftHandLandmarksPosition.Count == gesture.joints.Count)
+        else if (righthandLandmarks != null && gesture.handedness == Handedness.Right && righthandLandmarks.Count == gesture.joints.Count)
         {
             joinData = righthandLandmarks;
         }
@@ -226,7 +229,14 @@ public class GestureRecognizer : MonoBehaviour
         {
             return;
         }
-        savedGestures.Add(new Gesture(type, joints, handForGesture));
+        
+        
+        GameObject gestureObj = new GameObject();
+        gestureObj.AddComponent<Gesture>();
+        Gesture toSafe = gestureObj.GetComponent<Gesture>();
+        toSafe.joints = joints;
+        toSafe.type = type;
+        toSafe.handedness = handForGesture;
     }
     
     

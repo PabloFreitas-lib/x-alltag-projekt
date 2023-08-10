@@ -350,7 +350,7 @@ public class SaveSystem : MonoBehaviour
                 GameObject go = Instantiate(nodePrefab, persistedNode.position, Quaternion.identity);
                 Node node = go.GetComponent<Node>();
                 node.id = persistedNode.id;
-                node.text = persistedNode.text;
+                node.label.text.text = persistedNode.text;
                 go.GetComponent<ColorChanger>().objectColor = persistedNode.userColor;
                 node.mindmap = socket.map;
                 go.transform.parent = socket.map.transform;

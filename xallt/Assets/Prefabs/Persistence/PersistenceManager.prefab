@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2275120850741697494}
   - component: {fileID: 2275120850741697495}
+  - component: {fileID: 1471334429}
   m_Layer: 0
   m_Name: PersistenceManager
   m_TagString: Untagged
@@ -48,3 +49,15 @@ MonoBehaviour:
   filePrefab: {fileID: 4412990469660499065, guid: 948edd6a109d6514cbce035133d4f4ed, type: 3}
   connectionPrefab: {fileID: 203616100014956186, guid: 4c86c357f3579644ba5724e4dfb3266d, type: 3}
   whiteboardPrefab: {fileID: 2522349086003568400, guid: 10c76e71c62614a469df5dfaf848f47a, type: 3}
+--- !u!114 &1471334429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2275120850741697496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 838f813c5cc7d7d488eceeb32b09c226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

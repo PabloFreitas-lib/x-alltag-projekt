@@ -11,7 +11,6 @@ public class Node : MonoBehaviour
 {
     //Metadata
     public uint id;
-    public DateTime creationDate;
     public Mindmap mindmap;
 
     //Display information
@@ -19,8 +18,9 @@ public class Node : MonoBehaviour
     //Lists or variables for each type of appendable data
 
     //Model
-    public Node parent;                       //empty parent -> treat node as root
+    public Node parent;
     public List<Node> children;
+    public List<Node> destinations;           //complete data model by reference to connection destinations of a node
 
     //Boolean
     public bool isRoot;
@@ -28,15 +28,19 @@ public class Node : MonoBehaviour
     /// <summary> 
     /// gives nodes metadata
     /// </summary>
-    /// <author> Dmitry, Mert, Mailin </author>
+    /// <author> Dmitry, Mert, Mailin, Jakob </author>
     /// <param name="uint pId"> requires the node ID </param>
     /// <param name="string pText"> requires text </param>
     /// <param name="Color pUserColor"> requires Color </param>
-    public Node(uint pId, string pText, Color pUserColor)
+    public Node(uint pId, string pText, Color pUserColor, Vector3 position, Vector3 size, Mindmap pmindmap)
     {
         id = pId;
         text = pText;
         this.GetComponent<ColorChanger>().objectColor = pUserColor;
+        mindmap = pmindmap;
+        transform.parent = mindmap.transform;
+        transform.position = position;
+        transform.localScale = size;
     }
 
     /// <summary>
@@ -91,6 +95,7 @@ public class Node : MonoBehaviour
         {
             GameObject connection = Instantiate(mindmap.connectionPrefab, transform.position, Quaternion.identity);
             connection.GetComponent<Connection>().SetFromTo(mindmap.prevSelected, mindmap.selected);
+            destinations.Add(mindmap.selected);               //complete data model by reference to connection destinations of a node
             connection.transform.parent = mindmap.transform;
             mindmap.mode = Mindmap.Mode.defaultMode;
         }

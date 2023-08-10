@@ -12,7 +12,6 @@ using System.Linq;
 [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 public class SaveSystem : MonoBehaviour
 {
-
     /// <summary>
     /// Wrapper-Class for serialization of general software-state (CUP) in JSON.
     /// </summary>
@@ -63,9 +62,9 @@ public class SaveSystem : MonoBehaviour
     [System.Serializable]
     public class FilePersistentObject
     {
-        string name;
-        Color color;
-        Vector3 position;
+        public string name;
+        public Color color;
+        public Vector3 position;
 
         /// <summary>
         /// Called by CUP Constructor to get a serializable fileCube representation.
@@ -131,14 +130,17 @@ public class SaveSystem : MonoBehaviour
 
         public string text { get; }
         public Color userColor { get; }
+        public Vector3 position { get; }
+        public Vector3 size { get; }
 
         public uint[] childrenIds { get; }
+        public uint[] destinationIds { get; }
 
         /// <summary>
         /// Called by SaveMindmap(Mindmap mindmap) to easily encapsulate a mindmaps nodes.
         /// A mindmap is primarily described by its name (which is its path) and a list of nodes.
         /// </summary>
-        /// <author> Autoren </author>
+        /// <author> Jakob Kern </author>
         /// <param name="node"> The node to be wrapped. </param>
         public NodePersistentObject(Node node)
         {
@@ -146,19 +148,58 @@ public class SaveSystem : MonoBehaviour
             id = node.id;
             parentId = node.parent.id;
             text = node.text;
+            position = node.transform.position;
+            size = node.transform.localScale;
 
             //Encode userColor
             userColor = node.GetComponent<ColorChanger>().objectColor;
 
             //Encode childrenIds
             childrenIds = new uint[node.children.ToArray().Length];
+            destinationIds = new uint[node.destinations.ToArray().Length];
             int i = 0;
             foreach (Node child in node.children)
             {
                 childrenIds[i] = child.id;
                 i++;
             }
+
+            i = 0;
+            foreach (Node destination in node.destinations)
+            {
+                childrenIds[i] = destination.id;
+                i++;
+            }
         }
+    }
+
+    // SaveSystems reference to the whiteboard, node and connection prefabs
+    [SerializeField]
+    public GameObject nodePrefab;
+    [SerializeField]
+    public GameObject filePrefab;
+    [SerializeField]
+    public Connection connectionPrefab;
+    [SerializeField]
+    public Whiteboard whiteboardPrefab;
+
+
+    /// <summary>
+    /// Called on launch.
+    /// </summary>
+    /// <author>Jakob Kern</author>
+    public void Awake()
+    {
+        LoadComplexUserPrefs();
+    }
+
+    /// <summary>
+    /// Called on quit.
+    /// </summary>
+    /// <author>Jakob Kern</author>
+    public void OnApplicationQuit()
+    {
+        SaveComplexUserPrefs();
     }
 
     /// <summary>
@@ -190,8 +231,20 @@ public class SaveSystem : MonoBehaviour
             string json = System.IO.File.ReadAllText(fullPath);
             ComplexUserPrefsPersistentObject cup = JsonUtility.FromJson<ComplexUserPrefsPersistentObject>(json);
 
-            //File Objekte erstellen
-            //Lichtobjekte erstellen
+            //Lichteinstellungen setzen
+            LightController lights = FindObjectOfType<LightController>();
+            lights.color = cup.lightColor;
+            lights.brightness = cup.lightIntensity;
+
+            //File-Objekte erstellen
+            foreach (FilePersistentObject persistentFile in cup.files)
+            {
+                GameObject go = Instantiate(filePrefab, persistentFile.position, Quaternion.identity);
+                go.GetComponent<File>().name = persistentFile.name;
+                go.GetComponent<ColorChanger>().objectColor = persistentFile.color;
+            }
+
+            //Liste der verfÃ¼gbaren Whiteboards erstellen
         }
         else
         {
@@ -223,8 +276,7 @@ public class SaveSystem : MonoBehaviour
     /// </summary>
     /// <author> Jakob Kern </author>
     /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
-    /// <returns> An object containing all the (now deserialized) data of the freeDraw with id=drawingID </returns>
-    public FreeDrawPersistentObject LoadFreeDraw(uint drawingID)
+    public void LoadFreeDraw(uint drawingID)
     {
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");
@@ -235,7 +287,7 @@ public class SaveSystem : MonoBehaviour
             string json = System.IO.File.ReadAllText(fullPath);
 
             FreeDrawPersistentObject positions = JsonUtility.FromJson<FreeDrawPersistentObject>(json);
-            return positions;
+            return;
         }
         else
         {
@@ -249,7 +301,7 @@ public class SaveSystem : MonoBehaviour
     /// </summary>
     /// <author> Jakob Kern </author>
     /// <param name="mindmap"> The Mindmap object to be wrapped and saved. </param>
-    public static void SaveMindmap(Mindmap mindmap)
+    public void SaveMindmap(Mindmap mindmap)
     {
         Node[] nodes = mindmap.nodes.ToArray();
         NodePersistentObject[] persistenceMapped = new NodePersistentObject[nodes.Length];
@@ -274,24 +326,37 @@ public class SaveSystem : MonoBehaviour
     /// Load a given Mindmap. This function is to be called on GUI- or socket-interaction of the fileCube correlating with the mindmap.
     /// </summary>
     /// <param name="mindmap"> A Mindmap Object, which is allowed to be empty except for its name (correlating to path). The Function fills this Mindmap object, according to saved data. </param>
-    /// <returns> A list of all the nodes that have been succesfully deserialized. Not needed for implementation, but helpful for debugging.</returns>
-    public static List<Node> LoadMindmap(Mindmap mindmap)
-    {
+    public void LoadMindmap(Mindmap mindmap)
+    {   
+        //construct path
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "mindmaps");
         fullPath = Path.Combine(fullPath, mindmap.name);
 
+        //check if file available
         if (System.IO.File.Exists(fullPath))
         {
+            //read file contents
             string json = System.IO.File.ReadAllText(fullPath);
 
+            //deserialize
             NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
             Node[] nodes = new Node[persistenceMapped.Length];
 
+            //create Nodes from persisted data
             uint i = 0;
             foreach (NodePersistentObject persistedNode in persistenceMapped)
             {
-                Node node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor);
+                GameObject go = Instantiate(nodePrefab, persistedNode.position, Quaternion.identity);
+                Node node = go.GetComponent<Node>();
+                node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor, persistedNode.position, persistedNode.size, mindmap);
+                node.id = persistedNode.id;
+                node.text = persistedNode.text;
+                node.GetComponent<ColorChanger>().objectColor = persistedNode.userColor;
+                node.mindmap = mindmap;
+                go.transform.parent = mindmap.transform;
+                go.transform.position = persistedNode.position;
+                go.transform.localScale = persistedNode.size;
                 nodes[i] = node;
                 i++;
             }
@@ -305,9 +370,20 @@ public class SaveSystem : MonoBehaviour
                 {
                     node.children.Add(BinarySearch(nodes, childId));
                 }
+
+                // Add connections
+                foreach (uint destinationId in persistedNode.destinationIds)
+                {
+                    Node destination = BinarySearch(nodes, destinationId);
+                    GameObject connection = Instantiate(mindmap.connectionPrefab, node.transform.position, Quaternion.identity);
+                    connection.GetComponent<Connection>().SetFromTo(node, destination);
+                    node.destinations.Add(destination);               //complete data model by reference to connection destinations of a node
+                    connection.transform.parent = mindmap.transform;
+                }
+
             }
 
-            return nodes.ToList();
+            return;
         }
         else
         {
@@ -340,8 +416,7 @@ public class SaveSystem : MonoBehaviour
     /// </summary>
     /// <author>Noah Horn</author>
     /// <param name="whiteboard"> A Whiteboard object, which is allowed to be empty except for its id (correlating to path). Will be filled with stored information.</param>
-    /// <returns> Texture2D that shows the loaded whiteboard. Caller can ignore this, as it is the same contained in the given Whiteboard, though helpful for debugging.</returns>
-    public void LoadWhiteboard(Whiteboard whiteboard) //maybe change to returning fresh Whiteboard
+    public void LoadWhiteboard(Whiteboard whiteboard) 
     {
 
         Texture2D texture;
@@ -362,7 +437,7 @@ public class SaveSystem : MonoBehaviour
         else
         {
             Debug.Log("There is no save to this whiteboard");
-            // "Nicht jeder Pfad hatte eine Rückgabe" Fehler - Dmitry
+            // "Nicht jeder Pfad hatte eine Rï¿½ckgabe" Fehler - Dmitry
         }
     }
 

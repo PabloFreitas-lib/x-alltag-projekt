@@ -300,10 +300,10 @@ public class SaveSystem : MonoBehaviour
     /// Save a given Mindmap. This function is to be called on GUI- or socket-interaction of the fileCube correlating with the mindmap.
     /// </summary>
     /// <author> Jakob Kern </author>
-    /// <param name="mindmap"> The Mindmap object to be wrapped and saved. </param>
-    public void SaveMindmap(Mindmap mindmap)
+    /// <param name="socket"> The Socket containing the mindmap object to be wrapped and saved. </param>
+    public void SaveMindmap(FileSocket socket)
     {
-        Node[] nodes = mindmap.nodes.ToArray();
+        Node[] nodes = socket.map.nodes.ToArray();
         NodePersistentObject[] persistenceMapped = new NodePersistentObject[nodes.Length];
 
         uint i = 0;
@@ -317,7 +317,7 @@ public class SaveSystem : MonoBehaviour
 
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "mindmaps");
-        fullPath = Path.Combine(fullPath, mindmap.name);
+        fullPath = Path.Combine(fullPath, socket.map.name);
         System.IO.File.WriteAllText(fullPath, json);
     }
 
@@ -326,12 +326,12 @@ public class SaveSystem : MonoBehaviour
     /// Load a given Mindmap. This function is to be called on GUI- or socket-interaction of the fileCube correlating with the mindmap.
     /// </summary>
     /// <param name="mindmap"> A Mindmap Object, which is allowed to be empty except for its name (correlating to path). The Function fills this Mindmap object, according to saved data. </param>
-    public void LoadMindmap(Mindmap mindmap)
+    public void LoadMindmap(FileSocket socket)
     {   
         //construct path
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "mindmaps");
-        fullPath = Path.Combine(fullPath, mindmap.name);
+        fullPath = Path.Combine(fullPath, socket.map.name);
 
         //check if file available
         if (System.IO.File.Exists(fullPath))
@@ -349,12 +349,11 @@ public class SaveSystem : MonoBehaviour
             {
                 GameObject go = Instantiate(nodePrefab, persistedNode.position, Quaternion.identity);
                 Node node = go.GetComponent<Node>();
-                node = new Node(persistedNode.id, persistedNode.text, persistedNode.userColor, persistedNode.position, persistedNode.size, mindmap);
                 node.id = persistedNode.id;
                 node.text = persistedNode.text;
-                node.GetComponent<ColorChanger>().objectColor = persistedNode.userColor;
-                node.mindmap = mindmap;
-                go.transform.parent = mindmap.transform;
+                go.GetComponent<ColorChanger>().objectColor = persistedNode.userColor;
+                node.mindmap = socket.map;
+                go.transform.parent = socket.map.transform;
                 go.transform.position = persistedNode.position;
                 go.transform.localScale = persistedNode.size;
                 nodes[i] = node;
@@ -375,10 +374,10 @@ public class SaveSystem : MonoBehaviour
                 foreach (uint destinationId in persistedNode.destinationIds)
                 {
                     Node destination = BinarySearch(nodes, destinationId);
-                    GameObject connection = Instantiate(mindmap.connectionPrefab, node.transform.position, Quaternion.identity);
+                    GameObject connection = Instantiate(socket.map.connectionPrefab, node.transform.position, Quaternion.identity);
                     connection.GetComponent<Connection>().SetFromTo(node, destination);
                     node.destinations.Add(destination);               //complete data model by reference to connection destinations of a node
-                    connection.transform.parent = mindmap.transform;
+                    connection.transform.parent = socket.map.transform;
                 }
 
             }

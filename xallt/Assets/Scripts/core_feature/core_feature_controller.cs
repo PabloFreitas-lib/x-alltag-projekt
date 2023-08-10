@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 using UnityEngine.XR.Hands;
 using UnityEngine.XR.Hands.Samples.VisualizerSample;
 using UnityEngine.XR.Management;
@@ -66,6 +67,8 @@ public class core_feature_controller : MonoBehaviour
     /// </summary>
     private SeperateHandVisualizer m_handVisualizerScipt;
 
+    [SerializeField] private GestureRecognizer _gestureRecognizer;
+
 
     /// <summary>
     /// At start the script  tries to get access to the <see cref="XRHandSubsystem"/> to deliver the hand joint
@@ -100,6 +103,15 @@ public class core_feature_controller : MonoBehaviour
                 throw new MissingComponentException("XR Object of given name not found.");
             }
         }
+        
+        _gestureRecognizer.OnGestureDetected.AddListener(handleGesture);
+
+    }
+
+    private void handleGesture(Gesture gesture)
+    {
+        Debug.Log(gesture
+            .type + "");
     }
 
     /// <summary>
@@ -175,6 +187,8 @@ public class core_feature_controller : MonoBehaviour
         {
             m_leftHandObj.updateInteraction();
         }
+
+        _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
     }
 
     /// <summary>
@@ -189,6 +203,7 @@ public class core_feature_controller : MonoBehaviour
         {
             m_rightHandObj.updateInteraction();
         }
+        _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
     }
 
     /// <summary>
@@ -404,4 +419,6 @@ public class core_feature_controller : MonoBehaviour
             disableGameObject(Handedness.Right);
         }
     }
+    
+    
 }

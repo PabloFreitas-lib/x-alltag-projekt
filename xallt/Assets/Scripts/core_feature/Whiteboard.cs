@@ -44,9 +44,10 @@ public class Whiteboard : MonoBehaviour
         drawingTexture.Apply();
 
         // inititlize marker, that can draw on whiteboard
-        GameObject markerObject = GameObject.Find("Pen_Interactable");
-        WhiteboardMarker marker = markerObject.GetComponent<WhiteboardMarker>();
-        marker.addPath(id);
+        WhiteboardMarker marker = FindObjectOfType<WhiteboardMarker>();
+        // GameObject markerObject = GameObject.Find("Pen_Interactable");
+        // WhiteboardMarker marker = markerObject.GetComponent<WhiteboardMarker>();
+        marker.addPath(m_ID);
 
     }
 }

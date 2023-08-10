@@ -68,6 +68,8 @@ public class Mindmap : MonoBehaviour
     {
         prevSelected = selected;
         selected = node;
+        node.label.SelectSelf();
+        FindObjectOfType<AudioManager>().Play("selectNode"); // play a sound on node selection
     }
 
     /// <summary>

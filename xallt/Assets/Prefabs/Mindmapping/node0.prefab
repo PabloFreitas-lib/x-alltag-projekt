@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 4551093130385013283}
   - component: {fileID: 4551093130385013309}
   - component: {fileID: -3267779114954561680}
+  - component: {fileID: -2192057218628647796}
   m_Layer: 0
   m_Name: node0
   m_TagString: Untagged
@@ -400,6 +401,19 @@ MonoBehaviour:
   highLightColor: {r: 0, g: 0, b: 0, a: 0}
   isHighlighted: 0
   pointLight: {fileID: 0}
+--- !u!114 &-2192057218628647796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4551093130385013285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77edde16e1844747b3117b28331d1b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1562724183927433154, guid: c3b81b4fff7484442833a06e75e7f0e7, type: 3}
 --- !u!1 &4551093130459514148
 GameObject:
   m_ObjectHideFlags: 0

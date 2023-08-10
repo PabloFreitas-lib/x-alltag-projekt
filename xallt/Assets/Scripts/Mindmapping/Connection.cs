@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 /// <summary>
@@ -20,11 +21,46 @@ public class Connection : MonoBehaviour
     private void Start()
     {
         CreateLineRenderer();
+        subscribeToScissorsCut();
+    }
+
+    /// <summary>
+    /// Subscribes to the OnScissorsCut delegate of each excising scissors prefab object
+    /// <author>Fabian Schmurr</author>
+    /// </summary>
+    private void subscribeToScissorsCut()
+    {
+        //get references to scissor objects in scene
+        ScissorsInteraction[] scissorsObjects = FindObjectsOfType<ScissorsInteraction>();
+        //subscribe to scissors cut action
+        foreach (ScissorsInteraction scissors in scissorsObjects)
+        {
+            scissors.OnScissorsCut += checkForConnectionCut;
+        }
+    }
+
+    /// <summary>
+    /// Gets invoked by a scissors object and checks if there a part of a scissors objects intersects the connection, if so DestroyConnection gets called.
+    /// <author>Fabian Schmurr</author>
+    /// </summary>
+    private void checkForConnectionCut()
+    {
+        //do a raycast between the two nodes
+        Vector3 raycastDirection = to.transform.position - from.transform.position;
+        if(Physics.Raycast(from.transform.position, raycastDirection, out RaycastHit hit, Vector3.Magnitude(raycastDirection)))
+        {
+            //check if found collider is part of a scissors
+            ScissorsInteraction scissors = hit.collider.gameObject.GetComponentInParent<ScissorsInteraction>();
+            if (scissors != null)
+            {
+                DestroyConnection();
+            }
+        }
     }
 
     private void Update()
     {
-        UpdateLineRenderer();
+       UpdateLineRenderer();
     }
 
     /// <summary>
@@ -84,6 +120,7 @@ public class Connection : MonoBehaviour
                 to.parent = null;
                 from.parent.children.Remove(to);
                 from.mindmap.mode = Mindmap.Mode.defaultMode;
+                Destroy(lineRenderer);
                 Destroy(this);
             }
         }

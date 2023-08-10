@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 /// <summary>
 ///    This class is responsible to animate the movement of objects flying from a start to end point
-///    The animated object must implement <see cref="Scripted_Interactable_Object"/>
+///    The animated object must implement <see cref="ScriptedInteractableObject"/>
 /// </summary>
 /// <author> Fabian Schmurr</author>
-[RequireComponent(typeof(Scripted_Interactable_Object))]
+[RequireComponent(typeof(ScriptedInteractableObject))]
 public class MoveAnimation : MonoBehaviour
 {
     /// <summary>
@@ -80,7 +80,7 @@ public class MoveAnimation : MonoBehaviour
     /// <summary>
     /// Reference to animated object
     /// </summary>
-    private Scripted_Interactable_Object objectToMove;
+    private ScriptedInteractableObject objectToMove;
 
     private LineRenderer renderer;
 
@@ -88,7 +88,6 @@ public class MoveAnimation : MonoBehaviour
     /// Indicates whether the current animation is due to a detach or select operation
     /// </summary>
     private AnimationAction animationAction;
-
 
     /// <summary>
     /// Start is called before the first frame update
@@ -127,8 +126,8 @@ public class MoveAnimation : MonoBehaviour
     /// <param name="objectToMove">The object that should be moved to a new position</param>
     /// <param name="action">Whether the animation is due to detach or select action. This is important
     /// because the end-position varies if the object is moving to the hand, since its an scripted_interaction
-    /// and the final position therefore a specific joint at the hand <see cref="Scripted_Interactable_Object.getFinalTransform(in AnimationAction, out Vector3, out Quaternion)"/></param>
-    public void startAnimation(Scripted_Interactable_Object objectToMove, AnimationAction action)
+    /// and the final position therefore a specific joint at the hand <see cref="ScriptedInteractableObject.getFinalTransform(in AnimationAction, out Vector3, out Quaternion)"/></param>
+    public void startAnimation(ScriptedInteractableObject objectToMove, AnimationAction action)
     {
         if (!m_isRunning)
         {
@@ -148,7 +147,7 @@ public class MoveAnimation : MonoBehaviour
     /// <author> Fabian Schmurr</author>
     private void setupRenderer()
     {
-        renderer = new GameObject().AddComponent<LineRenderer>();
+        renderer = gameObject.GetComponent<LineRenderer>();
         renderer.material = drawingMaterial;
         renderer.startColor = renderer.endColor = pathColor;
         renderer.startWidth = renderer.endWidth = animationWidth;
@@ -194,9 +193,10 @@ public class MoveAnimation : MonoBehaviour
         remainingDistance = float.MaxValue;
         startDistance = float.NaN;
         m_startRotation = Quaternion.identity;
-        if (renderer.gameObject != null)
+        if (renderer != null)
         {
-            Destroy(renderer.gameObject);
+            renderer.positionCount = 0;
+            renderer = null;
         }
         if (OnAnimationEnd != null)
         {
@@ -267,7 +267,9 @@ public class MoveAnimation : MonoBehaviour
     /// <author> Fabian Schmurr</author>
     private void drawNextPoint()
     {
-        renderer.SetPosition(lineIndex++, objectToMove.transform.position);
+        renderer.positionCount = lineIndex + 1;
+        renderer.SetPosition(lineIndex, objectToMove.transform.position);
+        lineIndex++;
     }
 }
 

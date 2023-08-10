@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.XR.Hands;
-using UnityEngine.XR.Interaction.Toolkit;
 
 
 /// <summary>
@@ -18,23 +15,16 @@ public class VRDrawingManager : MonoBehaviour
     [Range(0.01f, 0.1f)]
     public float penWidth = 0.01f;
     public Color[] penColors;
-
-    [Header("Drawing Properties")]
     public LineRenderer _currentDrawing;
     private int _index;
     private int _currentColorIndex;
     private bool _isDrawing;
     private Vector3 _previousPosition;
+    private float drawDeactivationThreshhold = 0.05f;
+    private float drawDeactivationTimer = 0f;
 
-    [Header("Hands & Interactable")]
     [SerializeField]
-    private XRGrabInteractable interactable;
-    [SerializeField]
-    private InputActionReference leftSelect;
-    [SerializeField]
-    private InputActionReference rightSelect;
-
-    private Handedness _drawingHand = Handedness.Invalid;
+    private MeshBuffer meshBuffer;
 
     /// <summary>
     /// This function is called when an object is initialized.
@@ -52,84 +42,50 @@ public class VRDrawingManager : MonoBehaviour
     /// <author> Fabian Schmurr </author>
     private void Update()
     {
-        if (_drawingHand == Handedness.Left)
-        {
-            _isDrawing = leftSelect.action.inProgress; 
-        }
-        else if (_drawingHand == Handedness.Right)
-        {
-            _isDrawing = rightSelect.action.inProgress;
-        }
-        else if (_drawingHand == Handedness.Invalid)
-        {
-            _isDrawing = false;
-        }
         if(_isDrawing)
         {
             Draw();
         }
-        
-        /*if (_interactable.isSelected)
-        {
-            StartDrawing();
-        }
-        else
-        {
-            StopDrawing();
-        }*/
     }
 
     /// <summary>
-    /// This function is called when the object is activated by the core feature controller.
-    /// </summary>
-    /// <author> Fabian Schmurr </author>
-    /// <param name="hand">Handedness of the hand that activated the object</param>
-    public void SetDrawingHand(Handedness hand)
-    {
-        if (hand != Handedness.Invalid)
-        {
-            _drawingHand = hand;
-        }
-    }
-
-     /// <summary>
     /// This method is used to draw a line.
     /// </summary>
     /// <author> Celina Dadschun </author>
     private void Draw()
     {
-        if (_currentDrawing == null)
+        var currentPos = _currentDrawing.GetPosition(_index);
+        if (Vector3.Distance(currentPos, tip.position) > 0.01f)
         {
-            _index = 0;
-            _currentDrawing = gameObject.AddComponent<LineRenderer>();
-            _currentDrawing.material = drawingMaterial;
-            _currentDrawing.startColor = _currentDrawing.endColor = penColors[_currentColorIndex];
-            _currentDrawing.startWidth = _currentDrawing.endWidth = penWidth;
-            _currentDrawing.positionCount = 1;
-            _currentDrawing.SetPosition(0, tip.position);
-        }
-        else
-        {
-            var currentPos = _currentDrawing.GetPosition(_index);
-            if (Vector3.Distance(currentPos, tip.position) > 0.01f)
-            {
-                _index++;
-                _currentDrawing.positionCount = _index + 1;
-                _currentDrawing.SetPosition(_index, tip.position);
-            }
-        }
+            _index++;
+            _currentDrawing.positionCount = _index + 1;
+            _currentDrawing.SetPosition(_index, tip.position);
+        }        
     }
 
     /// <summary>
-    /// This function starts the drawing by setting _isDrawing to true.
+    /// Initializes line-renderer
     /// </summary>
-    /// <author> Celina Dadschun </author>
-    public void StartDrawing()
+    /// <author>Celina Dadschun and Fabian Schmurr</author>
+    private void initRenderer()
     {
-        _isDrawing = true;
-        Draw();
+        _currentDrawing = gameObject.GetComponent<LineRenderer>();
+        _currentDrawing.material = drawingMaterial;
+        _currentDrawing.startColor = _currentDrawing.endColor = penColors[_currentColorIndex];
+        _currentDrawing.startWidth = _currentDrawing.endWidth = penWidth;
+        startNewDrawing();
     }
 
+    /// <summary>
+    /// Gets called if line renderer should start to draw again after a pause
+    /// </summary>
+    /// <author>Celina Dadschun and Fabian Schmurr</author>
+    private void startNewDrawing()
+    {
+        _index = 0;
+        _currentDrawing.positionCount = 1;
+        _currentDrawing.SetPosition(0, tip.position);
+    }
 
     /// <summary>
     /// This function end the drawing by setting _isDrawing to false.
@@ -156,6 +112,29 @@ public class VRDrawingManager : MonoBehaviour
         }
         tipMaterial.color = penColors[_currentColorIndex];
     }
+
+    /// <summary>
+    /// Generates a mesh out of the current vertices list of linerenderer
+    /// </summary>
+    /// <returns>true if successful</returns>
+    /// <author>Fabian Schmurr and Sophia</author>
+    private bool bakeCurrentDrawing()
+    {
+        if(_index < 1)
+        {
+            return false;
+        }
+        if(_currentDrawing == null)
+        {
+            return false;
+        }
+
+        //get mesh from current drawing relative to line renderer
+        Mesh drawing = new Mesh();
+        _currentDrawing.BakeMesh(drawing, true);
+        meshBuffer.addBakedDrawing(drawing, _currentDrawing.material);
+        return true;
+    }
     
     /// <summary>
     /// This function clears the drawing.
@@ -163,8 +142,41 @@ public class VRDrawingManager : MonoBehaviour
     /// <author> Celina Dadschun </author>
     public void ClearDrawing()
     {
-        _currentDrawing.positionCount = 0;
-        _index = 0;
+        if(_currentDrawing != null)
+        {
+            _currentDrawing.positionCount = 0;
+            _currentDrawing = null;
+        }
     }
 
+    /// <summary>
+    /// Sets the drawing-manager into an active state so the pen is drawing or not drawing
+    /// </summary>
+    /// <author>Fabian Schmurr</author>
+    /// <param name="actionInProgress"></param>
+    public void setIsDrawing(bool actionInProgress)
+    {
+        if(_currentDrawing == null)
+        {
+            initRenderer();
+        }
+        if (drawDeactivationTimer > drawDeactivationThreshhold && _isDrawing && !actionInProgress && bakeCurrentDrawing())
+        {
+            _isDrawing = false;
+            return;
+        }
+        if(!actionInProgress)
+        {
+            drawDeactivationTimer += Time.deltaTime;
+        }else if(actionInProgress && !_isDrawing)
+        {
+            drawDeactivationTimer = 0f;
+            startNewDrawing();
+            _isDrawing = true;
+        }
+        else
+        {
+            drawDeactivationTimer = 0f;
+        }
+    }
 }

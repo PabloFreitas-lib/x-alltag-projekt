@@ -251,6 +251,7 @@ GameObject:
   - component: {fileID: 1888066478565158693}
   - component: {fileID: 6986665449588341299}
   - component: {fileID: 5399875599137624526}
+  - component: {fileID: 4507575435256135203}
   m_Layer: 0
   m_Name: root
   m_TagString: Untagged
@@ -500,8 +501,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  mindmap: {fileID: 0}
-  text: 
+  mindmap: {fileID: 1888066477941286747}
+  label: {fileID: 4507575435256135203}
   parent: {fileID: 0}
   children: []
   isRoot: 1
@@ -531,6 +532,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectColor: {r: 0.8396226, g: 0.40631145, b: 0.2653524, a: 0}
-  highLightColor: {r: 0, g: 0, b: 0, a: 0}
+  highLightColor: {r: 0.7049661, g: 0.165089, b: 0.0704119, a: 0}
   isHighlighted: 0
   pointLight: {fileID: 0}
+--- !u!114 &4507575435256135203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888066478565158717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77edde16e1844747b3117b28331d1b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputText: {fileID: 0}
+  text: {fileID: 1888066478505316409}
+  node: {fileID: 0}

@@ -37,6 +37,7 @@ public class TerrainLoader : MonoBehaviour
             terrain = other.GetComponent<TerrainPyramid>();
             Debug.Log("test");
             terrain.isOpen = true; // Mark the terrain pyramid as open
+            terrainName = terrain.terrainName;
 
             FindObjectOfType<AudioManager>().Play(terrainName); //play audio correlating to terrain
             //map = terrain.map; // Set map to the terrain pyramid's map (if needed).
@@ -57,6 +58,7 @@ public class TerrainLoader : MonoBehaviour
             terrain.isOpen = false; // Mark the terrain pyramid as closed
 
             FindObjectOfType<AudioManager>().Stop(terrainName); //stop audio correlating to terrain
+            terrainName = null;
             //map = null; // Unset map (if needed).
         }
     }

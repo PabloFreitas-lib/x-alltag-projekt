@@ -35,7 +35,7 @@ public class AudioManager : MonoBehaviour
     public void Play(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
-        if(s == null | (s.source.isPlaying))
+        if(s == null || (s.source.isPlaying))
         {
             Debug.Log(name + " is not an appropriate sound name or it is already being played");
             return;
@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour
     public void Stop(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null | !(s.source.isPlaying))
+        if (s == null || !(s.source.isPlaying))
         {
             Debug.Log(name + " is not an appropriate sound name or the correlating sound is not being played.");
             return;

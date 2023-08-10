@@ -137,7 +137,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7312621457939325422
 RectTransform:
   m_ObjectHideFlags: 0
@@ -280,13 +280,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 8d42b2523ec6c7946a4029291364287a, type: 3}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: WhiteboardMarker, Assembly-CSharp
+        m_MethodName: SaveDrawing
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2386,6 +2386,7 @@ GameObject:
   - component: {fileID: 3347197314620502283}
   - component: {fileID: 3347197314620502282}
   - component: {fileID: 3347197314620502281}
+  - component: {fileID: 899583823}
   m_Layer: 5
   m_Name: Hand UI Canvas
   m_TagString: Untagged
@@ -2481,6 +2482,25 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &899583823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3347197314620502287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 0
+  m_CheckFor2DOcclusion: 0
+  m_CheckFor3DOcclusion: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RaycastTriggerInteraction: 1
 --- !u!1 &3347197314681816824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2749,8 +2769,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Mindmap, Assembly-CSharp
-        m_MethodName: DeleteNode
+        m_TargetAssemblyTypeName: FileSocket, Assembly-CSharp
+        m_MethodName: DeleteNodeUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3163,8 +3183,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Mindmap, Assembly-CSharp
-        m_MethodName: CreateNode
+        m_TargetAssemblyTypeName: FileSocket, Assembly-CSharp
+        m_MethodName: CreateNodeUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3456,9 +3476,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Mindmap, Assembly-CSharp
-        m_MethodName: changeMode
-        m_Mode: 3
+        m_TargetAssemblyTypeName: FileSocket, Assembly-CSharp
+        m_MethodName: CreateConnectionUI
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3649,7 +3669,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3347197315025564581
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5383,7 +5403,6 @@ GameObject:
   - component: {fileID: 3347197315588536819}
   - component: {fileID: 3347197315588536818}
   - component: {fileID: 3347197315588536817}
-  - component: {fileID: 3347197315588536816}
   m_Layer: 5
   m_Name: "objekt-hinzuf\xFCgen"
   m_TagString: Untagged
@@ -5492,22 +5511,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3347197315588536818}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
---- !u!114 &3347197315588536816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3347197315588536822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 466c33c02a8b04f81ba55813ee3e93cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cubePrefab: {fileID: 0}
-  cubeParent: {fileID: 0}
-  cubeScale: {x: 1, y: 1, z: 1}
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: CubeSpawner, Assembly-CSharp
+        m_MethodName: SpawnCubeUI
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 3347197315588536823}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3347197315675223950
 GameObject:
   m_ObjectHideFlags: 0
@@ -5630,8 +5646,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Mindmap, Assembly-CSharp
-        m_MethodName: DeleteNode
+        m_TargetAssemblyTypeName: FileSocket, Assembly-CSharp
+        m_MethodName: DeleteConnectionUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6031,7 +6047,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9163880794272454420}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: SaveSystem, Assembly-CSharp
+        m_MethodName: LoadWhiteboard
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: Whiteboard, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3717980023944432139
 GameObject:
   m_ObjectHideFlags: 0
@@ -8132,7 +8160,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5240425679882598079}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: WhiteboardMarker, Assembly-CSharp
+        m_MethodName: ClearDrawing
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &4451557373469327087
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8239,6 +8279,22 @@ PrefabInstance:
     - target: {fileID: 4719333661951163463, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
       propertyPath: m_Name
       value: ColorPicker
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ChangeColorUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: FileSocket, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
@@ -8522,6 +8578,22 @@ PrefabInstance:
       propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetColor
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ColorChanger, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7313114158203072879, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
+      propertyPath: ColorPickerEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: addb4e0f9c585f6458d6ebd152930c84, type: 3}
 --- !u!114 &3774695918591255637 stripped
@@ -8574,6 +8646,18 @@ PrefabInstance:
     - target: {fileID: 612328973638756789, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -8.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1342244944437129487, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.b
+      value: 0.31132078
+      objectReference: {fileID: 0}
+    - target: {fileID: 1342244944437129487, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.31132078
+      objectReference: {fileID: 0}
+    - target: {fileID: 1342244944437129487, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.r
+      value: 0.31132078
       objectReference: {fileID: 0}
     - target: {fileID: 4371777293683817490, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_Pivot.x
@@ -8675,9 +8759,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: LichtAuswahlUI 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4371777293834098696, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4371777293834098696, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4239883
+      objectReference: {fileID: 0}
     - target: {fileID: 4371777294152410656, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 130
+      objectReference: {fileID: 0}
+    - target: {fileID: 4371777294152410656, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_MaxValue
+      value: 130
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294152410657, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8711,13 +8807,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 4371777294152410658, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Name
+      value: TempSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 4371777294316455864, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294316455864, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294316455864, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchorMin.x
@@ -8729,11 +8829,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294389336998, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 13.5
+      value: 13.1
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294389336998, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 11.3
+      value: 12.92
+      objectReference: {fileID: 0}
+    - target: {fileID: 4371777294389336999, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Name
+      value: TempToggle
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294846013924, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8749,7 +8853,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294846013925, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4371777294869749950, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.7768781
+      objectReference: {fileID: 0}
+    - target: {fileID: 4371777294869749950, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.r
+      value: 0.0141509175
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294869749951, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchorMax.x
@@ -8757,6 +8869,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4371777294869749951, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8888838772081483876, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8888838772081483876, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.g
+      value: 0.9577489
+      objectReference: {fileID: 0}
+    - target: {fileID: 8888838772081483876, guid: c9ff1c7eb68ecb446b92babfce9ee2b6, type: 3}
+      propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:

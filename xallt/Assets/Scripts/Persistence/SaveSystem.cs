@@ -147,7 +147,7 @@ public class SaveSystem : MonoBehaviour
             //Set simple parameters
             id = node.id;
             parentId = node.parent.id;
-            text = node.text;
+            text = node.label.text.text;
             position = node.transform.position;
             size = node.transform.localScale;
 

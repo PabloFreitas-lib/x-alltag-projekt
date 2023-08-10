@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 7056331298312823638}
   - component: {fileID: -936026745922366678}
   - component: {fileID: 3442681793999656953}
+  - component: {fileID: 1297934925453979223}
   m_Layer: 0
   m_Name: node
   m_TagString: Untagged
@@ -413,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5765f2e46fd04274c8dd03233139597c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectColor: {r: 0.85924655, g: 0.8679245, b: 0.38892844, a: 0}
+  objectColor: {r: 0.8695564, g: 0.8773585, b: 0.4014329, a: 0}
   highLightColor: {r: 0.7383046, g: 0.753293, b: 0.15126534, a: 0}
   isHighlighted: 0
   pointLight: {fileID: 0}
@@ -450,6 +451,21 @@ MonoBehaviour:
   m_MinimumScaleRatio: 0.25
   m_MaximumScaleRatio: 2
   m_ScaleMultiplier: 0.25
+--- !u!114 &1297934925453979223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562724184071086511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77edde16e1844747b3117b28331d1b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputText: {fileID: 0}
+  text: {fileID: 1562724183927433154}
+  node: {fileID: 0}
 --- !u!1 &1562724185159529916
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,19 +12,6 @@ using UnityEngine.Timeline;
 /// <author> Noah Horn </author>
 public class PersistenceManager : MonoBehaviour
 {
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     ///  calls SaveWhiteboard function. Uses currently used whiteboard from Whiteboardmarker class as parameter
     ///  
@@ -37,7 +24,7 @@ public class PersistenceManager : MonoBehaviour
 
         if (whiteboardMarkerInstance != null)
             {
-                SaveSystem.SaveWhiteboard(whiteboardMarkerInstance.get_Whiteboard());
+                FindObjectOfType<SaveSystem>().SaveWhiteboard(whiteboardMarkerInstance.get_Whiteboard());
         }
         else
         {

@@ -158,6 +158,10 @@ public class Selection_checker : MonoBehaviour
                 currentSelectionTime = 0f;
             }
         }
+        else if(m_lastSelected)
+        {
+            m_lastSelected = false;
+        }
     }
 
     private void checkForRaycastSelection()

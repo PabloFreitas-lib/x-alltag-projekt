@@ -68,6 +68,7 @@ public class core_feature_controller : MonoBehaviour
     private SeperateHandVisualizer m_handVisualizerScipt;
 
     [SerializeField] private GestureRecognizer _gestureRecognizer;
+    
 
 
     /// <summary>
@@ -104,12 +105,33 @@ public class core_feature_controller : MonoBehaviour
             }
         }
 
-        _gestureRecognizer.OnGestureDetected.AddListener(handleGesture);
+        _gestureRecognizer.OnGestureDetected.AddListener(OnGestureDetected);
 
     }
 
-    private void handleGesture(Gesture gesture)
+    private void OnGestureDetected(Gesture gesture)
     {
+        switch (gesture.type)
+        {
+            case Gesture.GestureType.DETACH:
+                if (gesture.handedness == Handedness.Right)
+                {
+                    disableGameObject(Handedness.Right);
+                }
+                else
+                {
+                    disableGameObject(Handedness.Left);
+                }
+                break;
+            case Gesture.GestureType.GRAB_PEN:
+                break;
+            case Gesture.GestureType.GRAB_SCISSORS:
+                break;
+            case Gesture.GestureType.DRAW:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
         Debug.Log(gesture
             .type + "");
     }

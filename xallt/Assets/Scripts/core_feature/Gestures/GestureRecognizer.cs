@@ -37,7 +37,10 @@ public class GestureRecognizer : MonoBehaviour
     private Vector3 leftHandRoot;
     private Vector3 rightHandRoot;
 
+    private Gesture lastGestureRecognized;
+
     public GestureEvent OnGestureDetected;
+    public GestureEvent OnGestureReleased;
     
     public class GestureEvent : UnityEvent<Gesture>{}
 
@@ -53,7 +56,17 @@ public class GestureRecognizer : MonoBehaviour
         Gesture gesture = checkForGesture();
         if(gesture != null)
         {
-            Debug.Log(gesture.type + "");
+            if (!lastGestureRecognized.Equals(gesture) && OnGestureReleased != null)
+            {
+                OnGestureReleased.Invoke(lastGestureRecognized);
+            }
+
+            if (OnGestureDetected != null)
+            {
+                OnGestureDetected.Invoke(gesture);
+            }
+            
+            lastGestureRecognized = gesture;
         }
     }
 
@@ -172,10 +185,12 @@ public class GestureRecognizer : MonoBehaviour
         // For each finger
         for (int f = 0; f < joinData.Count; f++)
         {
-            //TODO make palm a center of coordinate system in this case 
+            //TODO calibrate  
+            
             //Vector3 fingerRelativePos = hand.transform.InverseTransformPoint(fingers[f].transform.position);
             float difference = Vector3.Magnitude(joinData[f]) - Vector3.Magnitude(gesture.joints[f]);
             // If at least one finger does not enter the threshold we discard the gesture
+            //TODO do not throw Gesture away if one single finger was over threshold 
             if (Mathf.Abs(difference) > threshhold)
             {
                 discardGesture = true;

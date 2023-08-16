@@ -76,19 +76,19 @@ MonoBehaviour:
     loop: 1
     source: {fileID: 0}
   - name: selectNode
-    clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
+    clip: {fileID: 8300000, guid: add37a16ffaeb4e1fb127632f7dfd48d, type: 3}
     volume: 1
     spatialBlend: 0
     loop: 0
     source: {fileID: 0}
-  - name: pickTool
+  - name: pickPen
     clip: {fileID: 0}
     volume: 1
     spatialBlend: 0
     loop: 0
     source: {fileID: 0}
   - name: acceptAction
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 41931be3a7c494e2aa309d7fbad62dd1, type: 3}
     volume: 1
     spatialBlend: 0
     loop: 0
@@ -100,19 +100,25 @@ MonoBehaviour:
     loop: 0
     source: {fileID: 0}
   - name: cutScissors
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: e38750b72dbcd1148894dae3696902e0, type: 3}
     volume: 1
     spatialBlend: 0
     loop: 0
     source: {fileID: 0}
   - name: trashbin
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: ee3d41ba12e17904bab11239897e9542, type: 3}
     volume: 1
     spatialBlend: 0
     loop: 0
     source: {fileID: 0}
   - name: drawPen
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: e7702f582bf5242d99834adad598d0ec, type: 3}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: tapUI
+    clip: {fileID: 8300000, guid: 8e6b315903a344b619a71ae3ce391cf0, type: 3}
     volume: 1
     spatialBlend: 0
     loop: 0

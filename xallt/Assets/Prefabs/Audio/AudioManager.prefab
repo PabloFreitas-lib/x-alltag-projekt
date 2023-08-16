@@ -45,15 +45,75 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - name: selectNode
-    clip: {fileID: 8300000, guid: add37a16ffaeb4e1fb127632f7dfd48d, type: 3}
-    volume: 1
-    spatialBlend: 0
-    loop: 0
-    source: {fileID: 0}
   - name: Mountain2
     clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
     volume: 1
     spatialBlend: 0
     loop: 1
+    source: {fileID: 0}
+  - name: Mountain1
+    clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
+    volume: 1
+    spatialBlend: 0
+    loop: 1
+    source: {fileID: 0}
+  - name: Forest1
+    clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
+    volume: 1
+    spatialBlend: 0
+    loop: 1
+    source: {fileID: 0}
+  - name: Desert1
+    clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
+    volume: 1
+    spatialBlend: 0
+    loop: 1
+    source: {fileID: 0}
+  - name: Desert2
+    clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
+    volume: 1
+    spatialBlend: 0
+    loop: 1
+    source: {fileID: 0}
+  - name: selectNode
+    clip: {fileID: 8300000, guid: 7673a29e64608499e871326f9cb54dbb, type: 3}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: pickTool
+    clip: {fileID: 0}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: acceptAction
+    clip: {fileID: 0}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: denyAction
+    clip: {fileID: 0}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: cutScissors
+    clip: {fileID: 0}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: trashbin
+    clip: {fileID: 0}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: drawPen
+    clip: {fileID: 0}
+    volume: 1
+    spatialBlend: 0
+    loop: 0
     source: {fileID: 0}

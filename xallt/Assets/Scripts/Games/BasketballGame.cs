@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class BasketballGame : MonoBehaviour
 {
-    public Collider collider;
     public Text text;
     private int counter;
 
@@ -16,22 +15,16 @@ public class BasketballGame : MonoBehaviour
         text.text = counter.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.CompareTag("Ball"))
+        if (collider.gameObject.CompareTag("Ball"))
         {
             Debug.Log(collider.gameObject);
-            increaseScore();
+            IncreaseScore();
         }
     }
 
-    private void increaseScore()
+    private void IncreaseScore()
     {
         counter++;
         text.text = counter.ToString();

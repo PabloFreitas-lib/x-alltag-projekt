@@ -10,6 +10,8 @@ public class LightController : MonoBehaviour
 {
     private CustomLightScript[] lights;
 
+    private CustomEmissionScript[] emissions;
+
     [Header("UI Components")]
     public UIColorPickButton colorPickButton; // Color picker button for selecting a color
     public Slider brightnessSlider; // UI Slider for brightness control
@@ -31,6 +33,9 @@ public class LightController : MonoBehaviour
     {
         // Find all light components with the CustomLightScript attached
         lights = FindObjectsOfType<CustomLightScript>();
+
+        // Find all material components with the CustomEmissionScript attached
+        emissions = FindObjectsOfType<CustomEmissionScript>();
 
         // Starting point on slider
         tempSlider = 0f;
@@ -68,6 +73,14 @@ public class LightController : MonoBehaviour
         foreach (CustomLightScript light in lights)
         {
             light.SetColor(color);
+        }
+    }
+
+    public void SetEmissionColor(Color color)
+    {
+        foreach (CustomEmissionScript emission in emissions)
+        {
+            emission.SetEmissionColor(color);
         }
     }
 
@@ -128,6 +141,21 @@ public class LightController : MonoBehaviour
     /// <author> Christoph Dreier </author>
     private void Update()
     {
+
+        Color currentColor;
+        if (useTemperatureControl)
+        {
+            currentColor = new Color(1f, ((169f + (tempSlider / 2)) / 255), ((87 + tempSlider) / 255));
+        }
+        else
+        {
+            currentColor = colorPickButton.newcolor;
+        }
+
+        SetColor(currentColor);
+        SetBrightness(brightness);
+        SetEmissionColor(currentColor);
+
         if (activateAllLights)
         {
             // Activate all lights
@@ -143,22 +171,8 @@ public class LightController : MonoBehaviour
             {
                 light.gameObject.SetActive(false);
             }
-        }
 
-        Color currentColor;
-        if (useTemperatureControl)
-        {
-            // Calculate the current color based on the temperature slider
-            currentColor = new Color(1f, ((169f + (tempSlider / 2)) / 255), ((87 + tempSlider) / 255));
+            SetEmissionColor(Color.black);
         }
-        else
-        {
-            // Use the color selected with the Color Picker button
-            currentColor = colorPickButton.newcolor;
-        }
-
-        // Set the current color and brightness for all lights
-        SetColor(currentColor);
-        SetBrightness(brightness);
     }
 }

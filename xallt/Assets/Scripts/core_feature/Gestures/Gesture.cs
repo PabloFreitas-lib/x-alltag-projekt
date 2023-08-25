@@ -2,15 +2,34 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Class to represent a gesture. Gives information about the defined type
+/// and the time for that the gesture is currently performed
+/// </summary>
+/// <author>Fabian Schmurr</author>
 public class Gesture : MonoBehaviour
 {
-
+    /// <summary>
+    /// List of position data that is used to detect a gesture
+    /// </summary>
     public List<Vector3> joints;
 
+    /// <summary>
+    /// Type of this gesture
+    /// </summary>
     public GestureType type;
 
+    /// <summary>
+    /// Which hand is performing this gesture
+    /// </summary>
     public UnityEngine.XR.Hands.Handedness handedness;
 
+    /// <summary>
+    /// Overloading of Equals-Method, so equality is only based on the defined type
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns>true</returns> if equal
+    /// <author>Fabian Schmurr</author>
     protected bool Equals(Gesture other)
     {
         return base.Equals(other) && type == other.type && handedness == other.handedness;
@@ -36,6 +55,10 @@ public class Gesture : MonoBehaviour
         this.handedness = handedness;
     }
 
+    /// <summary>
+    /// Possible types of a gesture
+    /// </summary>
+    /// <author>Fabian Schmurr</author
     public enum GestureType
     {
         DETACH,

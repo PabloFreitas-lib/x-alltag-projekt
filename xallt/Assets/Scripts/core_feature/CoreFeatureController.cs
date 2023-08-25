@@ -68,6 +68,9 @@ public class CoreFeatureController : MonoBehaviour
     [SerializeField] 
     private GestureRecognizer _gestureRecognizer;
 
+    [SerializeField]
+    private RelocationOnInit _relocationOnInit;
+
     [SerializeField] 
     private float detachGestureTime = 2f;
     private float leftDetachTimer = 0f;
@@ -146,7 +149,7 @@ public class CoreFeatureController : MonoBehaviour
             case Gesture.GestureType.DRAW:
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                break;
         }
     }
 
@@ -194,6 +197,7 @@ public class CoreFeatureController : MonoBehaviour
                     }
                     _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
                     _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
+                    _relocationOnInit.updateData(getHandDataDictionary(Handedness.Left, _relocationOnInit.handLandMarks), Handedness.Left);
                 }
                 else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.LeftHandRootPose | XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints))
                 {
@@ -201,6 +205,7 @@ public class CoreFeatureController : MonoBehaviour
                     {
                         updateLeft();
                     }
+                    _relocationOnInit.updateData(getHandDataDictionary(Handedness.Left, _relocationOnInit.handLandMarks), Handedness.Left);
                     _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
                 }
                 else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.RightHandJoints | XRHandSubsystem.UpdateSuccessFlags.RightHandRootPose))

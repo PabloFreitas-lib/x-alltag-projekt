@@ -85,6 +85,7 @@ public class Gesture : MonoBehaviour
         DETACH,
         GRAB_PEN,
         GRAB_SCISSORS,
-        DRAW
+        DRAW,
+        STONE
     }
 }

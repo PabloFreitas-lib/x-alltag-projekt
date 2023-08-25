@@ -132,11 +132,11 @@ public class CoreFeatureController : MonoBehaviour
             case Gesture.GestureType.DETACH:
                 if (gesture.handedness == Handedness.Right && m_rightObjInInteractionPos)
                 {
-                    rightDetachTimer += Time.deltaTime;
+                    rightDetachTimer =  gesture.getTimePerformed();
                 }
                 else if (gesture.handedness == Handedness.Left && m_leftObjInInteractionPosition)
                 {
-                    leftDetachTimer += Time.deltaTime;
+                    leftDetachTimer = gesture.getTimePerformed();
                 }
                 break;
             case Gesture.GestureType.GRAB_PEN:

@@ -27,7 +27,7 @@ public class GestureRecognizer : MonoBehaviour
     /// Max deviation per joint that is allowed.
     /// If a deviation above this threshold occurs, a gesture is not detected
     /// </summary>
-    [SerializeField] private float threshhold = 0.05f;
+    [SerializeField] private float threshhold = 0.08f;
 
     /// <summary>
     /// This value is used if a gesture gets saved and indicates
@@ -212,11 +212,6 @@ public class GestureRecognizer : MonoBehaviour
                 results.Add(new Result(gesture, gestureError));
             }
         }
-
-        if (results != null)
-        {
-            results.Sort();
-        }
         // If we've found something, we'll return it
         // If we haven't found anything, we return it anyway (newly created object)
         return results;
@@ -261,7 +256,7 @@ public class GestureRecognizer : MonoBehaviour
             float difference = Vector3.Magnitude(joinData[f]) - Vector3.Magnitude(gesture.joints[f]);
             // If at least one finger does not enter the threshold we discard the gesture
             //TODO do not throw Gesture away if one single finger was over threshold 
-            if (Mathf.Abs(difference) > threshhold)
+            if (Mathf.Abs(difference) > gesture.threshold)
             {
                 discardGesture = true;
                 break;
@@ -274,6 +269,7 @@ public class GestureRecognizer : MonoBehaviour
         // If we have to discard the gesture, we skip it
         if (discardGesture)
         {
+            gesture.resetTimePerformed();
             return -1f;
         }
 
@@ -288,12 +284,19 @@ public class GestureRecognizer : MonoBehaviour
     private Gesture getNearestGesture(List<Result> results)
     {
         Gesture gesture = null;
-        if (results.Count > 0)
+        if(results.Count > 0)
         {
-            results.Sort();
             Result bestResult = results[^1];
+            if (results.Count > 1)
+            {
+                results.Sort((x, y) => y.error.CompareTo(x.error));
+                bestResult = results[^1];
+            }
+
             gesture = bestResult._gesture;
+            gesture.increaseTimePerformed(Time.deltaTime);
         }
+
         return gesture;
     }
 
@@ -325,6 +328,7 @@ public class GestureRecognizer : MonoBehaviour
         toSafe.joints = joints;
         toSafe.type = type;
         toSafe.handedness = handForGesture;
+        toSafe.threshold = threshhold;
     }
 
 

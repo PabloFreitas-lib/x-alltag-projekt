@@ -25,6 +25,14 @@ public class Gesture : MonoBehaviour
     public UnityEngine.XR.Hands.Handedness handedness;
 
     /// <summary>
+    /// Indicates for how long this gesture is currently performed
+    /// </summary>
+    private float timePerfored = 0f;
+
+    [SerializeField]
+    public float threshold = 0.1f;
+
+    /// <summary>
     /// Overloading of Equals-Method, so equality is only based on the defined type
     /// </summary>
     /// <param name="other"></param>
@@ -48,11 +56,24 @@ public class Gesture : MonoBehaviour
         return HashCode.Combine(base.GetHashCode(), (int)type, (int)handedness);
     }
 
-    public Gesture(GestureType type, List<Vector3> joints, UnityEngine.XR.Hands.Handedness handedness)
+    public Gesture(GestureType type, List<Vector3> joints, UnityEngine.XR.Hands.Handedness handedness, float threshold)
     {
         this.joints = joints;
         this.type = type;
         this.handedness = handedness;
+        this.threshold = threshold;
+    }
+
+    public float getTimePerformed()
+    { return timePerfored; }
+
+    public void resetTimePerformed()
+    {
+        timePerfored = 0f;
+    }
+    public void increaseTimePerformed(float delta)
+    {
+        timePerfored += delta;
     }
 
     /// <summary>

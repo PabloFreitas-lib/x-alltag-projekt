@@ -19,25 +19,40 @@ public class NodesToPrompt : MonoBehaviour
     //mindmap given as argument ? or by findobject ? 
     public Mindmap mindmap;
 
-    void NodestoPromt()
-    {
-        //findObject of Type -> get mindmap and select certain mindmap 
-        //mindmap = FindObjectOfType<Mindmap>().;
-        
-    }
+    //Gameobject that was fileSocket script as component
+    public GameObject objectFileSocket;
+
+   
 
     //basic version just take all label entrys of mindmap and add them together
     void connectPromptTexts()
     {
-        for(int i= 0; i < mindmap.nodes.Count; i++)
+        if (objectFileSocket != null)
         {
-            prompt = prompt + mindmap.nodes[i] + " ";
+            FileSocket fileSocket = objectFileSocket.GetComponent<FileSocket>();
+            if (fileSocket != null)
+            {
+                mindmap = fileSocket.map;
+
+
+                for (int i = 0; i < mindmap.nodes.Count; i++)
+                {
+                    prompt = prompt + mindmap.nodes[i] + " ";
+                }
+                Console.WriteLine(prompt);
+                UnityEngine.Debug.Log("ergebnis:" + prompt);
+
+
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("Script wasnt found on gameobject");
+            }
         }
-        Console.WriteLine(prompt);
-        //texts[]
-        //for (i < texts[].length){
-        //prompt = prompt + texts[i]
-        //oder was mit append
+        else 
+        {
+            UnityEngine.Debug.LogError("Gameobject wasnt found");
+        }
     }
 
     void startStableDiffusion()
@@ -45,7 +60,7 @@ public class NodesToPrompt : MonoBehaviour
         Process stableDiffusion = new Process();
 
         stableDiffusion.StartInfo.FileName = "C:\\Users\\Noah\\stable-diffusion-webui\\webui-user.bat";
-        ///ßßßßßßßßßßßßßßßß\\\
+        
         stableDiffusion.Start();
     }
 

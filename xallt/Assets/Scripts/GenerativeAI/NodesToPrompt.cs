@@ -1,6 +1,9 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class NodesToPrompt : MonoBehaviour
@@ -14,12 +17,12 @@ public class NodesToPrompt : MonoBehaviour
     //muss die länge festgelegt werden iwo ? 
 
     //mindmap given as argument ? or by findobject ? 
-    public Mindmap mindmap = new Mindmap();
+    public Mindmap mindmap;
 
     void NodestoPromt()
     {
         //findObject of Type -> get mindmap and select certain mindmap 
-        mindmap = FindObjectOfType<Mindmap>().;
+        //mindmap = FindObjectOfType<Mindmap>().;
         
     }
 
@@ -37,10 +40,21 @@ public class NodesToPrompt : MonoBehaviour
         //oder was mit append
     }
 
+    void startStableDiffusion()
+    {
+        Process stableDiffusion = new Process();
+
+        stableDiffusion.StartInfo.FileName = "C:\\Users\\Noah\\stable-diffusion-webui\\webui-user.bat";
+        ///ßßßßßßßßßßßßßßßß\\\
+        stableDiffusion.Start();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        startStableDiffusion();
+        connectPromptTexts();
+
     }
 
     // Update is called once per frame

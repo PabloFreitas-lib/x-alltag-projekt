@@ -11,6 +11,8 @@ public class GameSelection : MonoBehaviour
     public GameObject DartGame;
     public Button Baskets;
     public GameObject BasketGame;
+    public Button Stack;
+    public GameObject StackGame;
 
     private List<Button> GameButtons;
     private List<GameObject> Games;
@@ -23,10 +25,13 @@ public class GameSelection : MonoBehaviour
         GameButtons.Add(Cans);
         GameButtons.Add(Darts);
         GameButtons.Add(Baskets);
+        GameButtons.Add(Stack);
 
         Games.Add(CanGame);
         Games.Add(DartGame);
         Games.Add(BasketGame);
+        Games.Add(StackGame);
+
 
 
     }

@@ -9,6 +9,7 @@ public class TetrisGame : MonoBehaviour
     public List<GameObject> tetrisPiecePrefabs;  // List of Tetris piece prefabs
     public Transform tetrisPieceSpawnPoint;
     public Transform basePosition;
+    public GameObject piecesParent; // GameObject to store spawned objects
     [Header("UI")]
     public Text scoreText;
     public Text timerText;
@@ -60,6 +61,8 @@ public class TetrisGame : MonoBehaviour
     private void SpawnTetrisPiece()
     {
         GameObject newTetrisPiece = Instantiate(GetRandomTetrisPiecePrefab(), tetrisPieceSpawnPoint.position, Quaternion.identity);
+        newTetrisPiece.transform.rotation = Quaternion.Euler(0f, 0, -90f);
+        newTetrisPiece.transform.parent = piecesParent.transform;
         tetrisPieces.Add(newTetrisPiece);
     }
 

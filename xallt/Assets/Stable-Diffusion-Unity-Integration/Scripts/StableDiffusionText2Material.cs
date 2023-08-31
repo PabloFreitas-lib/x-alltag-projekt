@@ -246,8 +246,8 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
                 Directory.CreateDirectory(mat);
 
             // If the file already exists, delete it
-            if (File.Exists(filename))
-                File.Delete(filename);
+            if (System.IO.File.Exists(filename))
+                System.IO.File.Delete(filename);
         }
         catch (Exception e)
         {
@@ -374,7 +374,7 @@ public class StableDiffusionText2Material : StableDiffusionGenerator
                 try
                 {
                     // Read back the image into a texture
-                    if (File.Exists(filename))
+                    if (System.IO.File.Exists(filename))
                     {
                         Texture2D texture = new Texture2D(2, 2);
                         texture.LoadImage(imageData);

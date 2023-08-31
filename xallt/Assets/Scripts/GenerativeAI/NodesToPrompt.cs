@@ -59,7 +59,7 @@ public class NodesToPrompt : MonoBehaviour
     {
         Process stableDiffusion = new Process();
 
-        stableDiffusion.StartInfo.FileName = "C:\\Users\\Noah\\stable-diffusion-webui\\webui-user.bat";
+        stableDiffusion.StartInfo.FileName = "C:\\USERS\\ml\\stable-diffusion-webui\\webui-user.bat";
         
         stableDiffusion.Start();
     }

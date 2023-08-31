@@ -148,7 +148,7 @@ public class SelectionChecker : MonoBehaviour
 
     private void checkForGestureSelection()
     {
-        Debug.Log("current pen timer:\t" + currentSelectionTime);
+        //Debug.Log("current pen timer:\t" + currentSelectionTime);
         if (!m_lastSelected && currentSelectionTime > 0)
         {
             currentSelectionTime += Time.deltaTime;

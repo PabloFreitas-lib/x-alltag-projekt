@@ -55,19 +55,12 @@ public class NodesToPrompt : MonoBehaviour
         }
     }
 
-    void startStableDiffusion()
-    {
-        Process stableDiffusion = new Process();
-
-        stableDiffusion.StartInfo.FileName = "C:\\USERS\\ml\\stable-diffusion-webui\\webui-user.bat";
-        
-        stableDiffusion.Start();
-    }
+  
 
     // Start is called before the first frame update
     void Start()
     {
-        startStableDiffusion();
+       
         connectPromptTexts();
 
     }

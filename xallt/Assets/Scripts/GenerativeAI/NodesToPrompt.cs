@@ -72,14 +72,14 @@ public class NodesToPrompt : MonoBehaviour
 
 
     /// <summary>
-    /// sets prompt on StableDiffusionImage2Material instance on ImageKICube gameobject and starts the generation of the Image 
+    /// sets prompt on StableDiffusionText2Material instance on ImageKICube gameobject and starts the generation of the Image 
     /// </summary>
     /// <author>Noah Horn</author>
     public void setPromptStartGenerate()
     {
         //get class instance from gameobject ImageKICUbe 
-       StableDiffusionImage2Material stableSkript = GameObject.Find("ImageKICube").GetComponent<StableDiffusionImage2Material>();
-           
+       StableDiffusionText2Material stableSkript = GameObject.Find("ImageKICube").GetComponent<StableDiffusionText2Material>();
+       
       if (stableSkript != null)
       {
         stableSkript.prompt = prompt;
@@ -87,7 +87,7 @@ public class NodesToPrompt : MonoBehaviour
       }
       else
       {
-        UnityEngine.Debug.LogError("ImageKICube GameObject or StableDiffusionImage2Material-component not found.");
+        UnityEngine.Debug.LogError("ImageKICube GameObject or StableDiffusionText2Material-component not found.");
       }
 
     }

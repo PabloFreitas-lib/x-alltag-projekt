@@ -3,105 +3,41 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-public class Clock : UnityEngine.MonoBehaviour
+public class Clock : MonoBehaviour
 {
-    public GameObject bigZeiger;
-    public GameObject smallZeiger;
-    public GameObject secondZeiger;
-    private Quaternion bigRot;
-    private Quaternion smallRot;
+    public Transform bigZeiger;
+    public Transform smallZeiger;
+    public Transform secondZeiger;
 
-    private System.DateTime time = System.DateTime.Now;
-
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        ClockMove();
+        StartCoroutine(UpdateClock());
     }
 
-    private void ClockMove()
-    {
-        StartCoroutine("UpdateBig");
-        StartCoroutine("UpdateSmall");
-        StartCoroutine("UpdateSecond");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
-
-    IEnumerator UpdateBig()
+    private IEnumerator UpdateClock()
     {
         while (true)
         {
-            // Die jetzige Uhrzeit
             System.DateTime time = System.DateTime.Now;
 
-            // Die Minutenzahl der Uhrzeit
-            float minutes = time.Minute;
-
-            // Rotationswinkel des großen Zeigers
-            Vector3 currentRotationBig = bigZeiger.transform.eulerAngles;
-
-            // Aktualisieren der Rotation vom großen Zeiger
-            currentRotationBig.x = minutes * 6f;
-
-            // Rotation auf den großen Zeiger übernehmen
-            bigZeiger.transform.eulerAngles = currentRotationBig;
-
-            // Warte eine Sekunde.
-            yield return new WaitForSeconds(1);
-        }
-    }
-
-    IEnumerator UpdateSmall()
-    {
-        while(true) {
-
-            // Die jetzige Uhrzeit
-            System.DateTime time = System.DateTime.Now;
-
-            // Die Stundenzahl der Uhrzeit
-            float hours = time.Hour;
-
-            // Rotationswinkel des kleinen Zeigers
-            Vector3 currentRotationSmall = smallZeiger.transform.eulerAngles;
-
-            // Aktualisieren der Rotation vom kleinen Zeiger
-            currentRotationSmall.x = hours * 30f;
-
-            // Rotation auf den kleinen Zeiger übernehmen
-            smallZeiger.transform.eulerAngles = currentRotationSmall;
-
-            // Warte eine Sekunde.
-            yield return new WaitForSeconds(1);
-        }
-    }
-
-
-    IEnumerator UpdateSecond()
-    {
-        while (true) {
-
-            // Die jetzige Uhrzeit
-            System.DateTime time = System.DateTime.Now;
-
-            // Die Sekundenzahl der Uhrzeit
             float seconds = time.Second;
+            float minutes = time.Minute;
+            float hours = time.Hour % 12; // Modulo 12, um eine 12-Stunden-Uhr zu haben
 
-            // Rotationswinkel des großen Zeigers
-            Vector3 currentRotationSeconds = secondZeiger.transform.eulerAngles;
+            float secondRotation = seconds * 6f; // 360 Grad / 60 Sekunden = 6 Grad pro Sekunde
+            float minuteRotation = (minutes + seconds / 60f) * 6f; // 360 Grad / 60 Minuten = 6 Grad pro Minute
+            float hourRotation = (hours + minutes / 60f) * 30f; // 360 Grad / 12 Stunden = 30 Grad pro Stunde
 
-            // Aktualisieren der Rotation vom großen Zeiger
-            currentRotationSeconds.x = seconds * 6f;
+            // Großer Zeiger (Minute)
+            bigZeiger.localRotation = Quaternion.Euler(0f, minuteRotation, 0f);
 
-            // Rotation auf den kleinen Zeiger übernehmen
-            secondZeiger.transform.eulerAngles = currentRotationSeconds;
+            // Kleiner Zeiger (Stunde)
+            smallZeiger.localRotation = Quaternion.Euler(0f, hourRotation, 0f);
 
-            // Warte eine Sekunde.
-            yield return new WaitForSeconds(1);
+            // Sekundenzeiger
+            secondZeiger.localRotation = Quaternion.Euler(0f, secondRotation, 0f);
+
+            yield return new WaitForSeconds(1f); // Warte eine Sekunde.
         }
     }
 }

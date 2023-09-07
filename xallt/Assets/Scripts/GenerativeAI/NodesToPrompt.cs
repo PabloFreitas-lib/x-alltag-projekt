@@ -9,8 +9,7 @@ using UnityEngine;
 public class NodesToPrompt : MonoBehaviour
 {
 
-    //mindmap muss selected werden ggf als constructor argument ? 
-    //hab ich iwo in whiteboard gemacht
+    
 
     //prompt for image generation
     public string prompt;
@@ -22,46 +21,80 @@ public class NodesToPrompt : MonoBehaviour
     //Gameobject that was fileSocket script as component
     public GameObject objectFileSocket;
 
-   
+   //was soll objectFileSocket hier überhaupt sein ? 
 
-    //basic version just take all label entrys of mindmap and add them together
-    void connectPromptTexts()
+    /// <summary>
+    /// Function is called through a button on hand UI
+    /// Checks whether FileSocket exists, checks if a mindmap is open (saved in fileSocket)
+    /// If Mindmap is open connects all nodes to a string prompt and sets it to the prompt in textToMaterial.cs
+    /// </summary>
+    /// <author>
+    /// Noah Horn
+    /// </author>
+    
+    public void connectPromptTexts()
     {
-        if (objectFileSocket != null)
-        {
-            FileSocket fileSocket = objectFileSocket.GetComponent<FileSocket>();
+        FileSocket fileSocket = GameObject.Find("File-Socket").GetComponent<FileSocket>();
             if (fileSocket != null)
             {
-                mindmap = fileSocket.map;
-
-
-                for (int i = 0; i < mindmap.nodes.Count; i++)
+                if (fileSocket.socketFile.isOpen)
                 {
-                    prompt = prompt + mindmap.nodes[i] + " ";
+                    mindmap = fileSocket.map;
+
+
+                    for (int i = 0; i < mindmap.nodes.Count; i++)
+                    {
+                        prompt = prompt + mindmap.nodes[i] + " ";
+                    }
+                    Console.WriteLine(prompt);
+                    UnityEngine.Debug.Log("ergebnis:" + prompt);
+
+                    if (!string.IsNullOrEmpty(prompt))
+                    {
+                    setPromptStartGenerate();
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.LogError("Prompt is empty");
+                    }
                 }
-                Console.WriteLine(prompt);
-                UnityEngine.Debug.Log("ergebnis:" + prompt);
-
-
+                else
+                {
+                    UnityEngine.Debug.LogError("Keine Mindmap aktiv. FileCube auf FileSocket ziehen");
+                }
             }
             else
             {
-                UnityEngine.Debug.LogError("Script wasnt found on gameobject");
+                UnityEngine.Debug.LogError("Script or Gameobject wasnt found");
             }
-        }
-        else 
-        {
-            UnityEngine.Debug.LogError("Gameobject wasnt found");
-        }
+        
     }
 
-  
 
+    /// <summary>
+    /// sets prompt on StableDiffusionImage2Material instance on ImageKICube gameobject and starts the generation of the Image 
+    /// </summary>
+    /// <author>Noah Horn</author>
+    public void setPromptStartGenerate()
+    {
+        //get class instance from gameobject ImageKICUbe 
+       StableDiffusionImage2Material stableSkript = GameObject.Find("ImageKICube").GetComponent<StableDiffusionImage2Material>();
+           
+      if (stableSkript != null)
+      {
+        stableSkript.prompt = prompt;
+        stableSkript.Generate();
+      }
+      else
+      {
+        UnityEngine.Debug.LogError("ImageKICube GameObject or StableDiffusionImage2Material-component not found.");
+      }
+
+    }
     // Start is called before the first frame update
     void Start()
     {
        
-        connectPromptTexts();
 
     }
 

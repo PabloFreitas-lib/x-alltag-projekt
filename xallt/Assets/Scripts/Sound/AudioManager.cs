@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
+    public Slider volumeSlider;
 
     /// <summary>
     /// Creates an audio source for every sound in the editor defined sounds list on launch.
@@ -60,24 +61,21 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
 
-
-    public Slider volumeSlider;
-
-    // Start is called before the first frame update
+    /// <summary>
+    /// Connects Slider with Interface
+    /// </summary>
+    /// <author>Celina Dadschun, Minoush Prieb</author>
     void Start()
     {
-        //Slider verknüpfen
         volumeSlider.onValueChanged.AddListener(ChangeVolume);
     }
 
+    /// <summary>
+    /// Changes System Volume according to Slider value
+    /// </summary>
+    /// <author>Celina Dadschun, Minoush Prieb</author>
     void ChangeVolume(float newVolume)
     {
-        //Systemlautstärke entsprechend des Slider-Werts anpassen
         AudioListener.volume = newVolume;
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.Audio;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Maps statements like "Sound with name X and properties Y should be played" to the UnityEngine.Audio logic.
@@ -57,5 +58,26 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.Stop();
+    }
+
+
+    public Slider volumeSlider;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Slider verknüpfen
+        volumeSlider.onValueChanged.AddListener(ChangeVolume);
+    }
+
+    void ChangeVolume(float newVolume)
+    {
+        //Systemlautstärke entsprechend des Slider-Werts anpassen
+        AudioListener.volume = newVolume;
+    }
+    // Update is called once per frame
+    void Update()
+    {
+
     }
 }

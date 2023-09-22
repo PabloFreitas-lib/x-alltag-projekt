@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 33317395272862110}
   - component: {fileID: 23272747751323546}
   - component: {fileID: 8137250977669092846}
-  - component: {fileID: -502662717425579038}
   - component: {fileID: -8061184928682058388}
+  - component: {fileID: -6344109045707464560}
   m_Layer: 0
   m_Name: cherries
-  m_TagString: Untagged
+  m_TagString: Fruit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,20 +102,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &-502662717425579038
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1802840387486672}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300012, guid: 3f4d2118f6a772542a1635ef5bfa6982, type: 3}
 --- !u!114 &-8061184928682058388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,3 +114,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45abb306b048d7d40848eccd8ffc5df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &-6344109045707464560
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1802840387486672}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0014578919, y: 0.0012921381, z: 0.0016079434}
+  m_Center: {x: -0.00003839523, y: -0.000029923825, z: 0}

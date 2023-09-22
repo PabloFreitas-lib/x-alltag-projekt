@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 33505135154611496}
   - component: {fileID: 23923918548762266}
   - component: {fileID: -8333482966519375566}
-  - component: {fileID: -3692774326394593903}
   - component: {fileID: 201769383722340986}
+  - component: {fileID: -8009416761275677210}
   m_Layer: 0
   m_Name: lemon
-  m_TagString: Untagged
+  m_TagString: Fruit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -102,20 +102,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &-3692774326394593903
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1638444836145330}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300002, guid: 3f4d2118f6a772542a1635ef5bfa6982, type: 3}
 --- !u!114 &201769383722340986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,3 +114,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45abb306b048d7d40848eccd8ffc5df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &-8009416761275677210
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1638444836145330}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0016436265, y: 0.0012631235, z: 0.0015860561}
+  m_Center: {x: -0.0000068299996, y: 0.000026103424, z: 0}

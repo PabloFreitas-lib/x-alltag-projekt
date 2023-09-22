@@ -20,6 +20,9 @@ public class GameSelection : MonoBehaviour
     public GameObject dart;
     public GameObject ball;
 
+    public GameObject katanaR;
+    public GameObject katanaL;
+
     private void Start()
     {
         GameButtons = new List<Button>();
@@ -69,5 +72,11 @@ public class GameSelection : MonoBehaviour
     public void SpawnObject()
     {
         Instantiate(dart,transform.position, Quaternion.identity);
+    }
+
+    public void ChangeNinjaMode()
+    {
+        katanaL.SetActive(!katanaL.activeSelf);
+        katanaR.SetActive(!katanaR.activeSelf);
     }
 }

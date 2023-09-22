@@ -1,6 +1,7 @@
 using System;
 using UnityEngine.Audio;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Maps statements like "Sound with name X and properties Y should be played" to the UnityEngine.Audio logic.
@@ -10,6 +11,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public Sound[] sounds;
+    public Slider volumeSlider;
 
     /// <summary>
     /// Creates an audio source for every sound in the editor defined sounds list on launch.
@@ -57,5 +59,23 @@ public class AudioManager : MonoBehaviour
             return;
         }
         s.source.Stop();
+    }
+
+    /// <summary>
+    /// Connects Slider with Interface
+    /// </summary>
+    /// <author>Celina Dadschun, Minoush Prieb</author>
+    void Start()
+    {
+        volumeSlider.onValueChanged.AddListener(ChangeVolume);
+    }
+
+    /// <summary>
+    /// Changes System Volume according to Slider value
+    /// </summary>
+    /// <author>Celina Dadschun, Minoush Prieb</author>
+    void ChangeVolume(float newVolume)
+    {
+        AudioListener.volume = newVolume;
     }
 }

@@ -17,6 +17,9 @@ public class GameSelection : MonoBehaviour
     private List<Button> GameButtons;
     private List<GameObject> Games;
 
+    public GameObject dart;
+    public GameObject ball;
+
     private void Start()
     {
         GameButtons = new List<Button>();
@@ -61,5 +64,10 @@ public class GameSelection : MonoBehaviour
             }
 
         }
+    }
+
+    public void SpawnObject()
+    {
+        Instantiate(dart,transform.position, Quaternion.identity);
     }
 }

@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour
     {
         int randomFruit = Random.Range(0, 10);
         int randomSpawn = Random.Range(0, 4);
-        float randomForceFactor = Random.Range(0.7f, 1.3f);
+        float randomForceFactor = Random.Range(1f, 1.3f);
         int randomDirection = Random.Range(-30, 30);
 
         Transform spawn = spawnPoints[randomSpawn];

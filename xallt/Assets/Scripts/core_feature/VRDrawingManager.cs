@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 
 /// <summary>
@@ -7,7 +8,6 @@ using UnityEngine;
 /// <author> Celina Dadschun, Fabian Schmurr </author>
 public class VRDrawingManager : MonoBehaviour
 {
-    public uint id;
     [Header("Pen Properties")]
     public Transform tip;
     public Material drawingMaterial;
@@ -82,6 +82,7 @@ public class VRDrawingManager : MonoBehaviour
     /// <author>Celina Dadschun and Fabian Schmurr</author>
     private void startNewDrawing()
     {
+        FindObjectOfType<SaveSystem>().addFreeDraw(new FreeDrawWrapper(_currentDrawing));
         _index = 0;
         _currentDrawing.positionCount = 1;
         _currentDrawing.SetPosition(0, tip.position);

@@ -46,9 +46,11 @@ public class SelectionChecker : MonoBehaviour
     /// </summary>
     private float selectionGestureTime = 1f;
 
-    private float currentSelectionTime = 0f;
     private bool m_lastSelected = false;
 
+    /// <summary>
+    /// This is the last gesture that was accepted for object activation
+    /// </summary>
     private Gesture lastSelectionGesture;
 
     private CoreFeatureController controller;
@@ -102,8 +104,6 @@ public class SelectionChecker : MonoBehaviour
 
     private void OnGestureReleased(Gesture arg0)
     {
-        //stop timer
-        currentSelectionTime = 0;
         lastSelectionGesture = null;
     }
 
@@ -117,7 +117,6 @@ public class SelectionChecker : MonoBehaviour
              && handToHold == PossibleHand.BOTH))
         {
             lastSelectionGesture = arg0;
-            currentSelectionTime += Time.deltaTime;
         }
     }
 
@@ -148,15 +147,13 @@ public class SelectionChecker : MonoBehaviour
 
     private void checkForGestureSelection()
     {
-        //Debug.Log("current pen timer:\t" + currentSelectionTime);
-        if (!m_lastSelected && currentSelectionTime > 0)
+        if (!m_lastSelected)
         {
-            currentSelectionTime += Time.deltaTime;
-            if (currentSelectionTime > selectionGestureTime)
+            if (lastSelectionGesture != null && lastSelectionGesture.getTimePerformed() > selectionGestureTime)
             {
                 controller.activateGameObject(gameObject, lastSelectionGesture.handedness);
                 m_lastSelected = true;
-                currentSelectionTime = 0f;
+                lastSelectionGesture = null;
             }
         }
         else if (m_lastSelected)

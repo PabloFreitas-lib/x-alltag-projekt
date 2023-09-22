@@ -65,6 +65,13 @@ public class CoreFeatureController : MonoBehaviour
     /// </summary>
     private SeperateHandVisualizer m_handVisualizerScipt;
 
+    [SerializeField] 
+    private GestureRecognizer _gestureRecognizer;
+
+    [SerializeField] 
+    private float detachGestureTime = 2f;
+    private float leftDetachTimer = 0f;
+    private float rightDetachTimer = 0f;
 
     /// <summary>
     /// At start the script  tries to get access to the <see cref="XRHandSubsystem"/> to deliver the hand joint
@@ -98,6 +105,48 @@ public class CoreFeatureController : MonoBehaviour
             {
                 throw new MissingComponentException("XR Object of given name not found.");
             }
+        }
+        _gestureRecognizer.OnGestureDetected.AddListener(OnGestureDetected);
+        _gestureRecognizer.OnGestureReleased.AddListener(OnGestureReleased);
+    }
+
+    private void OnGestureReleased(Gesture arg0)
+    {
+        if (arg0.type == Gesture.GestureType.DETACH)
+        {
+            if (arg0.handedness == Handedness.Left)
+            {
+                leftDetachTimer = 0f;
+            }
+            else if (arg0.handedness == Handedness.Right)
+            {
+                rightDetachTimer = 0f;
+            }
+        }
+    }
+
+    private void OnGestureDetected(Gesture gesture)
+    {
+        switch (gesture.type)
+        {
+            case Gesture.GestureType.DETACH:
+                if (gesture.handedness == Handedness.Right && m_rightObjInInteractionPos)
+                {
+                    rightDetachTimer += Time.deltaTime;
+                }
+                else if (gesture.handedness == Handedness.Left && m_leftObjInInteractionPosition)
+                {
+                    leftDetachTimer += Time.deltaTime;
+                }
+                break;
+            case Gesture.GestureType.GRAB_PEN:
+                break;
+            case Gesture.GestureType.GRAB_SCISSORS:
+                break;
+            case Gesture.GestureType.DRAW:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -143,6 +192,8 @@ public class CoreFeatureController : MonoBehaviour
                     {
                         updateRigth();
                     }
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
                 }
                 else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.LeftHandRootPose | XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints))
                 {
@@ -150,6 +201,7 @@ public class CoreFeatureController : MonoBehaviour
                     {
                         updateLeft();
                     }
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Left, _gestureRecognizer.handLandMarks), Handedness.Left);
                 }
                 else if (updateSuccessFlags.HasFlag(XRHandSubsystem.UpdateSuccessFlags.RightHandJoints | XRHandSubsystem.UpdateSuccessFlags.RightHandRootPose))
                 {
@@ -157,6 +209,7 @@ public class CoreFeatureController : MonoBehaviour
                     {
                         updateRigth();
                     }
+                    _gestureRecognizer.updateData(getHandDataDictionary(Handedness.Right, _gestureRecognizer.handLandMarks), Handedness.Right);
                 }
                 break;
         }
@@ -401,6 +454,26 @@ public class CoreFeatureController : MonoBehaviour
         if (m_detachPinchRight.action.inProgress)
         {
             disableGameObject(Handedness.Right);
+        }
+
+        if (leftDetachTimer > 0)
+        {
+            leftDetachTimer += Time.deltaTime;
+            if (leftDetachTimer > detachGestureTime)
+            {
+                disableGameObject(Handedness.Left);
+                leftDetachTimer = 0f;
+            }
+        }
+
+        if (rightDetachTimer > 0)
+        {
+            rightDetachTimer += Time.deltaTime;
+            if (rightDetachTimer > detachGestureTime)
+            {
+                rightDetachTimer = 0f;
+                disableGameObject(Handedness.Right);
+            }
         }
     }
 }

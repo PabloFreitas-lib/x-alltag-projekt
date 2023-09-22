@@ -797,7 +797,10 @@ MonoBehaviour:
   _coreController: {fileID: 0}
   leftSelected: {fileID: -6131295136447488360, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   rightSelected: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  handToHold: 2
+  selectGesture: 2
+  selectionType: 0
+  handToHold: 1
+  _gestureRecognizer: {fileID: 0}
 --- !u!114 &7877148809727850597
 MonoBehaviour:
   m_ObjectHideFlags: 0

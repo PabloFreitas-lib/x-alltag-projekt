@@ -12,165 +12,19 @@ using System.Linq;
 [System.Diagnostics.DebuggerDisplay("{" + nameof(GetDebuggerDisplay) + "(),nq}")]
 public class SaveSystem : MonoBehaviour
 {
-    /// <summary>
-    /// Wrapper-Class for serialization of general software-state (CUP) in JSON.
-    /// </summary>
-    /// <author> Jakob Kern</author>    
-    [System.Serializable]
-    public class ComplexUserPrefsPersistentObject
-    {
-        //Central Lighting values
-        public Color lightColor;
-        public float lightIntensity;
-
-        //Files and Whiteboards existent in the scene
-        public FilePersistentObject[] files;
-        public string[] whiteboards;
-
-
-        /// <summary>
-        ///    Called by SaveComplexUserPrefs() to easily encapsulate necessary game state data.
-        /// </summary>
-        /// <author> Jakob Kern </author>
-        public ComplexUserPrefsPersistentObject()
-        {
-            LightController lights = GameObject.Find("Lights").GetComponent<LightController>();
-            lightColor = lights.color;
-            lightIntensity = lights.brightness;
-
-            //Add Tags to acutal Files
-            int f = 0;
-            File[] filesToEncode = Resources.FindObjectsOfTypeAll<File>();
-            files = new FilePersistentObject[filesToEncode.Length];
-
-            foreach (File file in filesToEncode)
-            {
-                files[f] = new FilePersistentObject(file);
-                f++;
-            }
-
-            GameObject markerObject = GameObject.Find("Pen_Interactable");
-            WhiteboardMarker marker = markerObject.GetComponent<WhiteboardMarker>();
-            whiteboards = marker.paths.ToArray();
-        }
-    }
-
-    /// <summary>
-    /// Wrapper-Class for serialization of fileCubes in JSON. Part of CUP.
-    /// </summary>
-    /// <author> Jakob Kern </author> 
-    [System.Serializable]
-    public class FilePersistentObject
-    {
-        public string name;
-        public Color color;
-        public Vector3 position;
-
-        /// <summary>
-        /// Called by CUP Constructor to get a serializable fileCube representation.
-        /// </summary>
-        /// <author> Autoren </author>
-        /// <param name="file"> The File to be serialized. </param>
-        public FilePersistentObject(File file)
-        {
-            name = file.name;
-            color = file.GetComponent<ColorChanger>().objectColor; // Access ColorChanger Script of file
-            position = file.gameObject.transform.position;
-        }
-    }
+    
 
     /// <summary>
     /// Wrapper-Class for serialization of single lights in JSON. Part of (CUP), not used yet.
     /// </summary>
     /// <author> Jakob Kern</author> 
     [System.Serializable]
-    public class LightPersistentObject
+    public class LightWrapper
     {
         uint modelID; //Modelidentifier
         Color color;
         float intesity; //float?
         Vector3 positon;
-    }
-
-    /// <summary>
-    /// Wrapper-Class for serialization of a free draw scene element in JSON.
-    /// </summary>
-    /// <author> Jakob Kern</author> 
-    public class FreeDrawPersistentObject
-    {
-        uint id;
-        Color color;
-        Vector3[] vectors;
-
-        /// <summary>
-        /// Called by SaveFreeDraw(VRDrawingManager manager) to extract a managers current LineRenderer.
-        /// Persitent-relevant data contains an identifier, the color and the vector positions of a free draw.
-        /// </summary>
-        /// <author> Jakob Kern </author>
-        /// <param name="manager"> Contains the LineRender whose information is to be persisted. </param>
-        public FreeDrawPersistentObject(VRDrawingManager manager)
-        {
-            id = manager.id;
-            color = manager.tipMaterial.color;
-
-            vectors = new Vector3[manager._currentDrawing.positionCount];              //still private in CORE Version of VRDrawingManager, change to param maybe?
-            manager._currentDrawing.GetPositions(vectors);
-        }
-    }
-
-    /// <summary>
-    ///  Wrapper-Class for serialization of a single mindmap node in JSON. Used to serialize a mindmap as a list of nodes.
-    /// </summary>
-    /// <author> Jakob Kern</author> 
-    [System.Serializable]
-    public class NodePersistentObject
-    {
-        public uint id { get; }
-        public uint parentId { get; }
-
-        public string text { get; }
-        public Color userColor { get; }
-        public Vector3 position { get; }
-        public Vector3 size { get; }
-
-        public uint[] childrenIds { get; }
-        public uint[] destinationIds { get; }
-
-        /// <summary>
-        /// Called by SaveMindmap(Mindmap mindmap) to easily encapsulate a mindmaps nodes.
-        /// A mindmap is primarily described by its name (which is its path) and a list of nodes.
-        /// </summary>
-        /// <author> Jakob Kern </author>
-        /// <param name="node"> The node to be wrapped. </param>
-        public NodePersistentObject(Node node)
-        {
-            //Set simple parameters
-            id = node.id;
-            parentId = node.parent.id;
-            text = node.label.text.text;
-            position = node.transform.position;
-            size = node.transform.localScale;
-
-            //Encode userColor
-            userColor = node.GetComponent<ColorChanger>().objectColor;
-
-            //Encode childrenIds
-            childrenIds = new uint[node.children.ToArray().Length];
-            destinationIds = new uint[node.destinations.ToArray().Length];
-            int i = 0;
-            foreach (Node child in node.children)
-            {
-                childrenIds[i] = child.id;
-                i++;
-            }
-
-            i = 0;
-            foreach (Node destination in node.destinations)
-            {
-                childrenIds[i] = destination.id;
-                i++;
-            }
-        }
     }
 
     // SaveSystems reference to the whiteboard, node and connection prefabs
@@ -183,6 +37,13 @@ public class SaveSystem : MonoBehaviour
     [SerializeField]
     public Whiteboard whiteboardPrefab;
 
+    //Reder-Bake-Pipeline
+    [SerializeField]
+    private MeshBuffer meshBuffer;
+
+    //Runtime Data Management
+    List<FreeDrawWrapper> allFreeDrawData = new List<FreeDrawWrapper>();
+
 
     /// <summary>
     /// Called on launch.
@@ -191,6 +52,11 @@ public class SaveSystem : MonoBehaviour
     public void Awake()
     {
         LoadComplexUserPrefs();
+    }
+
+    public void addFreeDraw(FreeDrawWrapper freeDraw)
+    {
+        allFreeDrawData.Add(freeDraw);
     }
 
     /// <summary>
@@ -211,7 +77,8 @@ public class SaveSystem : MonoBehaviour
     {
         string fullPath = Path.Combine(Application.dataPath, "Persistent Data");
         fullPath = Path.Combine(fullPath, "cup");
-        string json = JsonUtility.ToJson(new ComplexUserPrefsPersistentObject());
+        string json = JsonUtility.ToJson(new ComplexUserPrefsWrapper());
+        SaveFreeDraw();
 
         System.IO.File.WriteAllText(fullPath, json);
     }
@@ -229,15 +96,18 @@ public class SaveSystem : MonoBehaviour
         if (System.IO.File.Exists(fullPath))
         {
             string json = System.IO.File.ReadAllText(fullPath);
-            ComplexUserPrefsPersistentObject cup = JsonUtility.FromJson<ComplexUserPrefsPersistentObject>(json);
+            ComplexUserPrefsWrapper cup = JsonUtility.FromJson<ComplexUserPrefsWrapper>(json);
 
             //Lichteinstellungen setzen
             LightController lights = FindObjectOfType<LightController>();
             lights.color = cup.lightColor;
             lights.brightness = cup.lightIntensity;
 
+            //FreeDraws laden
+            LoadFreeDraw();
+
             //File-Objekte erstellen
-            foreach (FilePersistentObject persistentFile in cup.files)
+            foreach (FileWrapper persistentFile in cup.files)
             {
                 GameObject go = Instantiate(filePrefab, persistentFile.position, Quaternion.identity);
                 go.GetComponent<File>().name = persistentFile.name;
@@ -254,39 +124,46 @@ public class SaveSystem : MonoBehaviour
     }
 
     /// <summary>
-    /// Save the current FreeDraw by use of VRDrawingManager.
+    /// Save the all Free Draws held by the VRDrawingManager.
     /// </summary>
     /// <author> Jakob Kern </author>
     /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
-    public void SaveFreeDraw(VRDrawingManager drawing)
+    public void SaveFreeDraw()
     {
-        FreeDrawPersistentObject freeDraw = new FreeDrawPersistentObject(drawing);
-
-        string json = JsonUtility.ToJson(freeDraw);
+        String json = JsonUtility.ToJson(allFreeDrawData.ToArray());
 
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");
-        fullPath = Path.Combine(fullPath, drawing.id.ToString());
 
         System.IO.File.WriteAllText(fullPath, json);
     }
 
     /// <summary>
-    /// Load a FreeDraw by its id.
+    /// Load all Free Draws.
     /// </summary>
     /// <author> Jakob Kern </author>
     /// <param name="drawing"> VRDrawingManager containing the LineRenderer </param>
-    public void LoadFreeDraw(uint drawingID)
+    public void LoadFreeDraw()
     {
         string fullPath = Path.Combine(Application.dataPath, "Pesistent Data");
         fullPath = Path.Combine(fullPath, "freeDraw");
-        fullPath = Path.Combine(fullPath, drawingID.ToString());
 
         if (System.IO.File.Exists(fullPath))
         {
             string json = System.IO.File.ReadAllText(fullPath);
 
-            FreeDrawPersistentObject positions = JsonUtility.FromJson<FreeDrawPersistentObject>(json);
+            allFreeDrawData =  JsonUtility.FromJson<FreeDrawWrapper[]>(json).ToList<FreeDrawWrapper>();
+            LineRenderer renderer = gameObject.AddComponent<LineRenderer>();
+            
+            foreach(FreeDrawWrapper wrapper in allFreeDrawData)
+            {
+                renderer.SetPositions(wrapper.vectors);
+                renderer.startColor = renderer.endColor = wrapper.color;
+                Mesh mesh = new Mesh();
+                renderer.BakeMesh(mesh, true);
+                meshBuffer.addBakedDrawing(mesh, renderer.material);
+            }
+
             return;
         }
         else
@@ -304,12 +181,12 @@ public class SaveSystem : MonoBehaviour
     public void SaveMindmap(FileSocket socket)
     {
         Node[] nodes = socket.map.nodes.ToArray();
-        NodePersistentObject[] persistenceMapped = new NodePersistentObject[nodes.Length];
+        NodeWrapper[] persistenceMapped = new NodeWrapper[nodes.Length];
 
         uint i = 0;
         foreach (Node node in nodes)
         {
-            persistenceMapped[i] = new NodePersistentObject(node);
+            persistenceMapped[i] = new NodeWrapper(node);
             i++;
         }
 
@@ -340,12 +217,12 @@ public class SaveSystem : MonoBehaviour
             string json = System.IO.File.ReadAllText(fullPath);
 
             //deserialize
-            NodePersistentObject[] persistenceMapped = JsonUtility.FromJson<NodePersistentObject[]>(json);
+            NodeWrapper[] persistenceMapped = JsonUtility.FromJson<NodeWrapper[]>(json);
             Node[] nodes = new Node[persistenceMapped.Length];
 
             //create Nodes from persisted data
             uint i = 0;
-            foreach (NodePersistentObject persistedNode in persistenceMapped)
+            foreach (NodeWrapper persistedNode in persistenceMapped)
             {
                 GameObject go = Instantiate(nodePrefab, persistedNode.position, Quaternion.identity);
                 Node node = go.GetComponent<Node>();
@@ -361,7 +238,7 @@ public class SaveSystem : MonoBehaviour
             }
 
             //Convert id references to gameobject references (cannot be done in loop before because Nodes are persisted unsorted and therefore a parent or child might not yet be instantiated)
-            foreach (NodePersistentObject persistedNode in persistenceMapped)
+            foreach (NodeWrapper persistedNode in persistenceMapped)
             {
                 Node node = BinarySearch(nodes, persistedNode.id);
                 node.parent = BinarySearch(nodes, persistedNode.parentId);
@@ -472,7 +349,7 @@ public class SaveSystem : MonoBehaviour
     }
 
     /**
-     * Helper to QuickSort Elements of type NodePersistentObject by id.
+     * Helper to QuickSort Elements of type NodeWrapper by id.
      */
     public static void QuickSort(Node[] nodes, int low, int high)
     {

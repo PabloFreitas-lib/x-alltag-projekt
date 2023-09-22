@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+/// <summary>
+/// This class is to teleport to the terrace.
+/// </summary>
+/// <author> Mert Kaynak </author>
+
 public class Teleport : MonoBehaviour
 {
     // GameObject, which is getting teleported.

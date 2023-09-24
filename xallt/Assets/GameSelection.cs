@@ -18,7 +18,7 @@ public class GameSelection : MonoBehaviour
     private List<GameObject> Games;
 
     public GameObject dart;
-    public GameObject ball;
+    public Spawner fruitSpawner;
 
     public GameObject katanaR;
     public GameObject katanaL;
@@ -76,6 +76,7 @@ public class GameSelection : MonoBehaviour
 
     public void ChangeNinjaMode()
     {
+        fruitSpawner.enabled = !fruitSpawner.enabled;
         katanaL.SetActive(!katanaL.activeSelf);
         katanaR.SetActive(!katanaR.activeSelf);
     }

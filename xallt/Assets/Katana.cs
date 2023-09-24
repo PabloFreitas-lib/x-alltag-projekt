@@ -5,7 +5,8 @@ using EzySlice;
 
 public class Katana : MonoBehaviour
 {
-    
+    public Material mat;
+    public GameObject particlePrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +26,8 @@ public class Katana : MonoBehaviour
         SlicedHull hull = target.Slice(transform.position, transform.up);
         if(hull != null)
         {
-            Material mat = target.GetComponent<MeshRenderer>().material;
+            GameObject particle = Instantiate(particlePrefab, target.transform.position, Quaternion.identity, null);
+            Destroy(particle, 5f);
             GameObject upperHull = hull.CreateUpperHull(target, mat);
             upperHull.AddComponent<Rigidbody>();
             upperHull.AddComponent<fruit>();

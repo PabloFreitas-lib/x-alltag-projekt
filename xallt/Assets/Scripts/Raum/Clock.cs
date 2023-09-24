@@ -35,7 +35,10 @@ public class Clock : MonoBehaviour
             smallZeiger.localRotation = Quaternion.Euler(0f, hourRotation, 0f);
 
             // Sekundenzeiger
-            secondZeiger.localRotation = Quaternion.Euler(0f, secondRotation, 0f);
+            if(secondZeiger!= null)
+            {
+                secondZeiger.localRotation = Quaternion.Euler(0f, secondRotation, 0f);
+            }
 
             yield return new WaitForSeconds(1f); // Warte eine Sekunde.
         }

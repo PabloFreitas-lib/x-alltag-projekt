@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// The file socket detects mindmaps and handles the connection between the selected Mindmap and the User Interface.
+/// The file socket detects mindmaps and handles the connection between the selected mindmap and the user interface.
 /// Here are the methods, that the UI is calling to create, edit and work with mindmaps based on the current socketFile.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class FileSocket : MonoBehaviour
 {
     // file and file name
@@ -16,6 +15,10 @@ public class FileSocket : MonoBehaviour
     public Text fileNameText;
     [HideInInspector]public Mindmap map;
 
+    /// <summary>
+    /// Sets the mindmap placed on file socket to active.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("File"))
@@ -27,6 +30,10 @@ public class FileSocket : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Sets the mindmap placed on file socket to not active.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("File"))
@@ -39,7 +46,7 @@ public class FileSocket : MonoBehaviour
     }
 
     /// <summary>
-    /// Creates a node from the selected mindmap
+    /// Creates a node from the selected mindmap.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void CreateNodeUI()
@@ -50,7 +57,7 @@ public class FileSocket : MonoBehaviour
         }
     }
     /// <summary>
-    /// Deletes a node from the selected mindmap
+    /// Deletes a node from the selected mindmap.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void DeleteNodeUI()
@@ -62,7 +69,7 @@ public class FileSocket : MonoBehaviour
         }
     }
     /// <summary>
-    /// Creates a connection from the selected mindmap
+    /// Creates a connection from the selected mindmap.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void CreateConnectionUI()
@@ -73,7 +80,7 @@ public class FileSocket : MonoBehaviour
         }
     }
     /// <summary>
-    /// Deletes a connection from the selected mindmap
+    /// Deletes a connection from the selected mindmap.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void DeleteConnectionUI()
@@ -85,7 +92,7 @@ public class FileSocket : MonoBehaviour
     }
 
     /// <summary>
-    /// changes the color
+    /// Changes the color of any object.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     /// <param name="Color color"> requires color </param>

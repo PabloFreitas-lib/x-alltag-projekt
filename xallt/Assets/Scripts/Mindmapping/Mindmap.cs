@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// includes functions for the spawn position, creating, selecting and deleting nodes and the changing the mode
+/// Includes functions for the spawn position, creating, selecting and deleting nodes and the changing the mode.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
-
 public class Mindmap : MonoBehaviour
 {
     // special nodes (root, selected, prevSelected (previously selected))
@@ -37,7 +35,7 @@ public class Mindmap : MonoBehaviour
     }
 
     /// <summary>
-    /// deletes nodes (if a node is selected in delete mode and the node isn't the root) 
+    /// Deletes nodes (if a node is selected in delete mode and the node isn't the root).
     /// (also removes parent-children relation in structure)
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
@@ -60,10 +58,10 @@ public class Mindmap : MonoBehaviour
     }
 
     /// <summary>
-    /// selects nodes
+    /// Selects nodes.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
-    /// <param name="Node node"> requires a node </param>
+    /// <param name="Node node"> Requires a node. </param>
     public void SelectNode(Node node)
     {
         prevSelected = selected;
@@ -73,7 +71,7 @@ public class Mindmap : MonoBehaviour
     }
 
     /// <summary>
-    /// creates nodes
+    /// Creates nodes.
     /// determines spawn position, sets parents
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
@@ -104,10 +102,10 @@ public class Mindmap : MonoBehaviour
     }
 
     /// <summary>
-    /// changes the mode
+    /// Changes the mode.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
-    /// <param name="int index"> requires the mode index </param>
+    /// <param name="int index"> Requires the mode index. </param>
     public void changeMode(int index)
     {
             switch (index){

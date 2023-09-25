@@ -5,7 +5,6 @@ using UnityEngine;
 /// Connection lines between nodes and between child node and parent (creation and destruction)
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class Connection : MonoBehaviour
 {
     //Nodes
@@ -25,7 +24,7 @@ public class Connection : MonoBehaviour
     }
 
     /// <summary>
-    /// Subscribes to the OnScissorsCut delegate of each excising scissors prefab object
+    /// Subscribes to the OnScissorsCut delegate of each excising scissors prefab object.
     /// <author>Fabian Schmurr</author>
     /// </summary>
     private void subscribeToScissorsCut()
@@ -58,13 +57,17 @@ public class Connection : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the line renderer.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void Update()
     {
        UpdateLineRenderer();
     }
 
     /// <summary>
-    /// moves line connection with nodes
+    /// Moves line connection with nodes.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     private void UpdateLineRenderer()
@@ -83,7 +86,7 @@ public class Connection : MonoBehaviour
     }
 
     /// <summary>
-    /// creates line connection
+    /// Creates line connection.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     private void CreateLineRenderer()
@@ -99,7 +102,7 @@ public class Connection : MonoBehaviour
     }
 
     /// <summary>
-    /// setter for from and to nodes
+    /// Setter for from and to nodes
     /// </summary>
     public void SetFromTo(Node from, Node to)
     {
@@ -108,7 +111,7 @@ public class Connection : MonoBehaviour
     }
 
     /// <summary>
-    /// destroys line and parent-child-relation
+    /// Destroys line and parent-child-relation.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void DestroyConnection()
@@ -128,7 +131,7 @@ public class Connection : MonoBehaviour
     }
 
     /// <summary>
-    /// beginning for destroy connection function called by scissors
+    /// Beginning for destroy connection function called by scissors
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     /// <param name="Collider other"> needs collision as trigger </param>

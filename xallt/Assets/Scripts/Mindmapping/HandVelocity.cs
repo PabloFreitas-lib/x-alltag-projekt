@@ -4,13 +4,11 @@ using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
 /// <summary>
-/// eases pulling closer objects
+/// Eases pulling closer objects.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class HandVelocity : XRRayInteractor
 {
-    //
     public Transform target; // Das Zielobjekt
     public float normalizationRange = 1f; // Der Bereich zur Normalisierung der Geschwindigkeit
     public float deadZone = 0.2f;

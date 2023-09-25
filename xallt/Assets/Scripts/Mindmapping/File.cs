@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// spawns cube
+/// Class for Files
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class File : MonoBehaviour
 {
     // 
     public string fileName;
     public Mindmap map;
     public bool isOpen;
+
 
     private void Start()
     {

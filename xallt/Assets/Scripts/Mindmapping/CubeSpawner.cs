@@ -4,10 +4,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
 /// <summary>
-/// spawns cubes
+/// Spawns cubes/fíles.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class CubeSpawner : MonoBehaviour
 {
     //prefab, collider, position
@@ -44,7 +43,7 @@ public class CubeSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// spawns cube on socket
+    /// Spawns cube on socket.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     /// <param name="Transform spawn Position"> requires spawn position </param>
@@ -58,7 +57,7 @@ public class CubeSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// spawns cube in hand UI
+    /// Spawns cube in hand UI.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     /// <param name="Transform spawn Position"> requires spawn position </param>

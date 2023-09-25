@@ -6,6 +6,10 @@ using TMPro;
 using Microsoft.MixedReality.Toolkit.Experimental.UI;
 using System;
 
+/// <summary>
+/// Class for the labels on mindmap nodes.
+/// </summary>
+/// <author> Dmitry, Mert, Mailin </author>
 public class Label : MonoBehaviour
 {
     public TextMeshProUGUI inputText;
@@ -28,6 +32,10 @@ public class Label : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Label selects himself.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     public void SelectSelf()
     {
         if(labelManager != null && inputText != null)
@@ -37,6 +45,11 @@ public class Label : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Changes label from input text.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
+    /// <param name="object sender"> sender </param>
     private void OnTextSubmitted(object sender, EventArgs e)
     {
         if (labelManager.currentLabel != null)

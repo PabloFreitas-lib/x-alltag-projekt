@@ -1,10 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// makes cubes magnetic to file socket
+/// Makes cubes magnetic to file socket.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class CubeAttractor : MonoBehaviour
 {
     //force, radius, tag, color
@@ -14,7 +13,7 @@ public class CubeAttractor : MonoBehaviour
     public Color gizmoColor;
 
     /// <summary>
-    /// makes cube magnetic to file socket
+    /// Makes cube magnetic to file socket.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     private void FixedUpdate()

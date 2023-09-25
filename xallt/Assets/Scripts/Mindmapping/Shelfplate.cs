@@ -4,10 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// puts files in list
+/// Puts files in list.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class Shelfplate : MonoBehaviour
 {
     // file and file name and list of all files
@@ -16,17 +15,10 @@ public class Shelfplate : MonoBehaviour
 
     public List<File> filelist;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    /// <summary>
+    /// Saves files placed on shelf plate in list.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("File"))
@@ -37,6 +29,11 @@ public class Shelfplate : MonoBehaviour
             Debug.Log(socketFile.fileName);
         }
     }
+
+    /// <summary>
+    /// Removes files placed on shelf plate from list.
+    /// </summary>
+    /// <author> Dmitry, Mert, Mailin </author>
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("File"))

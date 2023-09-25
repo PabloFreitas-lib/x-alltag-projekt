@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// selects node, establishes connections between child node and parent and node and node
+/// Selects node, establishes connections between child node and parent and node and node.
 /// </summary>
 /// <author> Dmitry, Mert, Mailin </author>
-
 public class Node : MonoBehaviour
 {
     //Metadata
@@ -26,7 +25,7 @@ public class Node : MonoBehaviour
     public bool isRoot;
 
     /// <summary> 
-    /// gives nodes metadata
+    /// Gives nodes metadata.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin, Jakob </author>
     /// <param name="uint pId"> requires the node ID </param>
@@ -44,7 +43,7 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// calls the function ConnectToParent if the node isn't the root
+    /// Calls the function ConnectToParent if the node isn't the root.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     private void Start()
@@ -58,7 +57,7 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// connects node to parent
+    /// Connects node to parent.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     private void ConnectToParent()
@@ -76,7 +75,7 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// selects the node
+    /// Selects the node.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void SelectSelf()
@@ -86,7 +85,7 @@ public class Node : MonoBehaviour
     }
 
     /// <summary>
-    /// sets connections between nodes
+    /// Sets connections between nodes.
     /// </summary>
     /// <author> Dmitry, Mert, Mailin </author>
     public void ConnectNodes()
